@@ -9,9 +9,14 @@ export class ProductImage {
   @Column()
   url!: string;
 
-  @Column()
-  altText!: string;
+  @Column({ nullable: true })
+  altText?: string;
 
-  @ManyToOne(() => Product, (product: Product) => product.images)
+  @Column()
+  publicId!: string; // For Cloudinary reference
+
+  @ManyToOne(() => Product, (product) => product.images, {
+    onDelete: 'CASCADE' // Delete images when product is deleted
+  })
   product!: Product;
 }

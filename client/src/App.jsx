@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import  ProductsPage  from './pages/products.page'
 import { HomePage } from './pages/Home.page'
-import { AddProducts } from './pages/AddProducts.page';
+import AddProductPage from './pages/AddProducts.page';
 const App = () => {
   return (
     <>
@@ -22,7 +22,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/falful/products" element={<ProductsPage />} />
-          <Route path="/falful/products/add" element={<AddProducts />} />
+          <Route path="/falful/products/add" element={<AddProductPage />} />
         </Routes>
         <Footer />
       </Router>

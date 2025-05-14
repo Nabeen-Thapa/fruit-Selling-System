@@ -1,10 +1,10 @@
 import { DataSource } from "typeorm";
 import dotenv from "dotenv";
-import { Product } from "../models/products.model";
-import { ProductImage } from "../models/productImage.model";
+import { Product } from "../products/models/products.model";
+import { ProductImage } from "../products/models/productImage.model";
 dotenv.config();
 
-export const couponConnection = new DataSource({
+export const falfulConnection = new DataSource({
     type:"postgres",
     host : process.env.HOST ||"localhost",
     port: 5432,
@@ -17,7 +17,7 @@ export const couponConnection = new DataSource({
 })
 
 
-couponConnection.initialize()
+falfulConnection.initialize()
   .then(() => {
     console.log("Database connected successfully!");
   })

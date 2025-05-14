@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn,OneToMany  } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { ProductImage } from './productImage.model';
 
 @Entity()
@@ -9,7 +9,7 @@ export class Product {
   @Column()
   name!: string;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal')
   price!: number;
 
   @Column('text')
@@ -28,12 +28,9 @@ export class Product {
   quantity!: number;
 
   @Column()
-  category!: string; // 'fruit', 'berry', 'tropical'
+  category?: string;
 
-  @OneToMany(() => ProductImage, (image: ProductImage) => image.product, {
-    cascade: true,
-    eager: true
-  })
+  @OneToMany(() => ProductImage, image => image.product, { cascade: true })
   images!: ProductImage[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
