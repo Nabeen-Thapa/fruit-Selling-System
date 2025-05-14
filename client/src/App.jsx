@@ -6,9 +6,9 @@ import {
   Route,
   Routes
 } from "react-router-dom";
-import  ProductsPage  from './pages/products.page'
 import { HomePage } from './pages/Home.page'
 import AddProductPage from './pages/AddProducts.page';
+import ViewProducts from './pages/viewProducts.page';
 const App = () => {
   return (
     <>
@@ -21,7 +21,7 @@ const App = () => {
         <Banner3/> */}
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/falful/products" element={<ProductsPage />} />
+          <Route path="/falful/products" element={<ViewProducts />} />
           <Route path="/falful/products/add" element={<AddProductPage />} />
         </Routes>
         <Footer />

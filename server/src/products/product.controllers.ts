@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ 
+const upload = multer({
   storage: storage,
   limits: {
     fileSize: 5 * 1024 * 1024 // 5MB limit
@@ -64,7 +64,7 @@ export class ProductController {
 
       const productDto = plainToInstance(CreateProductDto, productData);
       const errors = await validate(productDto);
-      
+
       if (errors.length > 0) {
         const message = errors.map(err => Object.values(err.constraints || {}).join(", ")).join("; ");
         throw new Error(`Validation failed: ${message}`);
@@ -75,12 +75,33 @@ export class ProductController {
         productDto,
         req.files as Express.Multer.File[]
       );
-      
+
       sendSuccess(res, StatusCodes.CREATED, "Product added successfully", product);
-      
+
     } catch (error) {
       console.error("Error creating product:", error);
       sendError(res, StatusCodes.BAD_REQUEST, error instanceof Error ? error.message : 'Unknown error');
     }
   }
+
+  // Add this method to your ProductController class
+// In your ProductController
+@Route("get", "/view")
+async getAllProducts(req: Request, res: Response) {
+  try {
+    const products = await this.productService.getAllProducts();
+    
+    // Ensure numeric fields are properly typed
+    const responseData = products.map(product => ({
+      ...product,
+      price: Number(product.price),
+      quantity: Number(product.quantity)
+    }));
+    
+    sendSuccess(res, StatusCodes.OK, "Products fetched successfully", responseData);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, "Failed to fetch products");
+  }
+}
 }

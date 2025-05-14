@@ -14,67 +14,89 @@ export class ProductService {
   }
 
   async createProduct(
-  productData: CreateProductDto,
-  imageFiles: Express.Multer.File[]
-): Promise<Product> {
-  const queryRunner = this.dataSource.createQueryRunner();
-  await queryRunner.connect();
-  await queryRunner.startTransaction();
+    productData: CreateProductDto,
+    imageFiles: Express.Multer.File[]
+  ): Promise<Product> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-  let product: Product | null = null;
+    let product: Product | null = null;
 
-  try {
-    // 1. Create product without images first
-    product = this.productRepo.create({
-      name: productData.name,
-      price: productData.price,
-      description: productData.description,
-      seller: productData.seller,
-      phone: productData.phone,
-      email: productData.email,
-      quantity: productData.quantity,
-      category: productData.category,
-      images: [] // Initialize empty array
-    });
-    
-    await queryRunner.manager.save(product);
+    try {
+      // 1. Create product without images first
+      product = this.productRepo.create({
+        name: productData.name,
+        price: productData.price,
+        description: productData.description,
+        seller: productData.seller,
+        phone: productData.phone,
+        email: productData.email,
+        quantity: productData.quantity,
+        category: productData.category,
+        images: [] // Initialize empty array
+      });
 
-    // 2. Process and upload images
-    const images = await Promise.all(
-      imageFiles.map(async (file) => {
-        const { url, publicId } = await uploadImage(file.path);
-        return this.imageRepo.create({
-          url,
-          publicId,
-          altText: productData.name,
-          product: product! // Non-null assertion safe here
-        });
-      })
-    );
+      await queryRunner.manager.save(product);
 
-    // 3. Save images and commit
-    product.images = await queryRunner.manager.save(images);
-    await queryRunner.commitTransaction();
+      // 2. Process and upload images
+      const images = await Promise.all(
+        imageFiles.map(async (file) => {
+          const { url, publicId } = await uploadImage(file.path);
+          return this.imageRepo.create({
+            url,
+            publicId,
+            altText: productData.name,
+            product: product! // Non-null assertion safe here
+          });
+        })
+      );
 
-    return product;
-  } catch (error) {
-    await queryRunner.rollbackTransaction();
-    
-    if (product?.images) {
-      await this.cleanupImages(product.images);
+      // 3. Save images and commit
+      product.images = await queryRunner.manager.save(images);
+      await queryRunner.commitTransaction();
+
+      return product;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+
+      if (product?.images) {
+        await this.cleanupImages(product.images);
+      }
+
+      throw error;
+    } finally {
+      await queryRunner.release();
     }
-    
-    throw error;
-  } finally {
-    await queryRunner.release();
   }
-}
 
   private async cleanupImages(images: ProductImage[]): Promise<void> {
     await Promise.all(
-      images.map(img => 
+      images.map(img =>
         img.publicId ? deleteImage(img.publicId) : Promise.resolve()
       )
     );
   }
+
+  // Add this method to your ProductService class
+ async getAllProducts(): Promise<Product[]> {
+  return this.productRepo.find({
+    relations: ['images'],
+    order: {
+      createdAt: 'DESC'
+    },
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      description: true,
+      quantity: true,
+      seller: true,
+      images: {
+        url: true,
+        altText: true
+      }
+    }
+  });
+}
 }
