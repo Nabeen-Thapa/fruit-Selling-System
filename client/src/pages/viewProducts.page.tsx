@@ -57,7 +57,7 @@ const ViewProducts: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Our Products</h1>
           <p className="mt-2 text-sm text-gray-600">
@@ -69,7 +69,7 @@ const ViewProducts: React.FC = () => {
           {products.map((product) => (
             <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02]">
               {product.images?.length > 0 && (
-                <div className="h-48 overflow-hidden">
+                <div className="h-60 overflow-hidden">
                   <img
                     src={product.images[0].url}
                     alt={product.images[0].altText || product.name}

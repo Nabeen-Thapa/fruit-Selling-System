@@ -1,6 +1,6 @@
 import express,{ Router } from 'express';
-import { CONTROLLER_KEY } from './decorators/controller.decoder';
-import { ROUTE_KEY } from './decorators/route.decoder';
+import { CONTROLLER_KEY } from './common/decorators/controller.decoder';
+import { ROUTE_KEY } from './common/decorators/route.decoder';
 
 type ControllerConstructor = new (...args: any[]) => any;
 

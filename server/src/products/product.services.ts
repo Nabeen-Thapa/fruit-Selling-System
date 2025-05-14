@@ -39,9 +39,9 @@ export class ProductService {
 
       await queryRunner.manager.save(product);
 
-      // 2. Process and upload images
+      // Process from cloudinary and upload images
       const images = await Promise.all(
-        imageFiles.map(async (file) => {
+        imageFiles.map(async (file) => {//calls from cloudinary
           const { url, publicId } = await uploadImage(file.path);
           return this.imageRepo.create({
             url,
@@ -52,7 +52,6 @@ export class ProductService {
         })
       );
 
-      // 3. Save images and commit
       product.images = await queryRunner.manager.save(images);
       await queryRunner.commitTransaction();
 
@@ -60,16 +59,15 @@ export class ProductService {
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
-      if (product?.images) {
-        await this.cleanupImages(product.images);
-      }
-
+      if (product?.images) await this.cleanupImages(product.images);
+      
       throw error;
     } finally {
       await queryRunner.release();
     }
   }
 
+  //Remove uploaded images from cloud storage (like Cloudinary) if a transaction fails
   private async cleanupImages(images: ProductImage[]): Promise<void> {
     await Promise.all(
       images.map(img =>
@@ -78,7 +76,7 @@ export class ProductService {
     );
   }
 
-  // Add this method to your ProductService class
+  // Promise<Product[]>  It tells TypeScript "This will give you product data later, and here's exactly what that data will look like."
  async getAllProducts(): Promise<Product[]> {
   return this.productRepo.find({
     relations: ['images'],

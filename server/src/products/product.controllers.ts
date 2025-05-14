@@ -4,9 +4,9 @@ import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { ProductService } from './product.services';
 import { CreateProductDto } from './dtos/product.dot';
-import { Controller } from '../decorators/controller.decoder';
-import { Route } from '../decorators/route.decoder';
-import { sendError, sendSuccess } from '../utils/response.utils';
+import { Controller } from '../common/decorators/controller.decoder';
+import { Route } from '../common/decorators/route.decoder';
+import { sendError, sendSuccess } from '../common/utils/response.utils';
 import { StatusCodes } from "http-status-codes";
 import { falfulConnection } from '../config/dbORM.config';
 
@@ -47,13 +47,7 @@ export class ProductController {
   @Route("post", "/add", [upload.array('productImages', 5)])
   async createProductController(req: Request, res: Response) {
     try {
-      console.log("Request files:", req.files);
-      console.log("Request body:", req.body);
-
-      if (!req.files || !req.body) {
-        throw new Error("No files or form data received");
-      }
-
+      
       // Convert string numbers to actual numbers
       const productData = {
         ...req.body,
@@ -84,8 +78,7 @@ export class ProductController {
     }
   }
 
-  // Add this method to your ProductController class
-// In your ProductController
+
 @Route("get", "/view")
 async getAllProducts(req: Request, res: Response) {
   try {
