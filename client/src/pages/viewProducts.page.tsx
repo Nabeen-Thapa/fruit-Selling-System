@@ -88,6 +88,7 @@ const ViewProducts: React.FC = () => {
                 <p className="text-gray-600 mt-2 line-clamp-2">{product.description}</p>
                 <div className="mt-4 flex justify-between items-center">
                   <span className="text-sm text-gray-500">Seller: {product.seller}</span>
+                   <span className="text-sm text-gray-500">contact: {product.phone}</span>
                   <span className="text-sm text-gray-500">Qty: {product.quantity}</span>
                 </div>
                 <div className="mt-4 flex space-x-2">

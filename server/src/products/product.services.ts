@@ -92,6 +92,7 @@ export class ProductService {
       description: true,
       quantity: true,
       seller: true,
+      phone:true,
       images: {
         url: true,
         altText: true
