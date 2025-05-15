@@ -2,18 +2,20 @@ import { DataSource } from "typeorm";
 import dotenv from "dotenv";
 import { Product } from "../products/models/products.model";
 import { ProductImage } from "../products/models/productImage.model";
+import { seller } from "../users/models/seller.model";
+import { buyer } from "../users/models/buyer.model";
 dotenv.config();
 
 export const falfulConnection = new DataSource({
     type:"postgres",
-    host : process.env.HOST ||"localhost",
+    host : process.env.HOST,
     port: 5432,
-    username :"postgres",
-    password : process.env.password ||"Nt@post",
-    database : process.env.database || "FalfulSystem",
+    username : process.env.username,
+    password : process.env.password,
+    database : process.env.database,
     synchronize: true,
     logging: false,
-    entities : [Product, ProductImage],
+    entities : [Product, ProductImage, seller, buyer],
 })
 
 

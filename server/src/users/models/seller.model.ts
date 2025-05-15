@@ -5,6 +5,10 @@ import { Product } from "../../products/models/products.model";
 
 @Entity("sellerDetail")
 export class seller extends User{
-    @OneToMany(() => Product, (product) => product.seller)
+
+  @Column()
+  businessName?:string;
+
+  @OneToMany(() => Product, (product) => product.seller)
   products!: Product[];
 }
