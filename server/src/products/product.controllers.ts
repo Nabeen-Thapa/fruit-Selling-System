@@ -9,31 +9,8 @@ import { Route } from '../common/decorators/route.decoder';
 import { sendError, sendSuccess } from '../common/utils/response.utils';
 import { StatusCodes } from "http-status-codes";
 import { falfulConnection } from '../config/dbORM.config';
+import { upload } from '../common/utils/cloudinary-upload';
 
-// Multer configuration remains the same
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + '.' + file.originalname.split('.').pop());
-  }
-});
-
-const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
-  },
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
-    } else {
-      cb(new Error('Only image files are allowed!'));
-    }
-  }
-});
 
 @Controller("/product")
 export class ProductController {
@@ -44,10 +21,16 @@ export class ProductController {
     this.productService = new ProductService(falfulConnection);
   }
 
-  @Route("post", "/add", [upload.array('productImages', 5)])
-  async createProductController(req: Request, res: Response) {
+   @Route("post", "/add", [upload.array('productImages', 5)])
+  async createProduct(req: Request, res: Response) {
     try {
-      
+      console.log("Request files:", req.files);
+      console.log("Request body:", req.body);
+
+      if (!req.files || !req.body) {
+        throw new Error("No files or form data received");
+      }
+
       // Convert string numbers to actual numbers
       const productData = {
         ...req.body,
@@ -58,7 +41,7 @@ export class ProductController {
 
       const productDto = plainToInstance(CreateProductDto, productData);
       const errors = await validate(productDto);
-
+      
       if (errors.length > 0) {
         const message = errors.map(err => Object.values(err.constraints || {}).join(", ")).join("; ");
         throw new Error(`Validation failed: ${message}`);
@@ -69,9 +52,9 @@ export class ProductController {
         productDto,
         req.files as Express.Multer.File[]
       );
-
+      
       sendSuccess(res, StatusCodes.CREATED, "Product added successfully", product);
-
+      
     } catch (error) {
       console.error("Error creating product:", error);
       sendError(res, StatusCodes.BAD_REQUEST, error instanceof Error ? error.message : 'Unknown error');

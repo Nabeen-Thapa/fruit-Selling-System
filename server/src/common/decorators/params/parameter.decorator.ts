@@ -1,6 +1,8 @@
 import { parameterDecorator } from "./param-creator";
 import { ParamType } from "./types";
 
+export const UploadedFiles = () => parameterDecorator(ParamType.UPLOADED_FILES);
+export const UploadedFile = () => parameterDecorator(ParamType.UPLOADED_FILE);
 export const Req = () => parameterDecorator(ParamType.REQUEST);
 export const Res = () => parameterDecorator(ParamType.RESPONSE);
 export const Body = (key?: string) => parameterDecorator(ParamType.BODY, key);

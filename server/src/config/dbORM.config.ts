@@ -8,10 +8,10 @@ dotenv.config();
 
 export const falfulConnection = new DataSource({
     type:"postgres",
-    host : process.env.HOST,
+    host : process.env.HOST ||"localhost",
     port: 5432,
-    username : process.env.username,
-    password : process.env.password,
+    username :"postgres",
+    password : process.env.password ||"Nt@post",
     database : process.env.database,
     synchronize: true,
     logging: false,

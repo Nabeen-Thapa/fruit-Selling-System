@@ -4,7 +4,10 @@ export enum ParamType{
     QUERY = "query",
     HEADER = "header",
     REQUEST ="request",
-    RESPONSE = "response"
+    RESPONSE = "response",
+    UPLOADED_FILES = "upload-files",
+    UPLOADED_FILE = "upload-file"
+
 }
 
 export interface ParamMetadata {
