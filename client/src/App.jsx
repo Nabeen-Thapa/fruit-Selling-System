@@ -7,22 +7,19 @@ import {
   Routes
 } from "react-router-dom";
 import { HomePage } from './pages/Home.page'
-import AddProductPage from './pages/AddProducts.page';
-import ViewProducts from './pages/viewProducts.page';
+import ViewProducts from './pages/product/viewProducts.page';
+import AddProductPage from './pages/product/AddProducts.page';
+import { BuyerRegister } from './pages/users/buyerRegister.page';
 const App = () => {
   return (
     <>
       <Router>
         <Navbar />
-        {/*        
-        <Menus/>
-        <Banner/>
-        <Banner2/>
-        <Banner3/> */}
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/falful/products" element={<ViewProducts />} />
-          <Route path="/falful/products/add" element={<AddProductPage />} />
+          <Route path="/falful/products/add" element={<AddProductPage/>} />
+          <Route path="/falful/user/buyer/register" element={<BuyerRegister/>} />
         </Routes>
         <Footer />
       </Router>

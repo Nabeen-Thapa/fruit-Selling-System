@@ -1,5 +1,5 @@
 import React from 'react';
-import AddProducts from '../components/products/AddProducts.form';
+import AddProducts from '../../components/products/AddProducts.form';
 
 const AddProductPage = () => {
   return (

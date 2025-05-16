@@ -35,3 +35,20 @@ export interface UseProductFormReturn {
   resetForm: () => void;
   triggerFileInput: () => void;
 }
+
+
+interface ProductImages {
+  url: string;
+  altText?: string;
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  price: number | string;
+  description: string;
+  quantity: number;
+  seller: string;
+  phone: string;
+  images: ProductImage[];
+}

@@ -172,3 +172,6 @@ formData.append('price', product.price.toString());
     triggerFileInput
   };
 };
+
+
+
