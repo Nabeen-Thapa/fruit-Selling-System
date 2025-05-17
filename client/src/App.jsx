@@ -10,6 +10,8 @@ import { HomePage } from './pages/Home.page'
 import ViewProducts from './pages/product/viewProducts.page';
 import AddProductPage from './pages/product/AddProducts.page';
 import { BuyerRegister } from './pages/users/buyerRegister.page';
+import { SellerRegister } from './pages/users/sellerRegister.page';
+
 const App = () => {
   return (
     <>
@@ -20,6 +22,7 @@ const App = () => {
           <Route path="/falful/products" element={<ViewProducts />} />
           <Route path="/falful/products/add" element={<AddProductPage/>} />
           <Route path="/falful/user/buyer/register" element={<BuyerRegister/>} />
+          <Route path="/falful/user/seller/register" element={<SellerRegister/>} />
         </Routes>
         <Footer />
       </Router>

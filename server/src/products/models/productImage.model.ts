@@ -16,7 +16,7 @@ export class ProductImage {
   publicId!: string; // For Cloudinary reference
 
   @ManyToOne(() => Product, (product) => product.images, {
-    onDelete: 'CASCADE' // Delete images when product is deleted
+    onDelete: 'CASCADE' 
   })
   product!: Product;
 }

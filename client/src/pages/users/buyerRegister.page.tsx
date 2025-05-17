@@ -10,7 +10,7 @@ export const BuyerRegister: React.FC = () => {
   const handleSubmit = async (buyerData: Omit<Buyer, 'id' | 'createdAt' | 'lastLogin'>) => {
     try {
       await addBuyer(buyerData);
-      navigate('/buyers');
+      navigate('/buyer/login');
     } catch (err) {
       console.error('Registration failed:', err);
     }

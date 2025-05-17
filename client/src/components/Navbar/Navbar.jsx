@@ -31,7 +31,11 @@ const NavbarMenu = [
     title: "register",
     link: "/falful/user/buyer/register",
   },
-
+{
+    id: 3,
+    title: "seller",
+    link: "/falful/user/seller/register",
+  },
   
   // {
   //   id: 4,

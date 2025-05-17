@@ -1,11 +1,11 @@
 import "reflect-metadata"; 
 import express, { NextFunction, Request, Response } from 'express';
 import dotenv from "dotenv";
-import bodyParser from 'body-parser';
 import cors from "cors";
 import { registerRoutes } from "./registerRoutes";
 import { ProductController } from "./products/product.controllers";
 import { buyerController } from "./users/controllers/buyer.controller";
+import { sellerController } from "./users/controllers/seller.controller";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-registerRoutes(app, [ProductController, buyerController]);
+registerRoutes(app, [ProductController, buyerController, sellerController]);
 
 
 // Error handling middleware (add at the end)

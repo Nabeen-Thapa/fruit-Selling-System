@@ -37,7 +37,7 @@ export interface UseProductFormReturn {
 }
 
 
-interface ProductImages {
+export interface ProductImages {
   url: string;
   altText?: string;
 }
@@ -50,5 +50,5 @@ export interface Product {
   quantity: number;
   seller: string;
   phone: string;
-  images: ProductImage[];
+  images: ProductImages[];
 }

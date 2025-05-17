@@ -5,7 +5,7 @@ import { seller } from "../models/seller.model";
 export class sellerServices {
     private sellerRepo = falfulConnection.getRepository(seller)
 
-    async userRegister(sellerData: serllerDto): Promise<seller> {
+    async sellerRegister(sellerData: serllerDto): Promise<seller> {
         const queryRunner = falfulConnection.createQueryRunner();
         try {
             await queryRunner.connect();
