@@ -13,6 +13,7 @@ export class sellerController{
     async sellerRegisterController(req:Request, res:Response){
         try {
             const sellerData: serllerDto = req.body;
+            console.log(sellerData);
             await this.newSeller.sellerRegister(sellerData);
             sendSuccess(res, StatusCodes.OK, "successfully registered");
         } catch (error) {

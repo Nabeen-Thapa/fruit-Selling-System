@@ -5,7 +5,6 @@ import { Product } from "../../products/models/products.model";
 
 @Entity("sellerDetail")
 export class seller extends User{
-
   @Column()
   businessName?:string;
 

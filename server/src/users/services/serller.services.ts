@@ -12,13 +12,13 @@ export class sellerServices {
             await queryRunner.startTransaction();
 
             const existingSeller = await this.sellerRepo.findOne({ where: { email: sellerData.email } })
-            if (existingSeller) throw new Error('Buyer with this email already exists');
+            if (existingSeller) throw new Error('seller with this email already exists');
 
-            const newBuyer = this.sellerRepo.create()
-            const savedBuyer = await queryRunner.manager.save(newBuyer)
+            const newSeller = this.sellerRepo.create(sellerData)
+            const savedSeller = await queryRunner.manager.save(newSeller);
 
             await queryRunner.commitTransaction();
-            return savedBuyer;
+            return savedSeller;
 
         } catch (error) {
             await queryRunner.rollbackTransaction();
