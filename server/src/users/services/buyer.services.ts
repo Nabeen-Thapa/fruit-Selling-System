@@ -1,3 +1,4 @@
+import { hash } from "bcrypt";
 import { falfulConnection } from "../../config/dbORM.config";
 import { buyerDto } from "../dtos/buyer.dto";
 import { buyer } from "../models/buyer.model";
@@ -14,7 +15,13 @@ export class buyerServices {
             const existingBuyer = await this.buyerRepo.findOne({ where: { email: buyerData.email } })
             if (existingBuyer) throw new Error('Buyer with this email already exists');
 
-            const newBuyer = this.buyerRepo.create(buyerData)
+
+            const hashedPassword = await hash(buyerData.password, 10);
+            const newBuyer = this.buyerRepo.create({
+                ...buyerData,
+                password: hashedPassword
+            });
+
             const savedBuyer = await queryRunner.manager.save(newBuyer)
 
             await queryRunner.commitTransaction();
@@ -23,11 +30,11 @@ export class buyerServices {
         } catch (error) {
             await queryRunner.rollbackTransaction();
             throw error
-        }finally {
+        } finally {
             await queryRunner.release();
         }
 
     }
 
-    
+
 }

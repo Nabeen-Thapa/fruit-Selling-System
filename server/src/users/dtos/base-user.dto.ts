@@ -16,7 +16,7 @@ export class baseUserDto {
 
     @IsString()
     @IsNotEmpty()
-    @IsPhoneNumber('NP') 
+    @IsPhoneNumber('NP')
     // @Transform(({ value }) => value.toString())
     phone!: string;
 
@@ -26,4 +26,8 @@ export class baseUserDto {
     @IsOptional()
     @IsDateString()
     lastLogin?: Date;
+
+    @IsString()
+    @IsNotEmpty()
+    role!: string
 }

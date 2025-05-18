@@ -24,4 +24,7 @@ export abstract class User extends BaseEntity {
 
   @Column({ nullable: true })
   lastLogin!: Date;
+
+  @Column()
+  role!:string
 }

@@ -1,6 +1,7 @@
 import "reflect-metadata"; 
 import express, { NextFunction, Request, Response } from 'express';
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import { registerRoutes } from "./registerRoutes";
 import { ProductController } from "./products/product.controllers";
@@ -13,6 +14,7 @@ const PORT = process.env.PORT || 5000;
 
  app.use(cors());
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

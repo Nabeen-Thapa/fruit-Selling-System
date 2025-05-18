@@ -7,12 +7,15 @@ import { sellerServices } from "../services/serller.services";
 import { serllerDto } from "../dtos/seller.dot";
 
 @Controller("/seller")
-export class sellerController{
+export class sellerController {
     private newSeller = new sellerServices();
     @Route("post", "/register")
-    async sellerRegisterController(req:Request, res:Response){
+    async sellerRegisterController(req: Request, res: Response) {
         try {
-            const sellerData: serllerDto = req.body;
+            const sellerData: serllerDto = {
+                ...req.body,
+                role: "seller" 
+            };
             console.log(sellerData);
             await this.newSeller.sellerRegister(sellerData);
             sendSuccess(res, StatusCodes.OK, "successfully registered");
@@ -23,9 +26,9 @@ export class sellerController{
     }
 
     @Route("get", "/view")
-    async viewsellerController(req:Request, res:Response){
-         try {
-            
+    async viewsellerController(req: Request, res: Response) {
+        try {
+
             sendSuccess(res, StatusCodes.OK, "successfully view");
         } catch (error) {
             console.log("seller view controller error:", error)
@@ -33,11 +36,10 @@ export class sellerController{
         }
     }
 
+    @Route("get", "/delete")
+    async deletesellerController(req: Request, res: Response) {
+        try {
 
-     @Route("get", "/delete")
-    async deletesellerController(req:Request, res:Response){
-         try {
-            
             sendSuccess(res, StatusCodes.OK, "successfully view");
         } catch (error) {
             console.log("seller delete controller error:", error)
