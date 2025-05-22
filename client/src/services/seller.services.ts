@@ -22,3 +22,35 @@ export const registerSeller = async (sellerData: Omit<Seller, 'id' | 'createdAt'
     
     return sellerResponse.json();
 }
+
+export interface SellerLoginData {
+  email: string;
+  password: string;
+}
+
+
+// src/services/authService.ts
+export const loginSeller = async (email: string, password: string) => {
+  const res = await fetch("http://localhost:5000/seller/auth/login", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
+  });
+
+  const contentType = res.headers.get("content-type");
+
+  let data: any;
+  if (contentType && contentType.includes("application/json")) {
+    data = await res.json();
+  } else {
+    const text = await res.text();
+    throw new Error(`Unexpected response: ${text}`);
+  }
+
+  if (!res.ok) throw new Error(data.message || "Login failed");
+
+  return data;
+};

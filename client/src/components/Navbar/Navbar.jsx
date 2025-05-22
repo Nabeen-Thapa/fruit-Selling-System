@@ -5,17 +5,17 @@ import ResponsiveMenu from './ResponsiveMenu';
 import { motion } from 'framer-motion';
 
 const NavbarMenu = [
-   {
-    id: 1,
+  {
+    id: 0,
     title: "Home",
     link: "/",
   },
   {
-    id : 0,
+    id: 1,
     title: "add products",
-    link:"/falful/products/add"
+    link: "/falful/products/add"
   },
- 
+
   {
     id: 2,
     title: "Products",
@@ -26,27 +26,24 @@ const NavbarMenu = [
     title: "About",
     link: "#",
   },
-   {
-    id: 3,
-    title: "register",
+  {
+    id: 4,
+    title: "buyer register",
     link: "/falful/user/buyer/register",
   },
-{
-    id: 3,
-    title: "seller",
+  {
+    id: 5,
+    title: "seller register",
     link: "/falful/user/seller/register",
   },
-  
-  // {
-  //   id: 4,
-  //   title: "Shop",
-  //   link: "#",
-  // },
-  // {
-  //   id: 5,
-  //   title: "Contacts",
-  //   link: "#",
-  // },
+  ,
+  {
+    id: 6,
+    title: "login",
+    link: "/falful/user/seller/login",
+  },
+
+ 
 ];
 
 const Navbar = () => {

@@ -7,19 +7,27 @@ import { registerRoutes } from "./registerRoutes";
 import { ProductController } from "./products/product.controllers";
 import { buyerController } from "./users/controllers/buyer.controller";
 import { sellerController } from "./users/controllers/seller.controller";
+import { sellerAuthController } from "./users/controllers/seller.auth.controller";
+import { connectRedis } from "./config/redis.config";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 
- app.use(cors());
-
+//  app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // frontend port
+    credentials: true,
+  })
+)
+connectRedis();
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-registerRoutes(app, [ProductController, buyerController, sellerController]);
+registerRoutes(app, [ProductController, buyerController, sellerController, sellerAuthController]);
 
 
 // Error handling middleware (add at the end)

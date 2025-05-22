@@ -11,18 +11,22 @@ import ViewProducts from './pages/product/viewProducts.page';
 import AddProductPage from './pages/product/AddProducts.page';
 import { BuyerRegister } from './pages/users/buyerRegister.page';
 import { SellerRegister } from './pages/users/sellerRegister.page';
+import LoginPage from './pages/users/auth.sellerLogin.page';
+import VerifyUser from './middleware/auth.verifyToken';
 
 const App = () => {
   return (
     <>
       <Router>
         <Navbar />
+        <VerifyUser/>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/falful/products" element={<ViewProducts />} />
           <Route path="/falful/products/add" element={<AddProductPage/>} />
           <Route path="/falful/user/buyer/register" element={<BuyerRegister/>} />
           <Route path="/falful/user/seller/register" element={<SellerRegister/>} />
+          <Route path="/falful/user/seller/login" element={<LoginPage/>} />
         </Routes>
         <Footer />
       </Router>

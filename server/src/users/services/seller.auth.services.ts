@@ -3,7 +3,6 @@ import { AppError } from "../../common/utils/response.utils";
 import { falfulConnection } from "../../config/dbORM.config";
 import { serllerDto } from "../dtos/seller.dot";
 import { seller } from "../models/seller.model";
-import { UserSession } from "../models/userSession.model";
 import { compare } from "bcrypt";
 import { LoginResponse, TokenPayload, UserType } from "../types/auth.types";
 import { generateAccessToken, generateRefreshToken } from "../../config/jwt.config";
@@ -12,7 +11,7 @@ import { SessionService } from "./session.service";
 
 export class SellerAuthServices {
   protected sellerRegisterRepo = falfulConnection.getRepository(seller);
-  private sessionService = new SessionService();
+  private sessionService = new SessionService(); 
   private async delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
@@ -64,7 +63,7 @@ export class SellerAuthServices {
       );
       await queryRunner.commitTransaction();
       return {
-        accessToken,
+        refreshToken,
         user: {
           id: seller.id,
           email: seller.email,

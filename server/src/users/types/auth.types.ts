@@ -11,7 +11,7 @@ export interface TokenPayload {
 }
 
 export type LoginSuccess = {
-  accessToken: string;
+  refreshToken: string;
   user: {
     id: string;
     email: string;
@@ -25,3 +25,20 @@ export type AlreadyLoggedIn = {
 };
 
 export type LoginResponse = LoginSuccess | AlreadyLoggedIn;
+
+export interface SellerLoginData {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponses {
+  success: boolean;
+  message: string;
+  user?: {
+    id: string;
+    email: string;
+    role: string;
+  };
+}
+
+
