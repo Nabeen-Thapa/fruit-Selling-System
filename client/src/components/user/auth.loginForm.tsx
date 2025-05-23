@@ -21,7 +21,7 @@ export const LoginForm = () => {
     const hasRefreshToken = cookies.some(cookie => cookie.startsWith("refresh_token="));
     console.log(hasRefreshToken);
     if (hasRefreshToken) {
-      navigate("/");
+      navigate("/falful/products");
     }
   }, [navigate]);
   const handleLogin = async (e: React.FormEvent) => {
@@ -33,11 +33,11 @@ export const LoginForm = () => {
     try {
       const res = await loginSeller(email, password);
       if (res?.message === "You are already logged in") {
-        navigate("/")
+        navigate("/falful/products")
         setSuccess("Already logged in.");
       } else {
         setSuccess("Login successful.");
-        navigate("/")
+        navigate("/falful/products")
       }
     } catch (err: any) {
       setError(err.message || "An error occurred during login.");

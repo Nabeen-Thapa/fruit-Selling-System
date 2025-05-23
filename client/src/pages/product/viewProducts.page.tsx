@@ -20,9 +20,9 @@ const ViewProducts: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Our Products</h1>
+      <div className="max-w-6xl mx-auto mt-5">
+        <div className="text-center mt-6 pt-2 mb-8">
+          <h1 className="text-3xl mt-6 pt-6 font-bold text-gray-900">Our Products</h1>
           <p className="mt-2 text-sm text-gray-600">
             Browse through our collection of fresh fruits
           </p>
