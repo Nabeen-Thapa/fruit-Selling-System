@@ -10,6 +10,8 @@ import { sendError, sendSuccess } from '../common/utils/response.utils';
 import { StatusCodes } from "http-status-codes";
 import { falfulConnection } from '../config/dbORM.config';
 import { upload } from '../common/utils/cloudinary-upload';
+import { authenticate } from '../users/middleware/auth.middleware';
+import { UserPayload } from 'src/users/types/auth.types';
 
 
 @Controller("/product")
@@ -21,7 +23,7 @@ export class ProductController {
     this.productService = new ProductService(falfulConnection);
   }
 
-   @Route("post", "/add", [upload.array('productImages', 5)])
+  @Route("post", "/add", [upload.array('productImages', 5), authenticate])
   async createProduct(req: Request, res: Response) {
     try {
       console.log("Request files:", req.files);
@@ -30,18 +32,25 @@ export class ProductController {
       if (!req.files || !req.body) {
         throw new Error("No files or form data received");
       }
+      const user = req.user;
+      console.log("product controller: ", user)
+      if (!user) throw new Error("User not authenticated");
 
       // Convert string numbers to actual numbers
       const productData = {
         ...req.body,
         price: Number(req.body.price),
         quantity: Number(req.body.quantity),
-        images: req.files
+        images: req.files,
+        sellerId: user.id,
+        sellerName: user.name,
+        sellerEmail: user.email,
+        sellerPhone: user.phone
       };
 
       const productDto = plainToInstance(CreateProductDto, productData);
       const errors = await validate(productDto);
-      
+
       if (errors.length > 0) {
         const message = errors.map(err => Object.values(err.constraints || {}).join(", ")).join("; ");
         throw new Error(`Validation failed: ${message}`);
@@ -52,9 +61,9 @@ export class ProductController {
         productDto,
         req.files as Express.Multer.File[]
       );
-      
+
       sendSuccess(res, StatusCodes.CREATED, "Product added successfully", product);
-      
+
     } catch (error) {
       console.error("Error creating product:", error);
       sendError(res, StatusCodes.BAD_REQUEST, error instanceof Error ? error.message : 'Unknown error');
@@ -62,22 +71,22 @@ export class ProductController {
   }
 
 
-@Route("get", "/view")
-async getAllProducts(req: Request, res: Response) {
-  try {
-    const products = await this.productService.getAllProducts();
-    
-    // Ensure numeric fields are properly typed
-    const responseData = products.map(product => ({
-      ...product,
-      price: Number(product.price),
-      quantity: Number(product.quantity)
-    }));
-    
-    sendSuccess(res, StatusCodes.OK, "Products fetched successfully", responseData);
-  } catch (error) {
-    console.error("Error fetching products:", error);
-    sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, "Failed to fetch products");
+  @Route("get", "/view")
+  async getAllProducts(req: Request, res: Response) {
+    try {
+      const products = await this.productService.getAllProducts();
+
+      // Ensure numeric fields are properly typed
+      const responseData = products.map(product => ({
+        ...product,
+        price: Number(product.price),
+        quantity: Number(product.quantity)
+      }));
+
+      sendSuccess(res, StatusCodes.OK, "Products fetched successfully", responseData);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, "Failed to fetch products");
+    }
   }
-}
 }

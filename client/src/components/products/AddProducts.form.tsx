@@ -114,7 +114,7 @@ const AddProducts: React.FC = () => {
                 </div>
               </div>
 
-              <div className="space-y-1">
+              {/* <div className="space-y-1">
                 <label htmlFor="seller" className="block text-sm font-medium text-gray-700">
                   Seller/Farm Name *
                 </label>
@@ -128,9 +128,9 @@ const AddProducts: React.FC = () => {
                   className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
                   placeholder="e.g., Sunny Valley Farms"
                 />
-              </div>
+              </div> */}
 
-              <div className="space-y-1">
+              {/* <div className="space-y-1">
                 <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
                   Contact Phone *
                 </label>
@@ -144,9 +144,9 @@ const AddProducts: React.FC = () => {
                   className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
                   placeholder="e.g., 9876543210"
                 />
-              </div>
+              </div> */}
 
-              <div className="space-y-1">
+              {/* <div className="space-y-1">
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                   Contact Email *
                 </label>
@@ -160,10 +160,8 @@ const AddProducts: React.FC = () => {
                   className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
                   placeholder="e.g., contact@example.com"
                 />
-              </div>
-            </div>
+              </div> */}
 
-            <div className="space-y-6">
               <div className="space-y-1">
                 <label htmlFor="category" className="block text-sm font-medium text-gray-700">
                   Category *
@@ -182,6 +180,11 @@ const AddProducts: React.FC = () => {
                   ))}
                 </select>
               </div>
+              
+            </div>
+
+            <div className="space-y-6">
+              
 
               <div className="space-y-1">
                 <label htmlFor="description" className="block text-sm font-medium text-gray-700">

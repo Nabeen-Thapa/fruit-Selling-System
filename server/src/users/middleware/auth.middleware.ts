@@ -7,6 +7,8 @@ import { falfulConnection } from '../../config/dbORM.config';
 import { seller } from '../models/seller.model';
 import { UserSession } from '../models/userSession.model';
 import { MoreThan } from 'typeorm';
+import { JwtUserPayload } from '../types/auth.types';
+import { User } from '../models/user.model';
 
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -23,7 +25,9 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     const jwtKey = process.env.JWT_SECRET || 'hQ7@SpU87P17rByoN8odlu$ggVO2+zieRdGASq!%UDLExA5k';
     const decoded = jwt.verify(token, jwtKey) as {
       userId: string;
+      name: string;
       email: string;
+      phone: string;
       role: string;
     };
 
@@ -38,7 +42,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     const sellerExist = await sellerRepo.findOne({ where: { id: decoded.userId } });
 
     if (!sellerExist) throw new AppError('Seller not found', StatusCodes.UNAUTHORIZED);
-    
+
 
     // 5. Check for active session in DB
     const sessionRepo = falfulConnection.getRepository(UserSession);
@@ -50,8 +54,8 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
       },
     });
 
-    if (!activeSession)  throw new AppError('Session expired or invalid', StatusCodes.UNAUTHORIZED);
-    
+    if (!activeSession) throw new AppError('Session expired or invalid', StatusCodes.UNAUTHORIZED);
+
 
     // 6. Validate session token matches Redis refresh token
     const storedRefreshToken = await redisService.get(`refresh_token:${decoded.userId}`);
@@ -60,13 +64,16 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     }
 
     // 7. Attach user to request for further access
-    req.user = {
-      id: decoded.userId,
-      email: decoded.email,
-      role: decoded.role,
-    };
+ req.user = {
+  id: decoded.userId,
+  name: decoded.name,
+  email: decoded.email,
+  phone: decoded.phone,
+  role: decoded.role,
+} as unknown as User;
 
-    next();
+next();
+
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {
       return res.status(StatusCodes.UNAUTHORIZED).json({

@@ -17,7 +17,7 @@ const Navbar = () => {
   const [open, setOpen] = React.useState(false);
   const [userRole, setUserRole] = useState(null);
   const [existToken, setExistToken] = useState(null);
-  const [email, setEmail] = useState(null);
+  const [name, setName] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -40,7 +40,7 @@ const Navbar = () => {
     if (decodedToken) {
       setExistToken(decodedToken);
       setUserRole(decodedToken.role);
-      setEmail(decodedToken.email);
+      setName(decodedToken.name);
     }
   }, [navigate, location.pathname]);
 
@@ -100,7 +100,7 @@ const Navbar = () => {
               ) : (
                 <>
                 <div className="d-flex align-items-center">
-                  {existToken &&<NavProfileDropDown email ={email} jwtToken={existToken} />}
+                  {existToken &&<NavProfileDropDown name ={name} jwtToken={existToken} />}
                   </div>
                 </>
               )}

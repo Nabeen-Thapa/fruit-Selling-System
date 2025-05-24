@@ -11,7 +11,7 @@ import { SessionService } from "./session.service";
 
 export class SellerAuthServices {
   protected sellerRegisterRepo = falfulConnection.getRepository(seller);
-  private sessionService = new SessionService(); 
+  private sessionService = new SessionService();
   private async delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
@@ -43,15 +43,17 @@ export class SellerAuthServices {
 
       const payload: TokenPayload = {
         userId: seller.id,
+        name: seller.name,
         email: seller.email,
+        phone: seller.phone,
         role: seller.role,
       };
 
       const accessToken = generateAccessToken(payload);
       const refreshToken = generateRefreshToken(payload);
 
-        // Store refresh token in Redis with expiration
-         const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+      // Store refresh token in Redis with expiration
+      const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
       // Store tokens
       await redisService.set(`refresh_token:${seller.id}`, refreshToken, 60 * 60 * 24 * 7);
@@ -66,10 +68,13 @@ export class SellerAuthServices {
         refreshToken,
         user: {
           id: seller.id,
+          name: seller.name,
           email: seller.email,
+          phone: seller.phone,
           role: seller.role,
         },
       };
+
 
     } catch (error) {
       await queryRunner.rollbackTransaction();

@@ -32,6 +32,16 @@ export class sellerAuthController {
             });
 
 
+
+            // res.cookie("access_token", result.accessToken, {
+            //     httpOnly: true, // secure it
+            //     secure: process.env.NODE_ENV === "production",
+            //     sameSite: "strict",
+            //     maxAge: 1000 * 60 * 15, // 15 minutes
+            //     path: "/",
+            // });
+
+
             sendSuccess(res, StatusCodes.OK, "Login successful", {
                 user: result.user,
             });

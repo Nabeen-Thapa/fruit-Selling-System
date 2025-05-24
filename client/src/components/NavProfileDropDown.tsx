@@ -1,12 +1,13 @@
 import React, { useState, useEffect, MouseEvent, useRef } from 'react';
+import { FaUserCircle } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 
 interface NavProfileDropDownProps {
-  email: string;
+  name: string;
   jwtToken: string;
 }
 
-const NavProfileDropDown: React.FC<NavProfileDropDownProps> = ({ email, jwtToken }) => {
+const NavProfileDropDown: React.FC<NavProfileDropDownProps> = ({ name, jwtToken }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 370);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -54,8 +55,8 @@ const NavProfileDropDown: React.FC<NavProfileDropDownProps> = ({ email, jwtToken
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition"
       >
-        <i className="fas fa-user"></i>
-        {!isMobile && <span className="text-sm font-medium">{email}</span>}
+        <FaUserCircle size={25} />
+        {!isMobile && <span className="text-lg p-0 m-0 ">{name}</span>}
         <svg className="w-4 h-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
           <path d="M5.23 7.21a.75.75 0 011.06.02L10 11.586l3.71-4.355a.75.75 0 011.14.976l-4.25 5a.75.75 0 01-1.14 0l-4.25-5a.75.75 0 01.02-1.06z" />
         </svg>

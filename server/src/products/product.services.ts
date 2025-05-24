@@ -8,6 +8,7 @@ export class ProductService {
   private productRepo: Repository<Product>;
   private imageRepo: Repository<ProductImage>;
 
+
   constructor(private dataSource: DataSource) {
     this.productRepo = dataSource.getRepository(Product);
     this.imageRepo = dataSource.getRepository(ProductImage);

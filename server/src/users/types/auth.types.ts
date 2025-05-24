@@ -5,16 +5,19 @@ export enum UserType {
 
 export interface TokenPayload {
   userId: string;
+  name: string;
   email: string;
+  phone: string;
   role: string;
-  exp?: number;
 }
 
 export type LoginSuccess = {
   refreshToken: string;
   user: {
     id: string;
+    name: string;
     email: string;
+    phone: string;
     role: string;
   };
 };
@@ -36,9 +39,28 @@ export interface LoginResponses {
   message: string;
   user?: {
     id: string;
+    name: string;
     email: string;
+    phone: string;
     role: string;
   };
 }
 
+
+export interface UserPayload {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  role: string;
+}
+
+
+export interface JwtUserPayload {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  role: string;
+}
 

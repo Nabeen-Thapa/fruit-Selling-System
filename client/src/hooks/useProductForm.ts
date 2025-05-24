@@ -1,6 +1,5 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ProductCategory, ProductFormState, ProductImage, UseProductFormReturn } from '../types/product.type';
-
 const categories: ProductCategory[] = ['fruit', 'berry', 'tropical'];
 
 export const useProductForm = (): UseProductFormReturn => {
@@ -8,9 +7,9 @@ export const useProductForm = (): UseProductFormReturn => {
     name: '',
     price: '',
     description: '',
-    seller: '',
-    phone: '',
-    email: '',
+    // seller: '',
+    // phone: '',
+    // email: '',
     quantity: '',
     category: 'fruit',
     images: [],
@@ -20,12 +19,14 @@ export const useProductForm = (): UseProductFormReturn => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState('');
+  const [userCookieData, setUserCookieData] = useState(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setProduct(prev => ({ ...prev, [name]: value }));
   };
+
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -87,62 +88,72 @@ export const useProductForm = (): UseProductFormReturn => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setLoading(true);
-  setError('');
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
-  try {
-    const formData = new FormData();
-    
-    // Append all product data
-    formData.append('name', product.name);
-formData.append('price', product.price.toString());
-    formData.append('description', product.description);
-    formData.append('seller', product.seller);
-    formData.append('phone', product.phone);
-    formData.append('email', product.email);
-    formData.append('quantity', product.quantity);
-    formData.append('category', product.category);
-    
-    // Debug: Log form data before sending
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
+    try {
+      const formData = new FormData();
+
+      // Append all product data
+      formData.append('name', product.name);
+      formData.append('price', product.price.toString());
+      formData.append('description', product.description);
+      // formData.append('seller', product.seller);
+      // formData.append('phone', product.phone);
+      // formData.append('email', product.email);
+      formData.append('quantity', product.quantity);
+      formData.append('category', product.category);
+
+      // Debug: Log form data before sending
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+
+      // Append images
+      product.images.forEach((image) => {
+        formData.append('productImages', image.file);
+      });
+
+
+
+      const cookies = document.cookie.split(";").map(cookie => cookie.trim());
+      const token = cookies.find(cookie => cookie.startsWith("refresh_token="))?.split("=")[1];
+      console.log("Token:", token);
+
+
+      const response = await fetch('http://localhost:5000/product/add', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) throw new Error(data.message || 'Failed to add product');
+
+      setShowSuccess(true);
+      resetForm();
+
+      setTimeout(() => setShowSuccess(false), 3000);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
-    
-    // Append images
-    product.images.forEach((image) => {
-  formData.append('productImages', image.file);
-});
-
-
-    const response = await fetch('http://localhost:5000/product/add', {
-      method: 'POST',
-      body: formData,
-    });
-
-    const data = await response.json();
-    
-    if (!response.ok) throw new Error(data.message || 'Failed to add product');
-
-    setShowSuccess(true);
-    resetForm();
-    
-    setTimeout(() => setShowSuccess(false), 3000);
-  } catch (err) {
-    setError(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const resetForm = () => {
     setProduct({
       name: '',
       price: '',
       description: '',
-      seller: '',
-      phone: '',
-      email: '',
+      // seller: '',
+      // phone: '',
+      // email: '',
       quantity: '',
       category: 'fruit',
       images: [],
