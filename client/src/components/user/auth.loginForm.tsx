@@ -18,9 +18,9 @@ export const LoginForm = () => {
 
   useEffect(() => {
     const cookies = document.cookie.split(";").map(cookie => cookie.trim());
-    const hasRefreshToken = cookies.some(cookie => cookie.startsWith("refresh_token="));
-    console.log(hasRefreshToken);
-    if (hasRefreshToken) {
+    const hasAccessToken = cookies.some(cookie => cookie.startsWith("access_token="));
+    console.log("access auth client login :",hasAccessToken);
+    if (hasAccessToken) {
       navigate("/falful/products");
     }
   }, [navigate]);

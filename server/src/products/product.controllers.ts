@@ -33,9 +33,9 @@ export class ProductController {
         throw new Error("No files or form data received");
       }
       const user = req.user;
-      console.log("product controller: ", user)
+      console.log("product controller user: ", user)
       if (!user) throw new Error("User not authenticated");
-
+      const { name, phone, email } = req.user as UserPayload;
       // Convert string numbers to actual numbers
       const productData = {
         ...req.body,
@@ -43,9 +43,10 @@ export class ProductController {
         quantity: Number(req.body.quantity),
         images: req.files,
         sellerId: user.id,
-        sellerName: user.name,
-        sellerEmail: user.email,
-        sellerPhone: user.phone
+        seller: name,
+        phone,
+        email
+
       };
 
       const productDto = plainToInstance(CreateProductDto, productData);

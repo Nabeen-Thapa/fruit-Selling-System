@@ -2,7 +2,7 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { sendError, sendSuccess } from "../../common/utils/response.utils";
-import { verifyRefreshToken } from "../../config/jwt.config";
+import { verifyAccessToken, verifyRefreshToken } from "../../config/jwt.config";
 
 export async function checkRefreshToken(req: Request, res: Response) {
   const refreshToken = req.cookies.refresh_token;

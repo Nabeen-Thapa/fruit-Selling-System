@@ -3,7 +3,7 @@ import { FaLeaf } from "react-icons/fa";
 import { MdAddShoppingCart, MdMenu } from "react-icons/md";
 import ResponsiveMenu from './ResponsiveMenu';
 import { motion } from 'framer-motion';
-import { getDecodedToken } from '../../utility/auth.decodeToken.utils';
+import { fetchCurrentUser } from '../../services/auth.fetchCurrentUser.utils';
 import { useNavigate, useLocation } from 'react-router-dom';
 import NavProfileDropDown from '../NavProfileDropDown';
 
@@ -21,8 +21,10 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    const decodedToken = getDecodedToken();
+ useEffect(() => {
+  const getUser = async () => {
+    const decodedToken = await fetchCurrentUser();
+    console.log("navbar getDecodedToken:", decodedToken);
 
     const publicRoutes = [
       "/",
@@ -31,7 +33,6 @@ const Navbar = () => {
       "/falful/user/seller/register"
     ];
 
-    // Only redirect if user is on a protected route and has no token
     if (!decodedToken && !publicRoutes.includes(location.pathname)) {
       navigate("/");
       return;
@@ -40,9 +41,13 @@ const Navbar = () => {
     if (decodedToken) {
       setExistToken(decodedToken);
       setUserRole(decodedToken.role);
-      setName(decodedToken.name);
+      setName(decodedToken.name); // Set the name properly
     }
-  }, [navigate, location.pathname]);
+  };
+
+  getUser();
+}, [navigate, location.pathname]);
+
 
   return (
     <>

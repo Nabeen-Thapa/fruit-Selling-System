@@ -65,6 +65,7 @@ export class SellerAuthServices {
       );
       await queryRunner.commitTransaction();
       return {
+        accessToken,
         refreshToken,
         user: {
           id: seller.id,

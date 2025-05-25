@@ -7,7 +7,6 @@ import { falfulConnection } from '../../config/dbORM.config';
 import { seller } from '../models/seller.model';
 import { UserSession } from '../models/userSession.model';
 import { MoreThan } from 'typeorm';
-import { JwtUserPayload } from '../types/auth.types';
 import { User } from '../models/user.model';
 
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
@@ -22,8 +21,8 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     }
 
     // 2. Verify and decode token
-    const jwtKey = process.env.JWT_SECRET || 'hQ7@SpU87P17rByoN8odlu$ggVO2+zieRdGASq!%UDLExA5k';
-    const decoded = jwt.verify(token, jwtKey) as {
+    const accessKey = process.env.ACCESS_TOKEN_SECRET || 'access_secret';
+    const decoded = jwt.verify(token, accessKey) as {
       userId: string;
       name: string;
       email: string;
@@ -83,10 +82,7 @@ next();
       });
     }
 
-    const statusCode =
-      error instanceof AppError
-        ? error.statusCode
-        : StatusCodes.INTERNAL_SERVER_ERROR;
+    const statusCode =error instanceof AppError ? error.statusCode : StatusCodes.INTERNAL_SERVER_ERROR;
 
     return res.status(statusCode).json({
       success: false,

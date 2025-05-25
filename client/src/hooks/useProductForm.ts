@@ -7,9 +7,6 @@ export const useProductForm = (): UseProductFormReturn => {
     name: '',
     price: '',
     description: '',
-    // seller: '',
-    // phone: '',
-    // email: '',
     quantity: '',
     category: 'fruit',
     images: [],
@@ -99,9 +96,6 @@ export const useProductForm = (): UseProductFormReturn => {
       formData.append('name', product.name);
       formData.append('price', product.price.toString());
       formData.append('description', product.description);
-      // formData.append('seller', product.seller);
-      // formData.append('phone', product.phone);
-      // formData.append('email', product.email);
       formData.append('quantity', product.quantity);
       formData.append('category', product.category);
 
@@ -115,19 +109,9 @@ export const useProductForm = (): UseProductFormReturn => {
         formData.append('productImages', image.file);
       });
 
-
-
-      const cookies = document.cookie.split(";").map(cookie => cookie.trim());
-      const token = cookies.find(cookie => cookie.startsWith("refresh_token="))?.split("=")[1];
-      console.log("Token:", token);
-
-
       const response = await fetch('http://localhost:5000/product/add', {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-
+         credentials: 'include',
         body: formData,
       });
 

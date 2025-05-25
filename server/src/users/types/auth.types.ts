@@ -12,6 +12,7 @@ export interface TokenPayload {
 }
 
 export type LoginSuccess = {
+  accessToken: string;
   refreshToken: string;
   user: {
     id: string;

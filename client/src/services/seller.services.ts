@@ -39,18 +39,25 @@ export const loginSeller = async (email: string, password: string) => {
     },
     body: JSON.stringify({ email, password }),
   });
+  console.log("cient service seller login:", res);
 
   const contentType = res.headers.get("content-type");
 
-  let data: any;
-  if (contentType && contentType.includes("application/json")) {
-    data = await res.json();
-  } else {
-    const text = await res.text();
-    throw new Error(`Unexpected response: ${text}`);
+  // Check for success status
+  if (!res.ok) {
+    // Try to extract error message from JSON if available
+    if (contentType && contentType.includes("application/json")) {
+      const errorData = await res.json();
+      throw new Error(errorData.message || "Login failed");
+    } else {
+      throw new Error("Login failed with no response body");
+    }
   }
 
-  if (!res.ok) throw new Error(data.message || "Login failed");
-
-  return data;
+  // Return parsed response if JSON
+  if (contentType && contentType.includes("application/json")) {
+    return await res.json();
+  } else {
+    return { message: "Login successful (no JSON response)" };
+  }
 };
