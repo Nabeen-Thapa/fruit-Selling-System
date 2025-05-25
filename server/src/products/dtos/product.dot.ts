@@ -24,6 +24,10 @@ export class CreateProductDto {
 
   @IsString()
   @IsNotEmpty()
+  userId!: string;
+
+  @IsString()
+  @IsNotEmpty()
   seller!: string;
 
   @IsString()

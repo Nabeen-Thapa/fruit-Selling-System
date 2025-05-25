@@ -30,6 +30,7 @@ export class ProductService {
         name: productData.name,
         price: productData.price,
         description: productData.description,
+        userId: productData.userId,
         seller: productData.seller,
         phone: productData.phone,
         email: productData.email,

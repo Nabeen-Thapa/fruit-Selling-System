@@ -15,6 +15,9 @@ export class Product {
   @Column('text')
   description!: string;
 
+  @Column({ nullable: true }) // allow nulls temporarily
+  userId?: string;
+
   @Column()
   seller!: string;
 
