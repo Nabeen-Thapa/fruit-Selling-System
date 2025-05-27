@@ -13,6 +13,7 @@ import { BuyerRegister } from './pages/users/buyerRegister.page';
 import { SellerRegister } from './pages/users/sellerRegister.page';
 import LoginPage from './pages/users/auth.sellerLogin.page';
 import VerifyUser from './middleware/auth.verifyToken';
+import BuyerLogin from './pages/users/auth.buyerLOgin.page';
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="/falful/user/buyer/register" element={<BuyerRegister/>} />
           <Route path="/falful/user/seller/register" element={<SellerRegister/>} />
           <Route path="/falful/user/seller/login" element={<LoginPage/>} />
+          <Route path="/falful/user/buyer/login" element={<BuyerLogin/>} />
         </Routes>
         <Footer />
       </Router>

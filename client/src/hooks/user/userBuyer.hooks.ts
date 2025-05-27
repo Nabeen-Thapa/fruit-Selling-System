@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Buyer } from '../../types/buyer.types';
-import { deleteBuyer, fetchBuyers, registerBuyer } from '../../services/buyer.services';
+import { buyerLoginService, deleteBuyer, fetchBuyers, registerBuyer } from '../../services/buyer.services';
 
 export const useBuyers = () => {
   const [buyers, setBuyers] = useState<Buyer[]>([]);
@@ -45,9 +45,21 @@ export const useBuyers = () => {
     }
   };
 
+  const loginBuyer = async (email: string, password: string) => {
+    setLoading(true);
+    try {
+      const response = await buyerLoginService(email, password); // call your service function
+      return response;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Login failed');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     loadBuyers();
   }, []);
-
   return { buyers, loading, error, addBuyer, removeBuyer };
 };
