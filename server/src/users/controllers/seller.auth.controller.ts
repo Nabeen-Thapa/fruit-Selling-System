@@ -6,6 +6,7 @@ import { Route } from "../../common/decorators/route.decoder";
 import { SellerAuthServices } from "../services/seller.auth.services";
 import { checkRefreshToken } from "../middleware/check-refreshToken";
 import { getCurrentUser } from "../utils/getCurrentUser.utils";
+import { serllerDto } from "../dtos/seller.dot";
 
 @Controller("/seller/auth")
 export class sellerAuthController {

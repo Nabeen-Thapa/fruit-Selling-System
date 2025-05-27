@@ -30,7 +30,7 @@ export type AlreadyLoggedIn = {
 
 export type LoginResponse = LoginSuccess | AlreadyLoggedIn;
 
-export interface SellerLoginData {
+export interface LoginData {
   email: string;
   password: string;
 }

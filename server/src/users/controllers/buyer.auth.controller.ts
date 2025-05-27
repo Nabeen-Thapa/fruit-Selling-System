@@ -4,16 +4,23 @@ import { sendError, sendSuccess } from "../../common/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
 import { Route } from "../../common/decorators/route.decoder";
 import { buyerDto } from "../dtos/buyer.dto";
+import { buyerAuthServices } from "../services/buyer.auth.services";
+import { setAuthCookies } from "../utils/authCookie.utils";
 
 @Controller("/buyer/auth")
-export class buyerAuthController{
-   // protected buyerAuthServices = new buyerAuthService();
+export class buyerAuthController {
+    protected buyerAuthServices = new buyerAuthServices();
     @Route("post", "/login")
-    async buyerLoginController(req:Request, res:Response){
+    async buyerLoginController(req: Request, res: Response) {
         try {
             const buyerData: buyerDto = req.body;
-           // const buyerLoginResult =await this.buyerAuthServices.BuyerAuthService(buyerData);
-            sendSuccess(res, StatusCodes.OK, "seccess login");
+            const result = await this.buyerAuthServices.buyerLogin(buyerData);
+
+            if ('isAlreadyLoggedIn' in result) return sendSuccess(res, StatusCodes.CONFLICT, result.message);
+
+            setAuthCookies(res, result.accessToken, result.refreshToken);
+
+            sendSuccess(res, StatusCodes.OK, "seccess login as buyer");
         } catch (error) {
             console.log("buyer auth login controller:", error);
             sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, error);

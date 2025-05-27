@@ -3,8 +3,8 @@ import { TokenPayload } from '../users/types/auth.types';
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'access_secret';
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'refresh_secret';
-const ACCESS_TOKEN_EXPIRY = '15m';
-const REFRESH_TOKEN_EXPIRY = '7d';
+const ACCESS_TOKEN_EXPIRY ='7d';
+const REFRESH_TOKEN_EXPIRY ='7d';
 
 export const generateAccessToken = (payload: TokenPayload): string => {
   return sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRY });

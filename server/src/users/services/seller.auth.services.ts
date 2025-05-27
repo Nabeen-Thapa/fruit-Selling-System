@@ -12,6 +12,7 @@ import { SessionService } from "./session.service";
 export class SellerAuthServices {
   protected sellerRegisterRepo = falfulConnection.getRepository(seller);
   private sessionService = new SessionService();
+  
   private async delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
