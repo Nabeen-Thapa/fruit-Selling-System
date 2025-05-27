@@ -4,6 +4,7 @@ import { loginSeller } from "../../services/seller.services";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { fetchCurrentUser } from "../../services/auth.fetchCurrentUser.utils";
 
 
 export const LoginForm = () => {
@@ -17,12 +18,14 @@ export const LoginForm = () => {
 
 
   useEffect(() => {
-    const cookies = document.cookie.split(";").map(cookie => cookie.trim());
-    const hasAccessToken = cookies.some(cookie => cookie.startsWith("access_token="));
-    console.log("access auth client login :",hasAccessToken);
-    if (hasAccessToken) {
+    const checkLoggedIn = async () => {
+    const user = await fetchCurrentUser();
+    console.log("Fetched current user:", user);
+    if (user) {
       navigate("/falful/products");
     }
+  };
+  checkLoggedIn();
   }, [navigate]);
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
