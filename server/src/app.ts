@@ -9,6 +9,7 @@ import { buyerController } from "./users/controllers/buyer.controller";
 import { sellerController } from "./users/controllers/seller.controller";
 import { sellerAuthController } from "./users/controllers/seller.auth.controller";
 import { connectRedis } from "./config/redis.config";
+import { buyerAuthController } from "./users/controllers/buyer.auth.controller";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -30,7 +31,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 
 
-registerRoutes(app, [ProductController, buyerController, sellerController, sellerAuthController]);
+registerRoutes(app, [ProductController, buyerController, sellerController, sellerAuthController, buyerAuthController]);
 
 
 // Error handling middleware (add at the end)

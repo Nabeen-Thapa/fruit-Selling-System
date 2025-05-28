@@ -1,13 +1,13 @@
-import { falfulConnection } from "src/config/dbORM.config";
+import { falfulConnection } from "../../config/dbORM.config";
 import { buyer } from "../models/buyer.model";
 import { SessionService } from "./session.service";
 import { buyerDto } from "../dtos/buyer.dto";
 import { LoginResponse, TokenPayload, UserType } from "../types/auth.types";
-import { AppError } from "src/common/utils/response.utils";
+import { AppError } from "../../common/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
 import { compare } from "bcrypt";
-import { generateAccessToken, generateRefreshToken } from "src/config/jwt.config";
-import { redisService } from "src/common/services/redis.service";
+import { generateAccessToken, generateRefreshToken } from "../../config/jwt.config";
+import { redisService } from "../../common/services/redis.service";
 
 export class buyerAuthServices {
     protected buyerRegisterRepo = falfulConnection.getRepository(buyer);

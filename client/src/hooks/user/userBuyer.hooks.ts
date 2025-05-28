@@ -2,10 +2,8 @@ import { useState, useEffect } from 'react';
 import { Buyer } from '../../types/buyer.types';
 import { buyerLoginService, deleteBuyer, fetchBuyers, registerBuyer } from '../../services/buyer.services';
 
-export const useBuyers = () => {
+export const useBuyers = (error, setError,loading, setLoading) => {
   const [buyers, setBuyers] = useState<Buyer[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const loadBuyers = async () => {
     setLoading(true);
@@ -61,5 +59,5 @@ export const useBuyers = () => {
   useEffect(() => {
     loadBuyers();
   }, []);
-  return { buyers, loading, error, addBuyer, removeBuyer };
+  return { buyers, loading,setLoading, error, addBuyer, removeBuyer,loginBuyer };
 };

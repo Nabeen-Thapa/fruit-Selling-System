@@ -30,7 +30,7 @@ export const deleteBuyer = async (id: string): Promise<void> => {
 
 
 export const buyerLoginService = async (email: string, password: string) => {
-  const res = await fetch(`${BASE_URL}/auth/login`, {
+  const res = await fetch(`http://localhost:5000/buyer/auth/login`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -49,4 +49,10 @@ export const buyerLoginService = async (email: string, password: string) => {
       throw new Error("Login failed with no response body");
     }
   } 
+  // Return parsed response if JSON
+  if (contentType && contentType.includes("application/json")) {
+    return await res.json();
+  } else {
+    return { message: "Login successful (no JSON response)" };
+  }
 }

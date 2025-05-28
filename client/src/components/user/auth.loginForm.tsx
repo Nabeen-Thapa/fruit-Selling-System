@@ -5,18 +5,21 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { fetchCurrentUser } from "../../services/auth.fetchCurrentUser.utils";
+import { LoginFormProps, loginUserType } from "../../types/user.types";
+import { useBuyers } from "../../hooks/user/userBuyer.hooks";
+import { useSeller } from "../../hooks/user/useSeller.hook";
 
 
-export const LoginForm = () => {
+export const LoginForm = ({userType}:LoginFormProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-
+  const { buyers, addBuyer, removeBuyer,loginBuyer } = useBuyers(error, setError,loading, setLoading)
+const {addSeller, sellerLogin} = useSeller(error, setError, loading, setLoading)
   useEffect(() => {
     const checkLoggedIn = async () => {
     const user = await fetchCurrentUser();
@@ -28,36 +31,49 @@ export const LoginForm = () => {
   checkLoggedIn();
   }, [navigate]);
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
-    setIsLoading(true);
+  e.preventDefault();
+  setError("");
+  setSuccess("");
+  setLoading(true);
 
-    try {
-      const res = await loginSeller(email, password);
+  try {
+    if (userType === "buyer") {
+      const res = await loginBuyer(email, password);
       if (res?.message === "You are already logged in") {
-        navigate("/falful/products")
         setSuccess("Already logged in.");
       } else {
-        setSuccess("Login successful.");
-        navigate("/falful/products")
+        setSuccess("Buyer login successful.");
       }
-    } catch (err: any) {
-      setError(err.message || "An error occurred during login.");
-    } finally {
-      setIsLoading(false);
+    } else if (userType === "seller") {
+      const res = await sellerLogin(email, password);
+      if (res?.message === "You are already logged in") {
+        setSuccess("Already logged in.");
+      } else {
+        setSuccess("Seller login successful.");
+      }
+    } else {
+      setError("Invalid user type.");
+      return;
     }
-  };
+
+    navigate("/falful/products");
+  } catch (err: any) {
+    setError(err.message || "An error occurred during login.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-2 px-8 py-4 bg-white rounded-xl shadow-2xl">
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Seller Login
+            {userType} Login
           </h2>
           <p className="text-sm text-gray-600">
-            Sign in to your seller account
+            Sign in to your {userType} account
           </p>
         </div>
 
@@ -191,12 +207,12 @@ export const LoginForm = () => {
           <div>
             <button
               type="submit"
-              disabled={isLoading}
-              className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${isLoading ? "opacity-75 cursor-not-allowed" : ""
+              disabled={loading}
+              className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${loading ? "opacity-75 cursor-not-allowed" : ""
                 }`}
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                {isLoading ? (
+                {loading ? (
                   <svg
                     className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
                     xmlns="http://www.w3.org/2000/svg"
@@ -233,7 +249,7 @@ export const LoginForm = () => {
                   </svg>
                 )}
               </span>
-              {isLoading ? "Signing in..." : "Sign in"}
+              {loading ? "Signing in..." : "Sign in"}
             </button>
           </div>
         </form>

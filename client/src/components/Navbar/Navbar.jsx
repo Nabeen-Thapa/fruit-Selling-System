@@ -5,7 +5,7 @@ import ResponsiveMenu from './ResponsiveMenu';
 import { motion } from 'framer-motion';
 import { fetchCurrentUser } from '../../services/auth.fetchCurrentUser.utils';
 import { useNavigate, useLocation } from 'react-router-dom';
-import NavProfileDropDown from '../NavProfileDropDown';
+import NavProfileDropDown from './NavProfileDropDown';
 
 const NavbarMenu = [
   { id: 0, title: "Home", link: "/", },
@@ -30,7 +30,8 @@ const Navbar = () => {
       "/",
       "/falful/user/seller/login",
       "/falful/user/buyer/register",
-      "/falful/user/seller/register"
+      "/falful/user/seller/register",
+      "/falful/user/buyer/login"
     ];
 
     if (!decodedToken && !publicRoutes.includes(location.pathname)) {
@@ -92,13 +93,19 @@ const Navbar = () => {
                   <li>
                     <a href="/falful/user/seller/register"
                       className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
-                      buyer register
+                      selller register
                     </a>
                   </li>
                   <li>
                     <a href="/falful/user/seller/login"
                       className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
                       login
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/falful/user/buyer/login"
+                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
+                     buyer login
                     </a>
                   </li>
                 </>
