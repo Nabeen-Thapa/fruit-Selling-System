@@ -27,26 +27,9 @@ export class sellerAuthController {
         try {
             const result = await this.sellerAuthServices.sellerLogin(req.body);
 
-            if ('isAlreadyLoggedIn' in result) {
-                return sendSuccess(res, StatusCodes.CONFLICT, result.message);
-            }
+            if ('isAlreadyLoggedIn' in result) return sendSuccess(res, StatusCodes.CONFLICT, result.message);
+            
 
-            // Handle LoginSuccess case
-
-            // res.cookie("access_token", result.accessToken, {
-            //     httpOnly: true,
-            //     secure: false,
-            //     sameSite: "lax",   // ✅ ALLOW cross-origin for dev
-            //     maxAge: 1000 * 60 * 60 * 24 * 7,
-            //     path: "/",
-            // });
-
-            // res.cookie("refresh_token", result.refreshToken, {
-            //     httpOnly: false,
-            //     secure: false,
-            //     sameSite: "lax",
-            //     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-            // });
             setAuthCookies(res, result.accessToken, result.refreshToken)
             sendSuccess(res, StatusCodes.OK, "Login successful", {
                 user: result.user,

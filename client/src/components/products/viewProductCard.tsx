@@ -1,19 +1,24 @@
 import React from 'react';
-import { FiEdit, FiTrash2 } from 'react-icons/fi';
+import { FiEdit, FiEye, FiTrash2 } from 'react-icons/fi';
 import { Product } from '../../types/product.type';
 import { formatPrice } from '../../utility/format';
+import { loginUserType } from '../../types/user.types';
 
 interface ProductCardProps {
   product: Product;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
+  onView: (id: string) => void;
+  userRole: string | null;
 }
 
 
-export const ProductCard: React.FC<ProductCardProps> = ({ 
+export const ProductCard: React.FC<ProductCardProps> = ({
   product,
   onEdit,
-  onDelete
+  onDelete,
+  onView,
+  userRole
 }) => (
   <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02]">
     {product.images?.length > 0 && (
@@ -40,18 +45,28 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <span className="text-sm text-gray-500">Qty: {product.quantity}</span>
       </div>
       <div className="mt-4 flex space-x-2">
-        <button 
-          className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-          onClick={() => onEdit(product.id)}
-        >
-          <FiEdit className="inline mr-1" /> Edit
+        <button
+ className={`px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors ${
+    userRole !==  loginUserType.SELLER? "w-full" : ""
+  }`}          onClick={() => onView(product.id)}>
+          <FiEye className="inline mr-1" /> view details
         </button>
-        <button 
-          className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
-          onClick={() => onDelete(product.id)}
-        >
-          <FiTrash2 className="inline mr-1" /> Delete
-        </button>
+        {userRole === loginUserType.SELLER && (
+          <>
+            <button
+              className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+              onClick={() => onEdit(product.id)}>
+              <FiEdit className="inline mr-1" /> Edit
+            </button>
+
+            <button
+              className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+              onClick={() => onDelete(product.id)}>
+              <FiTrash2 className="inline mr-1" /> Delete
+            </button>
+          </>
+        )}
+
       </div>
     </div>
   </div>

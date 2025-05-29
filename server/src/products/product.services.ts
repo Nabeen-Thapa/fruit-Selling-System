@@ -45,6 +45,7 @@ export class ProductService {
       const images = await Promise.all(
         imageFiles.map(async (file) => {//calls from cloudinary
           const { url, publicId } = await uploadImage(file.path);
+          if (!url || !publicId) throw new Error("Image upload failed");
           return this.imageRepo.create({
             url,
             publicId,
@@ -55,14 +56,13 @@ export class ProductService {
       );
 
       product.images = await queryRunner.manager.save(images);
+      await queryRunner.manager.save(product); // <- this ensures images are linked to product
       await queryRunner.commitTransaction();
 
       return product;
     } catch (error) {
       await queryRunner.rollbackTransaction();
-
       if (product?.images) await this.cleanupImages(product.images);
-      
       throw error;
     } finally {
       await queryRunner.release();
@@ -79,25 +79,28 @@ export class ProductService {
   }
 
   // Promise<Product[]>  It tells TypeScript "This will give you product data later, and here's exactly what that data will look like."
- async getAllProducts(): Promise<Product[]> {
-  return this.productRepo.find({
-    relations: ['images'],
-    order: {
-      createdAt: 'DESC'
-    },
-    select: {
-      id: true,
-      name: true,
-      price: true,
-      description: true,
-      quantity: true,
-      seller: true,
-      phone:true,
-      images: {
-        url: true,
-        altText: true
-      }
+  async getAllProducts(): Promise<Product[]> {
+    try {
+      return await this.productRepo.find({
+        relations: ['images'],
+        order: { createdAt: 'DESC' },
+        select: {
+          id: true,
+          name: true,
+          price: true,
+          description: true,
+          quantity: true,
+          seller: true,
+          phone: true,
+          images: {
+            url: true,
+            altText: true
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Failed to fetch products:", error);
+      throw new Error("Unable to retrieve products at this time");
     }
-  });
-}
+  }
 }

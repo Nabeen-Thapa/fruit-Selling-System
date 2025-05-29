@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ProductCard } from '../../components/products/viewProductCard';
 import { useProducts } from '../../hooks/userProduct.hook';
+import { fetchCurrentUser } from '../../services/auth.fetchCurrentUser.utils';
+import { useNavigate } from 'react-router-dom';
+
+
 const ViewProducts: React.FC = () => {
   const { products, loading, error } = useProducts();
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const getUser = async () => {
+    const decodedToken = await fetchCurrentUser();
+    if (!decodedToken) {
+      navigate("/");
+      return;
+    }
+    setUserRole(decodedToken.role);
+  };
 
   const handleEdit = (id: string) => {
     console.log('Edit', id);
@@ -13,6 +28,12 @@ const ViewProducts: React.FC = () => {
     console.log('Delete', id);
     // Implement delete logic
   };
+
+  const handleView = (id: string) => {
+    console.log('Delete', id);
+    // Implement delete logic
+  };
+
 
   if (loading) return <div className="text-center py-8">Loading products...</div>;
   if (error) return <div className="text-center py-8 text-red-500">Error: {error}</div>;
@@ -35,6 +56,8 @@ const ViewProducts: React.FC = () => {
               product={product}
               onEdit={handleEdit}
               onDelete={handleDelete}
+              onView={handleView}
+              userRole ={userRole}
             />
           ))}
         </div>

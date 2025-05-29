@@ -24,7 +24,6 @@ const Navbar = () => {
  useEffect(() => {
   const getUser = async () => {
     const decodedToken = await fetchCurrentUser();
-    console.log("navbar getDecodedToken:", decodedToken);
 
     const publicRoutes = [
       "/",
