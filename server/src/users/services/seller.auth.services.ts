@@ -33,11 +33,8 @@ export class SellerAuthServices {
       if (!seller || !isPasswordValid) throw new AppError("invalid credential", StatusCodes.UNAUTHORIZED);
 
       const hasActiveSession = await this.sessionService.checkActiveSession(seller.id);
-      if (hasActiveSession)
-        return {
-          message: "You are already logged in",
-          isAlreadyLoggedIn: true
-        };
+      if (hasActiveSession)isAlreadyLoggedIn: true;
+
 
       const payload: TokenPayload = {
         userId: seller.id,
@@ -70,7 +67,6 @@ export class SellerAuthServices {
          user: { id, name, email, phone, role }
       };
 
-
     } catch (error) {
       await queryRunner.rollbackTransaction();
       console.log("Login error:", (error as Error).message);
@@ -79,5 +75,4 @@ export class SellerAuthServices {
       await queryRunner.release();
     }
   }
-
 }

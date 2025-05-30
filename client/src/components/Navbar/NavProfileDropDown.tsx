@@ -1,6 +1,7 @@
 import React, { useState, useEffect, MouseEvent, useRef } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
+import { clearSession } from '../../services/shared.services';
 
 interface NavProfileDropDownProps {
   name: string;
@@ -33,10 +34,15 @@ const NavProfileDropDown: React.FC<NavProfileDropDownProps> = ({ name, jwtToken 
     return () => window.removeEventListener('click', handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("jwtToken");
-    navigate("/iKeepMy/login");
+  const handleLogout = async() => {
+    try {
+    await clearSession();
+    navigate("/");
     window.location.reload();
+  } catch (error) {
+    console.error("Logout failed:", error);
+    alert("Something went wrong during logout.");
+  }
   };
 
   const handleDeleteAccount = async (e: MouseEvent<HTMLButtonElement>) => {

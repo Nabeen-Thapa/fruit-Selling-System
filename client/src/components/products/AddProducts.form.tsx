@@ -76,7 +76,7 @@ const AddProducts: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label htmlFor="price" className="block text-sm font-medium text-gray-700">
-                    Price *
+                    Price(per kg/dorzen) *
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -99,7 +99,7 @@ const AddProducts: React.FC = () => {
 
                 <div className="space-y-1">
                   <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">
-                    Quantity *
+                    Quantity(in kg/dorzen) *
                   </label>
                   <input
                     type="number"

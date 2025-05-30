@@ -7,6 +7,7 @@ import { SellerAuthServices } from "../services/seller.auth.services";
 import { checkRefreshToken } from "../middleware/check-refreshToken";
 import { getCurrentUser } from "../utils/getCurrentUser.utils";
 import { setAuthCookies } from "../utils/authCookie.utils";
+import { userLogOut } from "src/common/services/logout.service";
 
 @Controller("/seller/auth")
 export class sellerAuthController {

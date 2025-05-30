@@ -20,7 +20,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onView,
   userRole
 }) => (
-  <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02]">
+  <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02]" onClick={() => onView(product.id)}>
     {product.images?.length > 0 && (
       <div className="h-60 overflow-hidden">
         <img
@@ -38,21 +38,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           RS.{formatPrice(product.price)}
         </span>
       </div>
-      <p className="text-gray-600 mt-2 line-clamp-2">{product.description}</p>
+      {/* <p className="text-gray-600 mt-2 line-clamp-2">{product.description}</p> */}
       <div className="mt-4 flex justify-between items-center">
         <span className="text-sm text-gray-500">Seller: {product.seller}</span>
         <span className="text-sm text-gray-500">Contact: {product.phone}</span>
         <span className="text-sm text-gray-500">Qty: {product.quantity}</span>
       </div>
-      <div className="mt-4 flex space-x-2">
+      <div className="mt-6 flex space-x-2">
         <button
- className={`px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors ${
-    userRole !==  loginUserType.SELLER? "w-full" : ""
-  }`}          onClick={() => onView(product.id)}>
+          className={`px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors ${userRole !== "seller" ? "w-full" : ""
+            }`} onClick={() => onView(product.id)}>
           <FiEye className="inline mr-1" /> view details
         </button>
-        {userRole === loginUserType.SELLER && (
+        {userRole === 'seller' && (
           <>
+            {console.log(`${loginUserType.SELLER} matched! Showing buttons.`)}
             <button
               className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
               onClick={() => onEdit(product.id)}>

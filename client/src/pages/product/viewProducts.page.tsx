@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProductCard } from '../../components/products/viewProductCard';
 import { useProducts } from '../../hooks/userProduct.hook';
 import { fetchCurrentUser } from '../../services/auth.fetchCurrentUser.utils';
@@ -10,14 +10,18 @@ const ViewProducts: React.FC = () => {
   const [userRole, setUserRole] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const getUser = async () => {
+   const getUser = async () => {
     const decodedToken = await fetchCurrentUser();
     if (!decodedToken) {
       navigate("/");
       return;
     }
-    setUserRole(decodedToken.role);
+    setUserRole(decodedToken.role?.toLowerCase()); // lowercase for consistency
   };
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   const handleEdit = (id: string) => {
     console.log('Edit', id);
@@ -30,8 +34,8 @@ const ViewProducts: React.FC = () => {
   };
 
   const handleView = (id: string) => {
-    console.log('Delete', id);
-    // Implement delete logic
+    navigate(`/falful/product/${id}/view`);
+   
   };
 
 

@@ -31,18 +31,18 @@ export class ProductController {
         throw new Error("No files or form data received");
       }
       const user = req.user as UserPayload;
-    if (!user) throw new Error("Unauthorized access");
+      if (!user) throw new Error("Unauthorized access");
 
-    const productData = {
-      ...req.body,
-      price: Number(req.body.price),
-      quantity: Number(req.body.quantity),
-      images: req.files,
-      userId: user.id,
-      seller: user.name,
-      phone: user.phone,
-      email: user.email
-    };
+      const productData = {
+        ...req.body,
+        price: Number(req.body.price),
+        quantity: Number(req.body.quantity),
+        images: req.files,
+        userId: user.id,
+        seller: user.name,
+        phone: user.phone,
+        email: user.email
+      };
 
       const productDto = plainToInstance(CreateProductDto, productData);
       const errors = await validate(productDto);
@@ -53,7 +53,7 @@ export class ProductController {
       }
 
       // Process with service
-      const product = await this.productService.createProduct(productDto,req.files as Express.Multer.File[]
+      const product = await this.productService.createProduct(productDto, req.files as Express.Multer.File[]
       );
       sendSuccess(res, StatusCodes.CREATED, "Product added successfully", product);
 
@@ -77,6 +77,19 @@ export class ProductController {
       }));
 
       sendSuccess(res, StatusCodes.OK, "Products fetched successfully", responseData);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, "Failed to fetch products");
+    }
+  }
+
+  //get specific product
+  @Route("get", `/:id/view`)
+  async getSpecificProduct(req: Request, res: Response) {
+    try {
+      const id = Number(req.params.id);
+      const product = await this.productService.getProduct(id);
+      sendSuccess(res, StatusCodes.OK, "Products fetched successfully", product);
     } catch (error) {
       console.error("Error fetching products:", error);
       sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, "Failed to fetch products");

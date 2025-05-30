@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import Navbar from './components/Navbar/Navbar'
 import Footer from './components/Footer/Footer'
 import {
@@ -14,6 +14,7 @@ import { SellerRegister } from './pages/users/sellerRegister.page';
 import LoginPage from './pages/users/auth.sellerLogin.page';
 import VerifyUser from './middleware/auth.verifyToken';
 import BuyerLogin from './pages/users/auth.buyerLOgin.page';
+import ViewSpecificProductPage from './pages/product/viewSpecificProduct.page';
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
           <Route path="/falful/user/seller/register" element={<SellerRegister/>} />
           <Route path="/falful/user/seller/login" element={<LoginPage/>} />
           <Route path="/falful/user/buyer/login" element={<BuyerLogin/>} />
+          <Route path="/falful/product/:id/view" element={<ViewSpecificProductPage/>} />
         </Routes>
         <Footer />
       </Router>

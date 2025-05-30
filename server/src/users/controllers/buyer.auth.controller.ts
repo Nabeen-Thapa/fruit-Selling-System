@@ -12,16 +12,16 @@ import { getCurrentUser } from "../utils/getCurrentUser.utils";
 @Controller("/buyer/auth")
 export class buyerAuthController {
     protected buyerAuthServices = new buyerAuthServices();
-    
-        @Route("get", "/check-refresh-token")
-        async checkRefreshToken(req: Request, res: Response) {
-            return checkRefreshToken(req, res);
-        }
-    
-        @Route("get", "/me")
-        async correntUser(req: Request, res: Response) {
-            return getCurrentUser(req, res);
-        }
+
+    @Route("get", "/check-refresh-token")
+    async checkRefreshToken(req: Request, res: Response) {
+        return checkRefreshToken(req, res);
+    }
+
+    @Route("get", "/me")
+    async correntUser(req: Request, res: Response) {
+        return getCurrentUser(req, res);
+    }
     @Route("post", "/login")
     async buyerLoginController(req: Request, res: Response) {
         try {
@@ -38,4 +38,5 @@ export class buyerAuthController {
             sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, error);
         }
     }
+   
 }

@@ -26,3 +26,16 @@ export const fetchProducts = async (): Promise<Product[]> => {
     price: typeof product.price === 'string' ? parseFloat(product.price) : product.price
   }));
 };
+
+
+export const fetchSpecificProduct = async (id: string): Promise<Product> => {
+  const response = await fetch(`http://localhost:5000/product/${id}/view`);
+  if (!response.ok) throw new Error('Failed to fetch product');
+  const data = await response.json();
+
+  const product = data.data;
+  return {
+    ...product,
+    price: typeof product.price === 'string' ? parseFloat(product.price) : product.price
+  };
+};

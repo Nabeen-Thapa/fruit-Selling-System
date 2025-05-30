@@ -10,6 +10,7 @@ import { sellerController } from "./users/controllers/seller.controller";
 import { sellerAuthController } from "./users/controllers/seller.auth.controller";
 import { connectRedis } from "./config/redis.config";
 import { buyerAuthController } from "./users/controllers/buyer.auth.controller";
+import { LogoutController } from "./common/controllers/logout.controller";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,17 +25,13 @@ app.use(
 )
 connectRedis();
 app.use(cookieParser());
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 
 
-registerRoutes(app, [ProductController, buyerController, sellerController, sellerAuthController, buyerAuthController]);
+registerRoutes(app, [ProductController, buyerController, sellerController, sellerAuthController, buyerAuthController,LogoutController]);
 
-
-// Error handling middleware (add at the end)
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');

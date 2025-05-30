@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Response} from "express";
 import { AUTH_COOKIE_OPTIONS } from "../constants/cookie.constant";
 
 export function setAuthCookies(res: Response, accessToken: string, refreshToken: string): void {
@@ -8,6 +8,6 @@ export function setAuthCookies(res: Response, accessToken: string, refreshToken:
 
 //for logout
 export function clearAuthCookies(res: Response): void {
-    res.clearCookie("access_token");
-    res.clearCookie("refresh_token");
+  res.clearCookie("access_token", { ...AUTH_COOKIE_OPTIONS });
+  res.clearCookie("refresh_token", { ...AUTH_COOKIE_OPTIONS });
 }

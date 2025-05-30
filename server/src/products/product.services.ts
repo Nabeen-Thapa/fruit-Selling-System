@@ -103,4 +103,18 @@ export class ProductService {
       throw new Error("Unable to retrieve products at this time");
     }
   }
+
+  //get specific product for detail view
+  async getProduct(id: number): Promise<Product | null> {
+    try {
+      const product = await this.productRepo.findOne({
+        where: { id },
+        relations: ['images'],
+      });
+      return product;
+    } catch (error) {
+      console.error(`Failed to fetch product with id ${id}:`, error);
+      throw new Error("Unable to retrieve product at this time");
+    }
+  }
 }

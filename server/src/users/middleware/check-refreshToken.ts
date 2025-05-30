@@ -6,15 +6,12 @@ import { verifyAccessToken, verifyRefreshToken } from "../../config/jwt.config";
 
 export async function checkRefreshToken(req: Request, res: Response) {
   const refreshToken = req.cookies.refresh_token;
-  if (!refreshToken) {
-    return sendError(res, StatusCodes.UNAUTHORIZED, "No token found");
-  }
-
+  if (!refreshToken) return sendError(res, StatusCodes.UNAUTHORIZED, "No token found");
+  
   try {
     const payload = verifyRefreshToken(refreshToken);
-     if (!payload) {
-      return sendError(res, StatusCodes.UNAUTHORIZED, "Invalid token");
-    }
+     if (!payload)  return sendError(res, StatusCodes.UNAUTHORIZED, "Invalid token");
+    
     return sendSuccess(res, StatusCodes.OK, "Valid token", { userId: payload.userId });
   } catch (err) {
     console.error("Token verification error:", err);
