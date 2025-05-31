@@ -4,18 +4,12 @@ import { sendError, sendSuccess } from "../../common/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
 import { Route } from "../../common/decorators/route.decoder";
 import { SellerAuthServices } from "../services/seller.auth.services";
-import { checkRefreshToken } from "../middleware/check-refreshToken";
 import { getCurrentUser } from "../utils/getCurrentUser.utils";
 import { setAuthCookies } from "../utils/authCookie.utils";
-import { userLogOut } from "src/common/services/logout.service";
 
 @Controller("/seller/auth")
 export class sellerAuthController {
 
-    @Route("get", "/check-refresh-token")
-    async checkRefreshToken(req: Request, res: Response) {
-        return checkRefreshToken(req, res);
-    }
 
     @Route("get", "/me")
     async correntUser(req: Request, res: Response) {

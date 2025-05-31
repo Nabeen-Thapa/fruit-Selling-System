@@ -10,7 +10,7 @@ import { sellerController } from "./users/controllers/seller.controller";
 import { sellerAuthController } from "./users/controllers/seller.auth.controller";
 import { connectRedis } from "./config/redis.config";
 import { buyerAuthController } from "./users/controllers/buyer.auth.controller";
-import { LogoutController } from "./common/controllers/logout.controller";
+import { LogoutController } from "./common/controllers/users.controller";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
