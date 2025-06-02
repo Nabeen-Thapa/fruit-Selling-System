@@ -74,4 +74,8 @@ export const deleteProduct = async (id: string): Promise<{ success: boolean; mes
       message: error instanceof Error ? error.message : 'Deletion failed'
     };
   }
+
+  export const updateProduct = async(id: string){
+    
+  }
 };

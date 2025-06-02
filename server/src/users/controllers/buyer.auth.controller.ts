@@ -7,6 +7,8 @@ import { buyerDto } from "../dtos/buyer.dto";
 import { buyerAuthServices } from "../services/buyer.auth.services";
 import { setAuthCookies } from "../utils/authCookie.utils";
 import { getCurrentUser } from "../utils/getCurrentUser.utils";
+import { validate } from "class-validator";
+import { validateDto } from "../../common/utils/dtoValidateResponse.utils";
 
 @Controller("/buyer/auth")
 export class buyerAuthController {
@@ -20,9 +22,10 @@ export class buyerAuthController {
     @Route("post", "/login")
     async buyerLoginController(req: Request, res: Response) {
         try {
-            const buyerData: buyerDto = req.body;
-            const result = await this.buyerAuthServices.buyerLogin(buyerData);
+            const buyerData = await validateDto(buyerDto, req.body, res);
+            if (!buyerData.valid) return; 
 
+            const result = await this.buyerAuthServices.buyerLogin(buyerData.data);
             if ('isAlreadyLoggedIn' in result) return sendSuccess(res, StatusCodes.CONFLICT, result.message);
 
             setAuthCookies(res, result.accessToken, result.refreshToken);
@@ -32,9 +35,5 @@ export class buyerAuthController {
             console.log("buyer auth login controller:", error);
             sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, error);
         }
-    }
-
-
-    
-   
+    } 
 }

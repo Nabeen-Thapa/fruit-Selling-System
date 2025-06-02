@@ -1,9 +1,9 @@
 import { DataSource, Repository } from 'typeorm';
-import { Product } from './models/products.model';
-import { ProductImage } from './models/productImage.model';
-import { CreateProductDto } from './dtos/product.dot';
-import { uploadImage, deleteImage } from '../config/cloudinary.config';
-import { AppError } from '../common/utils/response.utils';
+import { Product } from '../models/products.model';
+import { ProductImage } from '../models/productImage.model';
+import { CreateProductDto } from '../dtos/product.dot';
+import { uploadImage, deleteImage } from '../../config/cloudinary.config';
+import { AppError } from '../../common/utils/response.utils';
 import { StatusCodes } from 'http-status-codes';
 
 export class ProductService {
@@ -16,13 +16,13 @@ export class ProductService {
     this.imageRepo = dataSource.getRepository(ProductImage);
   }
 
-  async createProduct( productData: CreateProductDto,imageFiles: Express.Multer.File[]): Promise<Product> {
+  async createProduct(productData: CreateProductDto, imageFiles: Express.Multer.File[]): Promise<Product> {
     const queryRunner = this.dataSource.createQueryRunner();
     let product: Product | null = null;
     try {
       await queryRunner.connect();
       await queryRunner.startTransaction();
-      
+
       product = this.productRepo.create({
         ...productData,
         images: [] // Initialize empty array for image
@@ -67,7 +67,7 @@ export class ProductService {
   //   );
   // }
 
-  
+
   private async cleanupImages(images: ProductImage[]): Promise<void> {
     await Promise.all(
       images.map(async img => {
@@ -150,5 +150,59 @@ export class ProductService {
     } finally {
       await queryRunner.release();
     }
+  }
+
+  async updateProduct(id: number, productData: CreateProductDto, imageFiles?: Express.Multer.File[]): Promise<Product> {
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    try {
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+
+      const existingProduct = await queryRunner.manager.findOne(Product, { where: { id }, relations: ['images'] });
+      if (!existingProduct) throw new AppError("Product not found", StatusCodes.NOT_FOUND);
+      // Update basic fields
+      existingProduct.name = productData.name;
+      existingProduct.price = productData.price;
+      existingProduct.description = productData.description;
+      existingProduct.quantity = productData.quantity;
+      existingProduct.seller = productData.seller;
+      existingProduct.phone = productData.phone;
+
+       // If new images are provided, delete old ones and add new ones
+    if (imageFiles && imageFiles.length > 0) {
+      // Delete old images from Cloudinary
+      if (existingProduct.images?.length) {
+        await this.cleanupImages(existingProduct.images);
+        await queryRunner.manager.delete(ProductImage, { product: { id } });
+      }
+
+      // Upload new images to Cloudinary
+      const newImages = await Promise.all(
+        imageFiles.map(async (file) => {
+          const { url, publicId } = await uploadImage(file.path);
+          if (!url || !publicId) throw new Error("Image upload failed");
+          return this.imageRepo.create({
+            url,
+            publicId,
+            altText: productData.name,
+            product: existingProduct,
+          });
+        })
+      );
+            existingProduct.images = await queryRunner.manager.save(newImages);
+    }
+     const updatedProduct = await queryRunner.manager.save(existingProduct);
+    await queryRunner.commitTransaction();
+
+    return updatedProduct;
+    } catch (error){
+    await queryRunner.rollbackTransaction();
+    console.error("Failed to update product:", error);
+    throw new AppError("Unable to update product", StatusCodes.INTERNAL_SERVER_ERROR);
+  } finally {
+    await queryRunner.release();
+  }
+
   }
 }

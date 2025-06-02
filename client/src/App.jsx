@@ -15,6 +15,7 @@ import LoginPage from './pages/users/auth.sellerLogin.page';
 import VerifyUser from './middleware/auth.verifyToken';
 import BuyerLogin from './pages/users/auth.buyerLOgin.page';
 import ViewSpecificProductPage from './pages/product/viewSpecificProduct.page';
+import ProductUpdatePage from './pages/product/productUpdate.page';
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="/falful/user/seller/login" element={<LoginPage/>} />
           <Route path="/falful/user/buyer/login" element={<BuyerLogin/>} />
           <Route path="/falful/product/:id/view" element={<ViewSpecificProductPage/>} />
+          <Route path="/falful/product/:id/update" element={<ProductUpdatePage/>} />
         </Routes>
         <Footer />
       </Router>

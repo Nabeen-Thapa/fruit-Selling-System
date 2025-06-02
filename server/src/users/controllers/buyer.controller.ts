@@ -5,6 +5,8 @@ import { sendError, sendSuccess } from "../../common/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
 import { buyerDto } from "../dtos/buyer.dto";
 import { buyerServices } from "../services/buyer.services";
+import { validate } from "class-validator";
+import { error } from "console";
 
 @Controller("/buyer")
 export class buyerController{
@@ -16,9 +18,15 @@ export class buyerController{
                 ...req.body,
                 role: "buyer"
             };
+            const sellerDtoError = await validate(buyerData)
+            if(sellerDtoError.length > 0){
+                const validationErrors = sellerDtoError.map(err =>({
+                    property: err.property,
+                    constraints: err.constraints
+                }));
+                return sendError(res, StatusCodes.BAD_REQUEST, validationErrors);
+            }
 
-            const {name , add} = req.body;
-            console.log("buyer controller data:", buyerData);
             const newBuyer = await this.buyerServices.buyerRegister(buyerData);
             sendSuccess(res, StatusCodes.OK, "successfully registered");
         } catch (error) {

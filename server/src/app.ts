@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { registerRoutes } from "./registerRoutes";
-import { ProductController } from "./products/product.controllers";
+import { ProductController } from "./store/controllers/product.controllers";
 import { buyerController } from "./users/controllers/buyer.controller";
 import { sellerController } from "./users/controllers/seller.controller";
 import { sellerAuthController } from "./users/controllers/seller.auth.controller";

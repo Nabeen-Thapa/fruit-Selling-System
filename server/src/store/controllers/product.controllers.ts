@@ -2,16 +2,17 @@ import { Request, Response } from 'express';
 import multer from 'multer';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
-import { ProductService } from './product.services';
-import { CreateProductDto } from './dtos/product.dot';
-import { Controller } from '../common/decorators/controller.decoder';
-import { Route } from '../common/decorators/route.decoder';
-import { sendError, sendSuccess } from '../common/utils/response.utils';
+import { ProductService } from '../services/product.services';
+import { CreateProductDto } from '../dtos/product.dot';
+import { Controller } from '../../common/decorators/controller.decoder';
+import { Route } from '../../common/decorators/route.decoder';
+import { sendError, sendSuccess } from '../../common/utils/response.utils';
 import { StatusCodes } from "http-status-codes";
-import { falfulConnection } from '../config/dbORM.config';
-import { upload } from '../common/utils/cloudinary-upload';
-import { authenticate } from '../users/middleware/auth.middleware';
-import { UserPayload } from '../users/types/auth.types';
+import { falfulConnection } from '../../config/dbORM.config';
+import { upload } from '../../common/utils/cloudinary-upload';
+import { authenticate } from '../../users/middleware/auth.middleware';
+import { UserPayload } from '../../users/types/auth.types';
+import { validateDto } from 'src/common/utils/dtoValidateResponse.utils';
 
 
 @Controller("/product")
@@ -110,5 +111,21 @@ export class ProductController {
       console.error("Error fetching products:", error);
       sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, "Failed to delete products");
     }
+  }
+
+  @Route("put", "/:id/update",[authenticate])
+  async updateProduct(req:Request, res:Response){
+    if(!req.user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorize");
+    try {
+      const validateProduct = await validateDto(CreateProductDto,req.body, res);
+      if(!validateProduct.valid) return;
+      const id =Number( req.params.id);
+
+      const result = await this.productService.updateProduct(id,validateProduct.data);
+    } catch (error) {
+      console.log("error in product update controller:", (error as Error).message);
+      sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, "product can not be updated due to internal server error")
+    }
+
   }
 }

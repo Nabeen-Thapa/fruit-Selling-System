@@ -5,6 +5,7 @@ import { sendError, sendSuccess } from "../../common/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
 import { sellerServices } from "../services/serller.services";
 import { serllerDto } from "../dtos/seller.dot";
+import { validate } from "class-validator";
 
 @Controller("/seller")
 export class sellerController {
@@ -16,6 +17,14 @@ export class sellerController {
                 ...req.body,
                 role: "seller" 
             };
+             const errors = await validate(sellerData);
+            if (errors.length > 0) {
+                const validationErrors = errors.map(err => ({
+                    property: err.property,
+                    constraints: err.constraints,
+                }));
+                return sendError(res, StatusCodes.BAD_REQUEST, validationErrors);
+            }
             console.log(sellerData);
             await this.newSeller.sellerRegister(sellerData);
             sendSuccess(res, StatusCodes.OK, "successfully registered");
