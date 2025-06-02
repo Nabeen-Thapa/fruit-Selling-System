@@ -12,11 +12,12 @@ export class buyerController{
     @Route("post", "/register")
     async buyerRegisterController(req:Request, res:Response){
         try {
-
             const buyerData: buyerDto = {
                 ...req.body,
                 role: "buyer"
             };
+
+            const {name , add} = req.body;
             console.log("buyer controller data:", buyerData);
             const newBuyer = await this.buyerServices.buyerRegister(buyerData);
             sendSuccess(res, StatusCodes.OK, "successfully registered");

@@ -57,10 +57,10 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
 
 
     // 6. Validate session token matches Redis refresh token
-    const storedRefreshToken = await redisService.get(`refresh_token:${decoded.userId}`);
-    if (!storedRefreshToken || storedRefreshToken !== activeSession.token) {
-      throw new AppError('Invalid session token', StatusCodes.UNAUTHORIZED);
-    }
+    // const storedRefreshToken = await redisService.get(`refresh_token:${decoded.userId}`);
+    // if (!storedRefreshToken || storedRefreshToken !== activeSession.token) {
+    //   throw new AppError('Invalid session token', StatusCodes.UNAUTHORIZED);
+    // }
 
     // 7. Attach user to request for further access
  req.user = {

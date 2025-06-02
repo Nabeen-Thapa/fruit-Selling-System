@@ -20,7 +20,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onView,
   userRole
 }) => (
-  <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02]" onClick={() => onView(product.id)}>
+  <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02]">
     {product.images?.length > 0 && (
       <div className="h-60 overflow-hidden">
         <img
@@ -34,11 +34,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     <div className="p-4">
       <div className="flex justify-between items-start">
         <h2 className="text-xl font-semibold text-gray-800">{product.name}</h2>
-        <span className="text-lg font-bold text-green-600">
-          RS.{formatPrice(product.price)}
-        </span>
+        <div className="whitespace-nowrap">
+          <span className="text-lg font-bold text-green-600">
+            RS.{Number(product.price).toFixed(0)}
+          </span>
+          <span className="text-sm text-gray-500"> (per kg/dozen)</span>
+        </div>
       </div>
-      {/* <p className="text-gray-600 mt-2 line-clamp-2">{product.description}</p> */}
       <div className="mt-4 flex justify-between items-center">
         <span className="text-sm text-gray-500">Seller: {product.seller}</span>
         <span className="text-sm text-gray-500">Contact: {product.phone}</span>

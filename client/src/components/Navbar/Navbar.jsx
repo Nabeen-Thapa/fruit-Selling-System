@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { FaLeaf } from "react-icons/fa";
-import { MdAddShoppingCart, MdMenu } from "react-icons/md";
+import { FaLeaf, FaUser, FaSignInAlt, FaUserPlus } from "react-icons/fa";
+import { MdAddShoppingCart, MdMenu, MdExpandMore, MdExpandLess } from "react-icons/md";
 import ResponsiveMenu from './ResponsiveMenu';
 import { motion } from 'framer-motion';
 import { fetchCurrentUser } from '../../services/auth.fetchCurrentUser.utils';
@@ -18,36 +18,47 @@ const Navbar = () => {
   const [userRole, setUserRole] = useState(null);
   const [existToken, setExistToken] = useState(null);
   const [name, setName] = useState(null);
+  const [registerDropdownOpen, setRegisterDropdownOpen] = useState(false);
+  const [loginDropdownOpen, setLoginDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
- useEffect(() => {
-  const getUser = async () => {
-    const decodedToken = await fetchCurrentUser();
+  useEffect(() => {
+    const getUser = async () => {
+      const decodedToken = await fetchCurrentUser();
 
-    const publicRoutes = [
-      "/",
-      "/falful/user/seller/login",
-      "/falful/user/buyer/register",
-      "/falful/user/seller/register",
-      "/falful/user/buyer/login"
-    ];
+      const publicRoutes = [
+        "/",
+        "/falful/user/seller/login",
+        "/falful/user/buyer/register",
+        "/falful/user/seller/register",
+        "/falful/user/buyer/login"
+      ];
 
-    if (!decodedToken && !publicRoutes.includes(location.pathname)) {
-      navigate("/");
-      return;
-    }
+      if (!decodedToken && !publicRoutes.includes(location.pathname)) {
+        navigate("/");
+        return;
+      }
 
-    if (decodedToken) {
-      setExistToken(decodedToken);
-      setUserRole(decodedToken.role);
-      setName(decodedToken.name); // Set the name properly
-    }
+      if (decodedToken) {
+        setExistToken(decodedToken);
+        setUserRole(decodedToken.role);
+        setName(decodedToken.name);
+      }
+    };
+
+    getUser();
+  }, [navigate, location.pathname]);
+
+  const toggleRegisterDropdown = () => {
+    setRegisterDropdownOpen(!registerDropdownOpen);
+    setLoginDropdownOpen(false); // Close login dropdown when opening register
   };
 
-  getUser();
-}, [navigate, location.pathname]);
-
+  const toggleLoginDropdown = () => {
+    setLoginDropdownOpen(!loginDropdownOpen);
+    setRegisterDropdownOpen(false); // Close register dropdown when opening login
+  };
 
   return (
     <>
@@ -71,7 +82,9 @@ const Navbar = () => {
                     font-semibold'
                   >{menu.title}</a>
                 </li>
-              ))} {userRole === "seller" && (
+              ))}
+              
+              {userRole === "seller" && (
                 <li>
                   <a href="/falful/products/add"
                     className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
@@ -82,48 +95,76 @@ const Navbar = () => {
 
               {!existToken ? (
                 <>
-                  <li>
-                    <a href="/falful/user/buyer/register"
-                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
-                      buyer register
-                    </a>
+                  {/* Register Dropdown */}
+                  <li className="relative">
+                    <button 
+                      onClick={toggleRegisterDropdown}
+                      className="flex items-center gap-1 py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold"
+                    >
+                      <FaUserPlus className="mr-1" />
+                      Register
+                      {registerDropdownOpen ? <MdExpandLess /> : <MdExpandMore />}
+                    </button>
+                    {registerDropdownOpen && (
+                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                        <a
+                          href="/falful/user/buyer/register"
+                          className="block px-4 py-2 text-lg text-gray-700 hover:bg-primary hover:text-white"
+                        >
+                          Register as Buyer
+                        </a>
+                        <a
+                          href="/falful/user/seller/register"
+                          className="block px-4 py-2 text-lg text-gray-700 hover:bg-primary hover:text-white"
+                        >
+                          Register as Seller
+                        </a>
+                      </div>
+                    )}
                   </li>
 
-                  <li>
-                    <a href="/falful/user/seller/register"
-                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
-                      selller register
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/falful/user/seller/login"
-                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
-                      login
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/falful/user/buyer/login"
-                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
-                     buyer login
-                    </a>
+                  {/* Login Dropdown */}
+                  <li className="relative">
+                    <button 
+                      onClick={toggleLoginDropdown}
+                      className="flex items-center gap-1 py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold"
+                    >
+                      <FaSignInAlt className="mr-1" />
+                      Login
+                      {loginDropdownOpen ? <MdExpandLess /> : <MdExpandMore />}
+                    </button>
+                    {loginDropdownOpen && (
+                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                        <a
+                          href="/falful/user/buyer/login"
+                          className="block px-4 py-2 text-lg text-gray-700 hover:bg-primary hover:text-white"
+                        >
+                          Login as Buyer
+                        </a>
+                        <a
+                          href="/falful/user/seller/login"
+                          className="block px-4 py-2 text-lg text-gray-700 hover:bg-primary hover:text-white"
+                        >
+                          Login as Seller
+                        </a>
+                      </div>
+                    )}
                   </li>
                 </>
               ) : (
                 <>
-                <div className="d-flex align-items-center">
-                  {existToken &&<NavProfileDropDown name ={name} jwtToken={existToken} />}
+                  <div className="d-flex align-items-center">
+                    {existToken && <NavProfileDropDown name={name} jwtToken={existToken} />}
                   </div>
                 </>
               )}
-              <button className='text-2xl hover:bg-primary hover:text-white rounded-full
-                p-2 duration-200'>
+              <button className='text-2xl hover:bg-primary hover:text-white rounded-full p-2 duration-200'>
                 <MdAddShoppingCart />
               </button>
             </ul>
           </div>
 
-          <div className='md:hidden' onClick={() =>
-            setOpen(!open)}>
+          <div className='md:hidden' onClick={() => setOpen(!open)}>
             <MdMenu className='text-4xl' />
           </div>
         </motion.div>

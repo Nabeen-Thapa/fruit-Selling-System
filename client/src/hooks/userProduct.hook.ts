@@ -1,6 +1,6 @@
-import React,{ useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Product } from '../types/product.type';
-import { fetchProducts } from '../services/product.services';
+import { fetchProducts, deleteProduct as deleteProductService } from '../services/product.services';
 
 export const useProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -22,5 +22,27 @@ export const useProducts = () => {
     getProducts();
   }, []);
 
-  return { products, loading, error };
+  const handleDeleteProduct = async (productId: string) => {
+    try {
+      setLoading(true);
+      const { success, message } = await deleteProductService(productId);
+      
+      if (success) {
+        setProducts(prev => prev.filter(product => product.id !== productId));
+      } else {
+        setError(message || 'Failed to delete product');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Deletion failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { 
+    products, 
+    loading, 
+    error, 
+    deleteProduct: handleDeleteProduct 
+  };
 };

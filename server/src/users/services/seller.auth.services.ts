@@ -35,7 +35,6 @@ export class SellerAuthServices {
       const hasActiveSession = await this.sessionService.checkActiveSession(seller.id);
       if (hasActiveSession)isAlreadyLoggedIn: true;
 
-
       const payload: TokenPayload = {
         userId: seller.id,
         name: seller.name,

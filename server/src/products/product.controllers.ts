@@ -11,7 +11,7 @@ import { StatusCodes } from "http-status-codes";
 import { falfulConnection } from '../config/dbORM.config';
 import { upload } from '../common/utils/cloudinary-upload';
 import { authenticate } from '../users/middleware/auth.middleware';
-import { UserPayload } from 'src/users/types/auth.types';
+import { UserPayload } from '../users/types/auth.types';
 
 
 @Controller("/product")
@@ -93,6 +93,22 @@ export class ProductController {
     } catch (error) {
       console.error("Error fetching products:", error);
       sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, "Failed to fetch products");
+    }
+  }
+
+  @Route("delete", "/:id/delete", [authenticate])
+  async deleteProduct(req: Request, res: Response) {
+    try {
+
+      if (!req.user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorize to delete product");
+
+      const id = Number(req.params.id);
+      
+      const deleteResult = await this.productService.deleteProduct(id);
+      return sendSuccess(res, StatusCodes.OK, "Products fetched successfully", deleteResult);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, "Failed to delete products");
     }
   }
 }

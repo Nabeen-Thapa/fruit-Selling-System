@@ -15,10 +15,12 @@
     "framer-motion": "^11.3.29",
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
+    "react-confirm-alert": "^3.0.6",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.56.4",
     "react-icons": "^5.5.0",
-    "react-router-dom": "^7.6.0"
+    "react-router-dom": "^7.6.0",
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

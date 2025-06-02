@@ -16,6 +16,7 @@ export class buyerAuthController {
     async correntUser(req: Request, res: Response) {
         return getCurrentUser(req, res);
     }
+    
     @Route("post", "/login")
     async buyerLoginController(req: Request, res: Response) {
         try {
@@ -32,5 +33,8 @@ export class buyerAuthController {
             sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, error);
         }
     }
+
+
+    
    
 }

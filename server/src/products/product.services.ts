@@ -3,6 +3,8 @@ import { Product } from './models/products.model';
 import { ProductImage } from './models/productImage.model';
 import { CreateProductDto } from './dtos/product.dot';
 import { uploadImage, deleteImage } from '../config/cloudinary.config';
+import { AppError } from '../common/utils/response.utils';
+import { StatusCodes } from 'http-status-codes';
 
 export class ProductService {
   private productRepo: Repository<Product>;
@@ -14,29 +16,16 @@ export class ProductService {
     this.imageRepo = dataSource.getRepository(ProductImage);
   }
 
-  async createProduct(
-    productData: CreateProductDto,
-    imageFiles: Express.Multer.File[]
-  ): Promise<Product> {
+  async createProduct( productData: CreateProductDto,imageFiles: Express.Multer.File[]): Promise<Product> {
     const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
     let product: Product | null = null;
-
     try {
-      // 1. Create product without images first
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+      
       product = this.productRepo.create({
-        name: productData.name,
-        price: productData.price,
-        description: productData.description,
-        userId: productData.userId,
-        seller: productData.seller,
-        phone: productData.phone,
-        email: productData.email,
-        quantity: productData.quantity,
-        category: productData.category,
-        images: [] // Initialize empty array
+        ...productData,
+        images: [] // Initialize empty array for image
       });
 
       await queryRunner.manager.save(product);
@@ -56,7 +45,7 @@ export class ProductService {
       );
 
       product.images = await queryRunner.manager.save(images);
-      await queryRunner.manager.save(product); // <- this ensures images are linked to product
+      await queryRunner.manager.save(product);
       await queryRunner.commitTransaction();
 
       return product;
@@ -70,13 +59,27 @@ export class ProductService {
   }
 
   //Remove uploaded images from cloud storage (like Cloudinary) if a transaction fails
+  // private async cleanupImages(images: ProductImage[]): Promise<void> {
+  //   await Promise.all(
+  //     images.map(img =>
+  //       img.publicId ? deleteImage(img.publicId) : Promise.resolve()
+  //     )
+  //   );
+  // }
+
+  
   private async cleanupImages(images: ProductImage[]): Promise<void> {
     await Promise.all(
-      images.map(img =>
-        img.publicId ? deleteImage(img.publicId) : Promise.resolve()
-      )
+      images.map(async img => {
+        try {
+          if (img.publicId) await deleteImage(img.publicId);
+        } catch (err) {
+          console.error(`Failed to delete image ${img.publicId}:`, err);
+        }
+      })
     );
   }
+
 
   // Promise<Product[]>  It tells TypeScript "This will give you product data later, and here's exactly what that data will look like."
   async getAllProducts(): Promise<Product[]> {
@@ -115,6 +118,37 @@ export class ProductService {
     } catch (error) {
       console.error(`Failed to fetch product with id ${id}:`, error);
       throw new Error("Unable to retrieve product at this time");
+    }
+  }
+
+
+  async deleteProduct(id: number) {
+    const queryRunner = this.productRepo.manager.connection.createQueryRunner();
+    try {
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+
+      const product = await queryRunner.manager.findOne(Product, {
+        where: { id },
+        relations: ['images']
+      });
+      if (!product) throw new AppError("product is not found", StatusCodes.NOT_FOUND);
+
+      // if (product.images && product.images.length > 0) await queryRunner.manager.delete(ProductImage, { product: { id } });
+      if (product.images?.length) {
+        await this.cleanupImages(product.images);
+        await queryRunner.manager.delete(ProductImage, { product: { id } });
+      }
+
+      await queryRunner.manager.delete(Product, { id })
+      await queryRunner.commitTransaction();
+      return { message: `Product ${id} deleted successfully` };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      console.error(`Failed to delete product:`, error);
+      throw new AppError("unable to delete", StatusCodes.INTERNAL_SERVER_ERROR);
+    } finally {
+      await queryRunner.release();
     }
   }
 }

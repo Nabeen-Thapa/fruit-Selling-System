@@ -10,7 +10,6 @@ import { setAuthCookies } from "../utils/authCookie.utils";
 @Controller("/seller/auth")
 export class sellerAuthController {
 
-
     @Route("get", "/me")
     async correntUser(req: Request, res: Response) {
         return getCurrentUser(req, res);

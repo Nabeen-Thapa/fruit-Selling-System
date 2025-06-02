@@ -3,20 +3,31 @@ import { ProductCard } from '../../components/products/viewProductCard';
 import { useProducts } from '../../hooks/userProduct.hook';
 import { fetchCurrentUser } from '../../services/auth.fetchCurrentUser.utils';
 import { useNavigate } from 'react-router-dom';
-
+import { deleteProduct } from '../../services/product.services';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Product } from '../../types/product.type';
 
 const ViewProducts: React.FC = () => {
-  const { products, loading, error } = useProducts();
+const { products: initialProducts, loading, error, deleteProduct } = useProducts(); // ⬅ use hook's deleteProduct
+  const [products, setProducts] = useState<Product[]>(initialProducts);
   const [userRole, setUserRole] = useState<string | null>(null);
   const navigate = useNavigate();
 
-   const getUser = async () => {
+  // Update local products when initialProducts changes
+  useEffect(() => {
+    setProducts(initialProducts);
+  }, [initialProducts]);
+
+  const getUser = async () => {
     const decodedToken = await fetchCurrentUser();
     if (!decodedToken) {
       navigate("/");
       return;
     }
-    setUserRole(decodedToken.role?.toLowerCase()); // lowercase for consistency
+    setUserRole(decodedToken.role?.toLowerCase());
   };
 
   useEffect(() => {
@@ -24,18 +35,35 @@ const ViewProducts: React.FC = () => {
   }, []);
 
   const handleEdit = (id: string) => {
-    console.log('Edit', id);
-    // Implement edit logic
+    navigate(`/falful/product/${id}/edit`);
   };
 
-  const handleDelete = (id: string) => {
-    console.log('Delete', id);
-    // Implement delete logic
-  };
+
+// Remove local setProducts state and rely on hook
+const handleDelete = async (id: string) => {
+  confirmAlert({
+    title: 'Confirm to delete',
+    message: 'Are you sure you want to delete this product?',
+    buttons: [
+      {
+        label: 'Yes',
+        onClick: async () => {
+          try {
+            await deleteProduct(id); // ⬅ Use hook's delete logic
+            toast.success('Product deleted successfully');
+          } catch (err) {
+            toast.error(err instanceof Error ? err.message : 'Deletion failed');
+          }
+        }
+      },
+      { label: 'No' }
+    ]
+  });
+  navigate("/falful/products");
+};
 
   const handleView = (id: string) => {
     navigate(`/falful/product/${id}/view`);
-   
   };
 
 
