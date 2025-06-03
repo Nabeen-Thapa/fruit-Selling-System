@@ -11,14 +11,11 @@ export const registerSeller = async (sellerData: Omit<Seller, 'id' | 'createdAt'
         body: JSON.stringify(sellerData),
     });
     
-    if (!sellerResponse.ok) {
-        throw new Error('Failed to register seller');
-    }
-    
-    // Handle 204 No Content
-    if (sellerResponse.status === 204) {
-        return sellerData as Seller; // Return input data or mock response
-    }
+   if (!sellerResponse.ok) {
+    const errorText = await sellerResponse.text(); // 👈 Get server response
+    console.error("Server Error Response:", errorText);
+    throw new Error('Failed to register seller');
+}
     
     return sellerResponse.json();
 }

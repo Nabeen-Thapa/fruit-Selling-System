@@ -4,6 +4,15 @@ import { buyerLoginService, deleteBuyer, fetchBuyers, registerBuyer } from '../.
 
 export const useBuyers = (error, setError,loading, setLoading) => {
   const [buyers, setBuyers] = useState<Buyer[]>([]);
+   const [state, setState] = useState<{
+    buyers: Buyer[];
+    loading: boolean;
+    error: string | null;
+  }>({
+    buyers: [],
+    loading: false,
+    error: null
+  });
 
   const loadBuyers = async () => {
     setLoading(true);
@@ -59,5 +68,11 @@ export const useBuyers = (error, setError,loading, setLoading) => {
   useEffect(() => {
     loadBuyers();
   }, []);
-  return { buyers, loading,setLoading, error, addBuyer, removeBuyer,loginBuyer };
-};
+ return {
+    buyers: state.buyers,
+    loading: state.loading,
+    error: state.error,
+    addBuyer,
+    removeBuyer,
+    loginBuyer
+  };};

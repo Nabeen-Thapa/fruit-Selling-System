@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Product } from '../types/product.type';
+import { Product, ProductFormState } from '../types/product.type';
 
 const API_BASE_URL = 'http://localhost:5000';
 
@@ -44,19 +44,19 @@ export const fetchSpecificProduct = async (id: string): Promise<Product> => {
 
 export const deleteProduct = async (id: string): Promise<{ success: boolean; message?: string }> => {
   try {
-  
+
     const response = await fetch(`http://localhost:5000/product/${id}/delete`, {
       method: 'DELETE',
       credentials: "include",
       headers: {
         'Content-Type': 'application/json',
       },
-      
+
     });
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(
-        errorData.message || 
+        errorData.message ||
         `Failed to delete product (Status: ${response.status})`
       );
     }
@@ -67,7 +67,7 @@ export const deleteProduct = async (id: string): Promise<{ success: boolean; mes
     };
   } catch (error) {
     console.error(`Delete failed for product ${id}:`, error);
-    
+
     // Return structured error information
     return {
       success: false,
@@ -75,7 +75,50 @@ export const deleteProduct = async (id: string): Promise<{ success: boolean; mes
     };
   }
 
-  export const updateProduct = async(id: string){
-    
+};
+
+// src/services/product.services.ts
+
+
+interface UpdateProductData {
+  name: string;
+  price: number;
+  description: string;
+  quantity: number;
+  seller: string;
+  phone: string;
+}
+
+export const updateProduct = async (
+  id: string,
+  productData: ProductFormState,
+  keepExistingImages: boolean = true
+): Promise<Product> => {
+  const formData = new FormData();
+  
+  // Append product data
+  formData.append('name', productData.name);
+  formData.append('price', productData.price);
+  formData.append('description', productData.description);
+  formData.append('quantity', productData.quantity);
+  formData.append('category', productData.category);
+  formData.append('keepExistingImages', keepExistingImages.toString());
+  
+  // Append new images
+  productData.images.forEach((image) => {
+    formData.append('productImages', image.file);
+  });
+
+  const response = await fetch(`http://localhost:5000/product/${id}/update`, {
+    method: 'PUT',
+    credentials: 'include',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to update product');
   }
+
+  return response.json();
 };

@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBuyers } from '../../hooks/user/userBuyer.hooks';
 import { Buyer } from '../../types/buyer.types';
 import { BuyerForm } from '../../components/user/buyerForm';
+import { useSeller } from '../../hooks/user/useSeller.hook';
+// BuyerRegister.tsx
 export const BuyerRegister: React.FC = () => {
-  const { addBuyer, loading, error } = useBuyers();
-  const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+    const { addSeller } = useSeller(error, setError, loading, setLoading);
+    const navigate = useNavigate();
 
   const handleSubmit = async (buyerData: Omit<Buyer, 'id' | 'createdAt' | 'lastLogin'>) => {
     try {

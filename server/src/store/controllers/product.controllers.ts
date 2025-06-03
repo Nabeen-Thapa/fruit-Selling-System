@@ -12,7 +12,7 @@ import { falfulConnection } from '../../config/dbORM.config';
 import { upload } from '../../common/utils/cloudinary-upload';
 import { authenticate } from '../../users/middleware/auth.middleware';
 import { UserPayload } from '../../users/types/auth.types';
-import { validateDto } from 'src/common/utils/dtoValidateResponse.utils';
+import { validateDto } from '../../common/utils/dtoValidateResponse.utils';
 
 
 @Controller("/product")
@@ -104,7 +104,7 @@ export class ProductController {
       if (!req.user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorize to delete product");
 
       const id = Number(req.params.id);
-      
+
       const deleteResult = await this.productService.deleteProduct(id);
       return sendSuccess(res, StatusCodes.OK, "Products fetched successfully", deleteResult);
     } catch (error) {
@@ -113,19 +113,33 @@ export class ProductController {
     }
   }
 
-  @Route("put", "/:id/update",[authenticate])
-  async updateProduct(req:Request, res:Response){
-    if(!req.user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorize");
+  @Route("put", "/:id/update", [upload.array('productImages', 5), authenticate])
+  async updateProduct(req: Request, res: Response) {
+    
     try {
-      const validateProduct = await validateDto(CreateProductDto,req.body, res);
-      if(!validateProduct.valid) return;
-      const id =Number( req.params.id);
+      if (!req.files || !req.body)  sendError(res, StatusCodes.BAD_REQUEST,"No files or form data received")
+       
+      const user = req.user as UserPayload;
+      if(!user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorize");
 
-      const result = await this.productService.updateProduct(id,validateProduct.data);
+      const productData = {
+        ...req.body,
+        price: Number(req.body.price),
+        quantity: Number(req.body.quantity),
+        images: req.files,
+        userId: user.id,
+        seller: user.name,
+        phone: user.phone,
+        email: user.email
+      };
+      const validateProduct = await validateDto(CreateProductDto, productData, res);
+      if (!validateProduct.valid) return;
+
+      const updatedProductResult = await this.productService.updateProduct(Number(req.params.id), validateProduct.data, req.files as Express.Multer.File[]);
+      return sendSuccess(res, StatusCodes.OK, "Product updated successfully", updatedProductResult);
     } catch (error) {
       console.log("error in product update controller:", (error as Error).message);
-      sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, "product can not be updated due to internal server error")
+      sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, error);
     }
-
   }
 }

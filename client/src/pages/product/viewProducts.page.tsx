@@ -35,7 +35,8 @@ const { products: initialProducts, loading, error, deleteProduct } = useProducts
   }, []);
 
   const handleEdit = (id: string) => {
-    navigate(`/falful/product/${id}/edit`);
+     navigate(`/falful/product/${id}/update`);
+    // navigate(`/falful/product/${id}/edit`);
   };
 
 

@@ -5,6 +5,8 @@ import { CreateProductDto } from '../dtos/product.dot';
 import { uploadImage, deleteImage } from '../../config/cloudinary.config';
 import { AppError } from '../../common/utils/response.utils';
 import { StatusCodes } from 'http-status-codes';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
 
 export class ProductService {
   private productRepo: Repository<Product>;
@@ -152,8 +154,13 @@ export class ProductService {
     }
   }
 
-  async updateProduct(id: number, productData: CreateProductDto, imageFiles?: Express.Multer.File[]): Promise<Product> {
-
+ async updateProduct(
+  id: number,
+  productData: CreateProductDto,
+  imageFiles?: Express.Multer.File[]
+): Promise<Product>{
+    console.log("Inside service updateProduct");
+   
     const queryRunner = this.dataSource.createQueryRunner();
     try {
       await queryRunner.connect();
@@ -161,48 +168,43 @@ export class ProductService {
 
       const existingProduct = await queryRunner.manager.findOne(Product, { where: { id }, relations: ['images'] });
       if (!existingProduct) throw new AppError("Product not found", StatusCodes.NOT_FOUND);
-      // Update basic fields
-      existingProduct.name = productData.name;
-      existingProduct.price = productData.price;
-      existingProduct.description = productData.description;
-      existingProduct.quantity = productData.quantity;
-      existingProduct.seller = productData.seller;
-      existingProduct.phone = productData.phone;
 
-       // If new images are provided, delete old ones and add new ones
-    if (imageFiles && imageFiles.length > 0) {
-      // Delete old images from Cloudinary
-      if (existingProduct.images?.length) {
-        await this.cleanupImages(existingProduct.images);
-        await queryRunner.manager.delete(ProductImage, { product: { id } });
+        Object.assign(existingProduct, productData);
+
+      if (imageFiles && imageFiles.length > 0) {
+        if (existingProduct.images?.length) {
+          await this.cleanupImages(existingProduct.images);
+          await queryRunner.manager.delete(ProductImage, { product: { id } });
+        }
+
+        const newImages = await Promise.all(
+          imageFiles.map(async (file) => {
+            const { url, publicId } = await uploadImage(file.path);
+            if (!url || !publicId) throw new Error("Image upload failed");
+
+            return this.imageRepo.create({
+              url,
+              publicId,
+              altText: productData.name,
+              product: existingProduct,
+            });
+          })
+        );
+
+        existingProduct.images = await queryRunner.manager.save(newImages);
       }
 
-      // Upload new images to Cloudinary
-      const newImages = await Promise.all(
-        imageFiles.map(async (file) => {
-          const { url, publicId } = await uploadImage(file.path);
-          if (!url || !publicId) throw new Error("Image upload failed");
-          return this.imageRepo.create({
-            url,
-            publicId,
-            altText: productData.name,
-            product: existingProduct,
-          });
-        })
-      );
-            existingProduct.images = await queryRunner.manager.save(newImages);
+      const updatedProduct = await queryRunner.manager.save(existingProduct);
+      await queryRunner.commitTransaction();
+
+      return updatedProduct;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      console.error("Failed to update product:", error);
+      throw error; // don't wrap again
+    } finally {
+      await queryRunner.release();
     }
-     const updatedProduct = await queryRunner.manager.save(existingProduct);
-    await queryRunner.commitTransaction();
-
-    return updatedProduct;
-    } catch (error){
-    await queryRunner.rollbackTransaction();
-    console.error("Failed to update product:", error);
-    throw new AppError("Unable to update product", StatusCodes.INTERNAL_SERVER_ERROR);
-  } finally {
-    await queryRunner.release();
   }
 
-  }
 }

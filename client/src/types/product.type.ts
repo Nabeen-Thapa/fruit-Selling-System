@@ -10,9 +10,6 @@ export interface ProductFormState {
   name: string;
   price: string;
   description: string;
-  // seller: string;
-  // phone: string;
-  // email: string;
   quantity: string;
   category: ProductCategory;
   images: ProductImage[];
@@ -51,4 +48,5 @@ export interface Product {
   seller: string;
   phone: string;
   images: ProductImages[];
+    category?: string; // Add this line
 }
