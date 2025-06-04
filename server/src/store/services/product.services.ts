@@ -154,13 +154,13 @@ export class ProductService {
     }
   }
 
- async updateProduct(
-  id: number,
-  productData: CreateProductDto,
-  imageFiles?: Express.Multer.File[]
-): Promise<Product>{
+  async updateProduct(
+    id: number,
+    productData: CreateProductDto,
+    imageFiles?: Express.Multer.File[]
+  ): Promise<Product> {
     console.log("Inside service updateProduct");
-   
+
     const queryRunner = this.dataSource.createQueryRunner();
     try {
       await queryRunner.connect();
@@ -169,7 +169,7 @@ export class ProductService {
       const existingProduct = await queryRunner.manager.findOne(Product, { where: { id }, relations: ['images'] });
       if (!existingProduct) throw new AppError("Product not found", StatusCodes.NOT_FOUND);
 
-        Object.assign(existingProduct, productData);
+      Object.assign(existingProduct, productData);
 
       if (imageFiles && imageFiles.length > 0) {
         if (existingProduct.images?.length) {
@@ -207,4 +207,30 @@ export class ProductService {
     }
   }
 
+  async getMyProducts(userId: string) {
+    try {
+     return await this.productRepo.find({where :{userId},
+        relations: ['images'],
+        order: { createdAt: 'DESC' },
+        select: {
+          id: true,
+          name: true,
+          price: true,
+          description: true,
+          quantity: true,
+          seller: true,
+          phone: true,
+          images: {
+            url: true,
+            altText: true
+          }
+        }
+      });
+    } catch (error) {
+      console.error(`Failed to fetch product with id ${userId}:`, error);
+      throw new AppError("Unable to retrieve product at this time", StatusCodes.INTERNAL_SERVER_ERROR);
+
+    }
+
+  }
 }

@@ -50,3 +50,13 @@ export interface Product {
   images: ProductImages[];
     category?: string; // Add this line
 }
+
+
+interface UpdateProductData {
+  name: string;
+  price: number;
+  description: string;
+  quantity: number;
+  seller: string;
+  phone: string;
+}

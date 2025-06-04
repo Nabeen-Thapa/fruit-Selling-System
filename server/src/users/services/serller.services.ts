@@ -6,7 +6,7 @@ import { AppError } from "../../common/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
 
 export class sellerServices {
-   // private sellerRepo = falfulConnection.getRepository(seller);
+    private sellerRepo = falfulConnection.getRepository(seller);
 
     async sellerRegister(sellerData: serllerDto): Promise<seller> {
         console.log("seller service");
@@ -36,5 +36,9 @@ export class sellerServices {
             await queryRunner.release();
         }
 
+    }
+
+    async sellerUpdate(){
+       
     }
 }

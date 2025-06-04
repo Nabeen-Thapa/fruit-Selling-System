@@ -83,6 +83,15 @@ const Navbar = () => {
                   >{menu.title}</a>
                 </li>
               ))}
+
+               {userRole === "seller" && (
+                <li>
+                  <a href="/falful/product/myproducts"
+                    className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
+                    my Products
+                  </a>
+                </li>
+              )}
               
               {userRole === "seller" && (
                 <li>
@@ -158,9 +167,9 @@ const Navbar = () => {
                   </div>
                 </>
               )}
-              <button className='text-2xl hover:bg-primary hover:text-white rounded-full p-2 duration-200'>
+              {existToken &&<button className='text-2xl hover:bg-primary hover:text-white rounded-full p-2 duration-200'>
                 <MdAddShoppingCart />
-              </button>
+              </button>}
             </ul>
           </div>
 

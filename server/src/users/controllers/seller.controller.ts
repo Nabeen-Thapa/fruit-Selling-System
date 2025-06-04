@@ -9,20 +9,20 @@ import { validateDto } from "../../common/utils/dtoValidateResponse.utils";
 
 @Controller("/seller")
 export class sellerController {
-    private newSeller = new sellerServices();
+    private sellerServices = new sellerServices();
     @Route("post", "/register")
     async sellerRegisterController(req: Request, res: Response) {
         console.log("seller controller", req.body);
         try {
             const sellerData = {
                 ...req.body,
-                role: "seller" 
+                role: "seller"
             };
             console.log("seller controller data:", sellerData);
             const sellerDtoValidate = await validateDto(serllerDto, sellerData, res);
-            if(!sellerDtoValidate.valid) return;
+            if (!sellerDtoValidate.valid) return;
             console.log("seller controller 1");
-            await this.newSeller.sellerRegister(sellerDtoValidate.data);
+            await this.sellerServices.sellerRegister(sellerDtoValidate.data);
             console.log("seller controller 2");
             sendSuccess(res, StatusCodes.OK, "successfully registered");
         } catch (error) {
@@ -39,6 +39,17 @@ export class sellerController {
         } catch (error) {
             console.log("seller view controller error:", error)
             sendError(res, StatusCodes.BAD_REQUEST, "fail to register");
+        }
+    }
+
+    @Route("put", "/update")
+    async updateSellerController(req: Request, res: Response) {
+        try {
+            await this.sellerServices.sellerUpdate();
+            sendSuccess(res, StatusCodes.OK, "successfully updated");
+        } catch (error) {
+            console.log("seller update controller error:", error)
+            sendError(res, StatusCodes.BAD_REQUEST, "fail to update");
         }
     }
 

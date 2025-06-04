@@ -24,6 +24,7 @@ export class ProductController {
     this.productService = new ProductService(falfulConnection);
   }
 
+  
   @Route("post", "/add", [upload.array('productImages', 5), authenticate])
   async createProduct(req: Request, res: Response) {
     try {
@@ -84,7 +85,7 @@ export class ProductController {
     }
   }
 
-  //get specific product
+  
   @Route("get", `/:id/view`)
   async getSpecificProduct(req: Request, res: Response) {
     try {
@@ -96,6 +97,7 @@ export class ProductController {
       sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, "Failed to fetch products");
     }
   }
+
 
   @Route("delete", "/:id/delete", [authenticate])
   async deleteProduct(req: Request, res: Response) {
@@ -113,14 +115,15 @@ export class ProductController {
     }
   }
 
+
   @Route("put", "/:id/update", [upload.array('productImages', 5), authenticate])
   async updateProduct(req: Request, res: Response) {
-    
+
     try {
-      if (!req.files || !req.body)  sendError(res, StatusCodes.BAD_REQUEST,"No files or form data received")
-       
+      if (!req.files || !req.body) sendError(res, StatusCodes.BAD_REQUEST, "No files or form data received")
+
       const user = req.user as UserPayload;
-      if(!user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorize");
+      if (!user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorize");
 
       const productData = {
         ...req.body,
@@ -140,6 +143,26 @@ export class ProductController {
     } catch (error) {
       console.log("error in product update controller:", (error as Error).message);
       sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, error);
+    }
+  }
+
+
+  @Route("get", "/myProducts", [authenticate])
+  async myProducts(req: Request, res: Response) {
+    try {
+      if (!req.user) sendError(res, StatusCodes.UNAUTHORIZED, "yuo are not authorized");
+      const userId = req.user?.id as string;
+      const myProductResult = await this.productService.getMyProducts(userId);
+      const responseData = myProductResult.map(product => ({
+        ...product,
+        price: Number(product.price),
+        quantity: Number(product.quantity)
+      }));
+
+      sendSuccess(res, StatusCodes.OK, "Products fetched successfully", responseData);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, "Failed to fetch products");
     }
   }
 }

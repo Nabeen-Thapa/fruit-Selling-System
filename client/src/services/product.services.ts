@@ -41,7 +41,6 @@ export const fetchSpecificProduct = async (id: string): Promise<Product> => {
 };
 
 
-
 export const deleteProduct = async (id: string): Promise<{ success: boolean; message?: string }> => {
   try {
 
@@ -79,23 +78,13 @@ export const deleteProduct = async (id: string): Promise<{ success: boolean; mes
 
 // src/services/product.services.ts
 
-
-interface UpdateProductData {
-  name: string;
-  price: number;
-  description: string;
-  quantity: number;
-  seller: string;
-  phone: string;
-}
-
 export const updateProduct = async (
   id: string,
   productData: ProductFormState,
   keepExistingImages: boolean = true
 ): Promise<Product> => {
   const formData = new FormData();
-  
+
   // Append product data
   formData.append('name', productData.name);
   formData.append('price', productData.price);
@@ -103,7 +92,7 @@ export const updateProduct = async (
   formData.append('quantity', productData.quantity);
   formData.append('category', productData.category);
   formData.append('keepExistingImages', keepExistingImages.toString());
-  
+
   // Append new images
   productData.images.forEach((image) => {
     formData.append('productImages', image.file);
@@ -122,3 +111,20 @@ export const updateProduct = async (
 
   return response.json();
 };
+
+export const myProducts = async (): Promise<Product[]> => {
+  const response = await fetch(`http://localhost:5000/product/myProducts`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (!response.ok) throw new Error("Unable to access your product");
+
+  const data = await response.json();
+
+ return data.data.map((product: Product) => ({
+    ...product,
+    price: typeof product.price === 'string' ? parseFloat(product.price) : product.price
+  }));
+};
+
