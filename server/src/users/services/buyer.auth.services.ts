@@ -9,12 +9,13 @@ import { compare } from "bcrypt";
 import { generateAccessToken, generateRefreshToken } from "../../config/jwt.config";
 import { redisService } from "../../common/services/redis.service";
 import { delay } from "../utils/loginDelay.utils";
+import { loginDto } from "../dtos/login.dto";
 
 export class buyerAuthServices {
     protected buyerRegisterRepo = falfulConnection.getRepository(buyer);
     private sessionService = new SessionService();
 
-    async buyerLogin(buyerData: buyerDto): Promise<LoginResponse> {
+    async buyerLogin(buyerData: loginDto): Promise<LoginResponse> {
         const queryRunner = falfulConnection.createQueryRunner();
         const { email, password } = buyerData;
         try {

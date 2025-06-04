@@ -19,6 +19,7 @@ export class sellerAuthController {
     @Route("post", "/login")
     async sellerLoginController(req: Request, res: Response) {
         try {
+
             const result = await this.sellerAuthServices.sellerLogin(req.body);
 
             if ('isAlreadyLoggedIn' in result) return sendSuccess(res, StatusCodes.CONFLICT, result.message);

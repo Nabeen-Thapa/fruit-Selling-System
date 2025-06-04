@@ -9,6 +9,7 @@ import { setAuthCookies } from "../utils/authCookie.utils";
 import { getCurrentUser } from "../utils/getCurrentUser.utils";
 import { validate } from "class-validator";
 import { validateDto } from "../../common/utils/dtoValidateResponse.utils";
+import { loginDto } from "../dtos/login.dto";
 
 @Controller("/buyer/auth")
 export class buyerAuthController {
@@ -22,7 +23,8 @@ export class buyerAuthController {
     @Route("post", "/login")
     async buyerLoginController(req: Request, res: Response) {
         try {
-            const buyerData = await validateDto(buyerDto, req.body, res);
+            const buyerLoginData = req.body;
+            const buyerData = await validateDto(loginDto, buyerLoginData, res);
             if (!buyerData.valid) return; 
 
             const result = await this.buyerAuthServices.buyerLogin(buyerData.data);

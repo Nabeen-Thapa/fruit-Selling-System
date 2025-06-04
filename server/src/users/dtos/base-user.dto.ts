@@ -16,7 +16,7 @@ export class baseUserDto {
 
     @IsString()
     @IsNotEmpty()
-    @IsPhoneNumber('NP')
+   // @IsPhoneNumber('NP')
     // @Transform(({ value }) => value.toString())
     phone!: string;
 

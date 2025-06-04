@@ -6,18 +6,20 @@ import { AppError } from "../../common/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
 
 export class sellerServices {
-    private sellerRepo = falfulConnection.getRepository(seller);
+   // private sellerRepo = falfulConnection.getRepository(seller);
 
     async sellerRegister(sellerData: serllerDto): Promise<seller> {
+        console.log("seller service");
         const queryRunner = falfulConnection.createQueryRunner();
         try {
             await queryRunner.connect();
             await queryRunner.startTransaction();
-
-            const existingSeller = await this.sellerRepo.findOne({ where: { email: sellerData.email } })
+            const sellerRepo = queryRunner.manager.getRepository(seller);
+            const existingSeller = await sellerRepo.findOne({ where: { email: sellerData.email } })
             if (existingSeller) throw new AppError('seller with this email already exists', StatusCodes.CONFLICT);
             const hashedPassword = await hash(sellerData.password, 10);
-            const newSeller = this.sellerRepo.create({
+
+            const newSeller = sellerRepo.create({
                 ...sellerData,
                 password: hashedPassword
             });
@@ -27,6 +29,7 @@ export class sellerServices {
             return savedSeller;
 
         } catch (error) {
+            console.log("seller service error:", (error as Error).message)
             await queryRunner.rollbackTransaction();
             throw error
         } finally {

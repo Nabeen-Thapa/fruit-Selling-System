@@ -5,9 +5,7 @@ import { useSeller } from '../../hooks/user/useSeller.hook';
 import { SellerForm } from '../../components/user/sellerFrom';
 
 export const SellerRegister: React.FC = () => {
-    const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState(false);
-    const { addSeller } = useSeller(error, setError, loading, setLoading);
+    const { addSeller,error, setError, loading, setLoading } = useSeller();
     const navigate = useNavigate();
 
     const handleSubmit = async (sellerData: Omit<Seller, 'id' | 'createdAt' | 'lastLogin'>) => {

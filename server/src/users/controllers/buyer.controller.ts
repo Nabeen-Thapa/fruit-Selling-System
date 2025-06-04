@@ -7,6 +7,7 @@ import { buyerDto } from "../dtos/buyer.dto";
 import { buyerServices } from "../services/buyer.services";
 import { validate } from "class-validator";
 import { error } from "console";
+import { validateDto } from "../../common/utils/dtoValidateResponse.utils";
 
 @Controller("/buyer")
 export class buyerController{
@@ -14,20 +15,14 @@ export class buyerController{
     @Route("post", "/register")
     async buyerRegisterController(req:Request, res:Response){
         try {
-            const buyerData: buyerDto = {
+            const buyerData = {
                 ...req.body,
                 role: "buyer"
             };
-            const sellerDtoError = await validate(buyerData)
-            if(sellerDtoError.length > 0){
-                const validationErrors = sellerDtoError.map(err =>({
-                    property: err.property,
-                    constraints: err.constraints
-                }));
-                return sendError(res, StatusCodes.BAD_REQUEST, validationErrors);
-            }
+           const buerDtoValidate = await validateDto(buyerDto, buyerData, res);
+           if(!buerDtoValidate.valid) return;
 
-            const newBuyer = await this.buyerServices.buyerRegister(buyerData);
+            const newBuyer = await this.buyerServices.buyerRegister(buerDtoValidate.data);
             sendSuccess(res, StatusCodes.OK, "successfully registered");
         } catch (error) {
             console.log("buyer register controller error:", error)

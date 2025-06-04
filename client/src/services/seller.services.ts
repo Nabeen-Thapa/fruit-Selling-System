@@ -3,29 +3,34 @@ import { Seller } from "../types/seller.types";
 const BASE_URL = "http://localhost:5000/seller"
 
 export const registerSeller = async (sellerData: Omit<Seller, 'id' | 'createdAt' | 'lastLogin'>): Promise<Seller> => {
-    const sellerResponse = await fetch(`${BASE_URL}/register`, {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(sellerData),
-    });
-    
-   if (!sellerResponse.ok) {
-    const errorText = await sellerResponse.text(); // 👈 Get server response
-    console.error("Server Error Response:", errorText);
-    throw new Error('Failed to register seller');
+  const sellerResponse = await fetch(`${BASE_URL}/register`, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(sellerData),
+  });
+
+  const contentType = sellerResponse.headers.get('content-type');
+
+  if (!sellerResponse.ok) {
+    let errorMsg = 'Failed to register buyer';
+    if (contentType && contentType.includes('application/json')) {
+      const errorData = await sellerResponse.json();
+      errorMsg = errorData.message || errorMsg;
+    }
+    throw new Error(errorMsg);
+  }
+
+
+  return sellerResponse.json();
 }
-    
-    return sellerResponse.json();
-}
+
 
 export interface SellerLoginData {
   email: string;
   password: string;
 }
-
-
 // src/services/authService.ts
 export const loginSeller = async (email: string, password: string) => {
   const res = await fetch("http://localhost:5000/seller/auth/login", {

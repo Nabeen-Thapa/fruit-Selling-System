@@ -10,10 +10,10 @@ export const SellerForm: React.FC<SellerFormProps> = ({ onSubmit, loading }) => 
   const [formData, setFormData] = useState<Omit<Seller, 'id' | 'createdAt' | 'lastLogin'>>({
     name: '',
     email: '',
+    password: '',
     phone: '',
     address: '',
-    businessName: '',
-    password: ''
+    businessName: ''
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

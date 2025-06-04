@@ -1,7 +1,7 @@
 import { Transform } from "class-transformer";
 import { IsString, IsNotEmpty, IsEmail, IsAlphanumeric, MinLength, IsOptional, IsDateString, Matches, IsPhoneNumber } from "class-validator";
 
-export class baseUserDto {
+export class loginDto {
     @IsEmail()
     email!: string
 

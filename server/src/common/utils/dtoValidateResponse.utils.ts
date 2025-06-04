@@ -17,6 +17,7 @@ export async function validateDto<T extends object>(
             property: err.property,
             constraints: err.constraints
         }));
+         console.log("Validation failed:", validationError); 
         if (res) {
             sendError(res, StatusCodes.BAD_REQUEST,validationError);
         }

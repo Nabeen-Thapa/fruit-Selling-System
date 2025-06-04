@@ -2,17 +2,10 @@ import { useState, useEffect } from 'react';
 import { Buyer } from '../../types/buyer.types';
 import { buyerLoginService, deleteBuyer, fetchBuyers, registerBuyer } from '../../services/buyer.services';
 
-export const useBuyers = (error, setError,loading, setLoading) => {
+export const useBuyers = () => {
   const [buyers, setBuyers] = useState<Buyer[]>([]);
-   const [state, setState] = useState<{
-    buyers: Buyer[];
-    loading: boolean;
-    error: string | null;
-  }>({
-    buyers: [],
-    loading: false,
-    error: null
-  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const loadBuyers = async () => {
     setLoading(true);
@@ -55,7 +48,7 @@ export const useBuyers = (error, setError,loading, setLoading) => {
   const loginBuyer = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const response = await buyerLoginService(email, password); // call your service function
+      const response = await buyerLoginService(email, password);
       return response;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
@@ -68,11 +61,6 @@ export const useBuyers = (error, setError,loading, setLoading) => {
   useEffect(() => {
     loadBuyers();
   }, []);
- return {
-    buyers: state.buyers,
-    loading: state.loading,
-    error: state.error,
-    addBuyer,
-    removeBuyer,
-    loginBuyer
-  };};
+
+  return { buyers, loading, setLoading, error, addBuyer, removeBuyer, loginBuyer };
+};

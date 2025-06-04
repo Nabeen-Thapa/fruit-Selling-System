@@ -5,31 +5,28 @@ import { sendError, sendSuccess } from "../../common/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
 import { sellerServices } from "../services/serller.services";
 import { serllerDto } from "../dtos/seller.dot";
-import { validate } from "class-validator";
+import { validateDto } from "../../common/utils/dtoValidateResponse.utils";
 
 @Controller("/seller")
 export class sellerController {
     private newSeller = new sellerServices();
     @Route("post", "/register")
     async sellerRegisterController(req: Request, res: Response) {
+        console.log("seller controller", req.body);
         try {
-            const sellerData: serllerDto = {
+            const sellerData = {
                 ...req.body,
                 role: "seller" 
             };
-             const errors = await validate(sellerData);
-            if (errors.length > 0) {
-                const validationErrors = errors.map(err => ({
-                    property: err.property,
-                    constraints: err.constraints,
-                }));
-                return sendError(res, StatusCodes.BAD_REQUEST, validationErrors);
-            }
-            console.log(sellerData);
-            await this.newSeller.sellerRegister(sellerData);
+            console.log("seller controller data:", sellerData);
+            const sellerDtoValidate = await validateDto(serllerDto, sellerData, res);
+            if(!sellerDtoValidate.valid) return;
+            console.log("seller controller 1");
+            await this.newSeller.sellerRegister(sellerDtoValidate.data);
+            console.log("seller controller 2");
             sendSuccess(res, StatusCodes.OK, "successfully registered");
         } catch (error) {
-            console.log("seller register controller error:", error)
+            console.log("seller register service error:", (error as Error).message)
             sendError(res, StatusCodes.BAD_REQUEST, "fail to register");
         }
     }

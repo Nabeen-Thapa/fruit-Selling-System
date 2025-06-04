@@ -2,7 +2,6 @@ import { Buyer } from "../types/buyer.types";
 
 
 const BASE_URL = 'http://localhost:5000/buyer';
-
 export const registerBuyer = async (buyerData: Omit<Buyer, 'id' | 'createdAt' | 'lastLogin'>): Promise<Buyer> => {
   const response = await fetch(`${BASE_URL}/register`, {
     method: 'POST',
@@ -11,15 +10,30 @@ export const registerBuyer = async (buyerData: Omit<Buyer, 'id' | 'createdAt' | 
     },
     body: JSON.stringify(buyerData),
   });
-  if (!response.ok) throw new Error('Failed to register buyer');
+
+  const contentType = response.headers.get('content-type');
+
+  if (!response.ok) {
+    let errorMsg = 'Failed to register buyer';
+    if (contentType && contentType.includes('application/json')) {
+      const errorData = await response.json();
+      errorMsg = errorData.message || errorMsg;
+    }
+    throw new Error(errorMsg);
+  }
+
   return response.json();
 };
+
+
+
 
 export const fetchBuyers = async (): Promise<Buyer[]> => {
   const response = await fetch(`${BASE_URL}/view`);
   if (!response.ok) throw new Error('Failed to fetch buyers');
   return response.json();
 };
+
 
 export const deleteBuyer = async (id: string): Promise<void> => {
   const response = await fetch(`${BASE_URL}/delete?id=${id}`, {
