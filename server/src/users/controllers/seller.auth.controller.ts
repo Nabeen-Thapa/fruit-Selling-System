@@ -24,7 +24,6 @@ export class sellerAuthController {
 
             if ('isAlreadyLoggedIn' in result) return sendSuccess(res, StatusCodes.CONFLICT, result.message);
             
-
             setAuthCookies(res, result.accessToken, result.refreshToken)
             sendSuccess(res, StatusCodes.OK, "Login successful", {
                 user: result.user,
@@ -34,5 +33,4 @@ export class sellerAuthController {
             sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, (error as Error).message);
         }
     }
-
 }

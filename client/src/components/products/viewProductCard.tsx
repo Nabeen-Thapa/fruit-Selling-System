@@ -2,7 +2,8 @@ import React from 'react';
 import { FiEdit, FiEye, FiTrash2 } from 'react-icons/fi';
 import { Product } from '../../types/product.type';
 import { formatPrice } from '../../utility/format';
-import { loginUserType } from '../../types/user.types';
+import { ShoppingCartIcon } from '@heroicons/react/24/outline';
+import { loginUserType, UserType } from '../../types/user.types';
 
 interface ProductCardProps {
   product: Product;
@@ -48,11 +49,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       </div>
       <div className="mt-6 flex space-x-2">
         <button
-          className={`px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors ${userRole !== "seller" ? "w-full" : ""
-            }`} onClick={() => onView(product.id)}>
+          className={`px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors `} onClick={() => onView(product.id)}>
           <FiEye className="inline mr-1" /> view details
         </button>
-        {userRole === 'seller' && (
+        {userRole === UserType.BUYER &&
+        <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 rounded transition-colors flex items-center justify-center">
+          <ShoppingCartIcon className="h-7 w-7 mr-2" />
+          Add to Cart
+        </button>}
+        {userRole !== UserType.BUYER && (
           <>
             {console.log(`${loginUserType.SELLER} matched! Showing buttons.`)}
             <button

@@ -26,14 +26,9 @@ export const registerSeller = async (sellerData: Omit<Seller, 'id' | 'createdAt'
   return sellerResponse.json();
 }
 
-
-export interface SellerLoginData {
-  email: string;
-  password: string;
-}
 // src/services/authService.ts
 export const loginSeller = async (email: string, password: string) => {
-  const res = await fetch("http://localhost:5000/seller/auth/login", {
+  const res = await fetch(`${BASE_URL}/auth/login`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -63,3 +58,28 @@ export const loginSeller = async (email: string, password: string) => {
     return { message: "Login successful (no JSON response)" };
   }
 };
+
+
+export const viewSeller = async () => {
+  try {
+    const viewResponse = await fetch(`http://localhost:5000/seller/view`, {
+      method: "GET",
+      credentials: "include"
+    });
+
+    const data = await viewResponse.json(); // ✅ Parse once
+
+    if (!viewResponse.ok) {
+      const errorMessage = data?.message || "Failed to view seller";
+      throw new Error(errorMessage);
+    }
+
+    console.log("view seller service:", data); // ✅ use parsed data
+
+    return data;
+    
+  } catch (error) {
+    console.error("Error fetching seller:", (error as Error).message);
+    throw error;
+  }
+}

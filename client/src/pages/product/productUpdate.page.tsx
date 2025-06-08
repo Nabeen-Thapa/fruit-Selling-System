@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { FiUpload, FiTrash2, FiImage, FiCheck, FiEdit } from 'react-icons/fi';
-import { useUpdateProductForm } from '../../hooks/useUpdateProductForm';
+import { useUpdateProductForm } from '../../hooks/products/useUpdateProductForm';
 import { useParams } from 'react-router-dom';
 
 const UpdateProducts: React.FC = () => {

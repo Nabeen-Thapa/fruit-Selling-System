@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ProductCard } from '../../components/products/viewProductCard';
-import { useMyProducts } from '../../hooks/userMyProducts.hook';
+import { useMyProducts } from '../../hooks/products/userMyProducts.hook';
 import { fetchCurrentUser } from '../../services/auth.fetchCurrentUser.utils';
 import { useNavigate } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';

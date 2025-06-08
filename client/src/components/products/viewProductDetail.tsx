@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useSpecificProduct } from '../../hooks/userSpecificProduct.hook';
+import { useSpecificProduct } from '../../hooks/products/userSpecificProduct.hook';
 import { StarIcon, HeartIcon, ShareIcon, ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 

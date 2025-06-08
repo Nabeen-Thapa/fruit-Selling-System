@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { ProductFormState, ProductImage, ProductImages } from '../types/product.type';
-import { fetchSpecificProduct, updateProduct } from '../services/product.services';
+import { ProductFormState, ProductImage, ProductImages } from '../../types/product.type';
+import { fetchSpecificProduct, updateProduct } from '../../services/product.services';
 
 interface UseUpdateProductFormReturn {
   product: ProductFormState | null;

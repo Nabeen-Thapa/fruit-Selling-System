@@ -49,10 +49,10 @@ export class buyerAuthServices {
             const accessToken = generateAccessToken(payload);
             const refreshToken = generateRefreshToken(payload);
 
-            const REFRESH_TOKEN_EXPIRY = parseInt(process.env.REFRESH_TOKEN_EXPIRY || "604800");
             const expiresAt = new Date(Date.now() + 60 * 60 * 24 * 7);
             await redisService.set(`refresh_token:${buyer.id}`, refreshToken, 60 * 60 * 24 * 7);
             await this.sessionService.createUserSession(buyer.id, refreshToken, UserType.BUYER, expiresAt);
+            
             await queryRunner.commitTransaction();
 
             const {id, name, phone, role} = buyer;

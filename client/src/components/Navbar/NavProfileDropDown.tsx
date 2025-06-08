@@ -1,7 +1,9 @@
+// NavProfileDropDown.tsx
 import React, { useState, useEffect, MouseEvent, useRef } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 import { clearSession } from '../../services/shared.services';
+import ViewSellerData from '../../pages/users/viewSeller.page';
 
 interface NavProfileDropDownProps {
   name: string;
@@ -11,24 +13,23 @@ interface NavProfileDropDownProps {
 const NavProfileDropDown: React.FC<NavProfileDropDownProps> = ({ name, jwtToken }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 370);
   const [isOpen, setIsOpen] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false); // Add this state
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Resize listener
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 370);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
-   const handleClickOutside = (e: MouseEvent | Event) => {
-  const target = e.target as Node;
-  if (dropdownRef.current && !dropdownRef.current.contains(target)) {
-    setIsOpen(false);
-  }
-};
+    const handleClickOutside = (e: MouseEvent | Event) => {
+      const target = e.target as Node;
+      if (dropdownRef.current && !dropdownRef.current.contains(target)) {
+        setIsOpen(false);
+      }
+    };
 
     window.addEventListener('click', handleClickOutside);
     return () => window.removeEventListener('click', handleClickOutside);
@@ -36,13 +37,13 @@ const NavProfileDropDown: React.FC<NavProfileDropDownProps> = ({ name, jwtToken 
 
   const handleLogout = async() => {
     try {
-    await clearSession();
-    navigate("/");
-    window.location.reload();
-  } catch (error) {
-    console.error("Logout failed:", error);
-    alert("Something went wrong during logout.");
-  }
+      await clearSession();
+      navigate("/");
+      window.location.reload();
+    } catch (error) {
+      console.error("Logout failed:", error);
+      alert("Something went wrong during logout.");
+    }
   };
 
   const handleDeleteAccount = async (e: MouseEvent<HTMLButtonElement>) => {
@@ -53,6 +54,15 @@ const NavProfileDropDown: React.FC<NavProfileDropDownProps> = ({ name, jwtToken 
       alert("User not authenticated");
       navigate("/iKeepMy/signup");
     }
+  };
+
+  const handleProfileClick = () => {
+    setShowProfileModal(true);
+    setIsOpen(false);
+  };
+
+  const closeProfileModal = () => {
+    setShowProfileModal(false);
   };
 
   return (
@@ -73,7 +83,7 @@ const NavProfileDropDown: React.FC<NavProfileDropDownProps> = ({ name, jwtToken 
           <div className="py-1">
             <button
               className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 flex justify-between"
-              onClick={() => document.getElementById('userDetailModal')?.classList.toggle('hidden')}
+              onClick={handleProfileClick}
             >
               Profile <i className="fas fa-user"></i>
             </button>
@@ -100,6 +110,9 @@ const NavProfileDropDown: React.FC<NavProfileDropDownProps> = ({ name, jwtToken 
           </div>
         </div>
       )}
+
+      {/* Render the profile modal */}
+      {showProfileModal && <ViewSellerData onClose={closeProfileModal} />}
     </div>
   );
 };

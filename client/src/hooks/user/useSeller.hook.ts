@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Seller } from '../../types/seller.types';
-import { loginSeller, registerSeller } from '../../services/seller.services';
+import { loginSeller, registerSeller, viewSeller } from '../../services/seller.services';
+import { fetchCurrentUser } from '../../services/auth.fetchCurrentUser.utils';
 
 export const useSeller = () => {
   const [seller, setSeller] = useState<Seller[]>([]);
@@ -33,12 +34,30 @@ export const useSeller = () => {
     }
   };
 
+
+  const viewSellerData = async()=>{
+     setLoading(true);
+    setError(null);
+    try {
+      const currentUser = await fetchCurrentUser();
+      if(!currentUser) throw new Error("faile to view your data");
+      const viewSellerRes = await viewSeller();
+      return viewSellerRes;
+    } catch (err) {
+        setError(err instanceof Error ? err.message : 'Login failed');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return {
     addSeller,
     sellerLogin,
+    viewSellerData,
     loading,
     error,
-    setError,     
-    setLoading   
+    setError,
+    setLoading
   };
 };

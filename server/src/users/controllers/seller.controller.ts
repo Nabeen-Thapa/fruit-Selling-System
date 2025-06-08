@@ -6,6 +6,7 @@ import { StatusCodes } from "http-status-codes";
 import { sellerServices } from "../services/serller.services";
 import { serllerDto } from "../dtos/seller.dot";
 import { validateDto } from "../../common/utils/dtoValidateResponse.utils";
+import { authenticate } from "../middleware/auth.middleware";
 
 @Controller("/seller")
 export class sellerController {
@@ -31,21 +32,26 @@ export class sellerController {
         }
     }
 
-    @Route("get", "/view")
+    @Route("get", "/view", [authenticate])
     async viewsellerController(req: Request, res: Response) {
         try {
-
-            sendSuccess(res, StatusCodes.OK, "successfully view");
+            if(!req.user) return sendError(res, StatusCodes.BAD_REQUEST, "bad request");
+            const id = req.user?.id as string;
+            const sellerViewResult = await this.sellerServices.sellerView(id);
+            console.log("seller contoller",sellerViewResult);
+            sendSuccess(res, StatusCodes.OK, "successfully view", sellerViewResult);
         } catch (error) {
             console.log("seller view controller error:", error)
-            sendError(res, StatusCodes.BAD_REQUEST, "fail to register");
+            sendError(res, StatusCodes.BAD_REQUEST, "fail to view");
         }
     }
 
-    @Route("put", "/update")
+    @Route("put", "/update", [authenticate])
     async updateSellerController(req: Request, res: Response) {
         try {
-            await this.sellerServices.sellerUpdate();
+             if(!req.user) return sendError(res, StatusCodes.BAD_REQUEST, "bad request");
+            const id = req.user?.id as string;
+            await this.sellerServices.sellerUpdate(id);
             sendSuccess(res, StatusCodes.OK, "successfully updated");
         } catch (error) {
             console.log("seller update controller error:", error)

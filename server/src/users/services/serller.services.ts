@@ -6,7 +6,7 @@ import { AppError } from "../../common/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
 
 export class sellerServices {
-    private sellerRepo = falfulConnection.getRepository(seller);
+        private sellerRepo = falfulConnection.getRepository(seller);
 
     async sellerRegister(sellerData: serllerDto): Promise<seller> {
         console.log("seller service");
@@ -38,7 +38,21 @@ export class sellerServices {
 
     }
 
-    async sellerUpdate(){
-       
+    async sellerView(sellerId: string) {
+        const queryRunner = falfulConnection.createQueryRunner();
+        try {
+           
+            const sellerData = await this.sellerRepo.findOne({ where:{ id: sellerId }})
+            if(!sellerData) throw new AppError("seller is not found", StatusCodes.BAD_REQUEST);
+        
+            return sellerData;
+        } catch (error) {
+            console.error("error in seller view service:", (error as Error).message);
+            throw error;
+        }
+    }
+
+    async sellerUpdate(sellerId :string) {
+        
     }
 }

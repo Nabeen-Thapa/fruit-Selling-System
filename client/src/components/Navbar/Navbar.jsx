@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { fetchCurrentUser } from '../../services/auth.fetchCurrentUser.utils';
 import { useNavigate, useLocation } from 'react-router-dom';
 import NavProfileDropDown from './NavProfileDropDown';
+import { UserType } from '../../types/user.types';
 
 const NavbarMenu = [
   { id: 0, title: "Home", link: "/", },
@@ -32,11 +33,12 @@ const Navbar = () => {
         "/falful/user/seller/login",
         "/falful/user/buyer/register",
         "/falful/user/seller/register",
-        "/falful/user/buyer/login"
+        "/falful/user/buyer/login",
+        "/falful/products"
       ];
 
       if (!decodedToken && !publicRoutes.includes(location.pathname)) {
-        navigate("/");
+        navigate("/falful/user/buyer/login");
         return;
       }
 
@@ -84,29 +86,47 @@ const Navbar = () => {
                 </li>
               ))}
 
-               {userRole === "seller" && (
-                <li>
-                  <a href="/falful/product/myproducts"
-                    className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
-                    my Products
-                  </a>
-                </li>
-              )}
-              
-              {userRole === "seller" && (
-                <li>
-                  <a href="/falful/products/add"
-                    className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
-                    Add Products
-                  </a>
-                </li>
+              {userRole === UserType.SELLER && (
+                <>
+                  <li>
+                    <a href="/falful/product/myproducts"
+                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
+                      my Products
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="/falful/products/add"
+                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
+                      Add Products
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="/falful/sellers"
+                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
+                      view sellers
+                    </a>
+                  </li>
+                </>
               )}
 
+
+              {userRole === UserType.BUYER && (
+                <>
+                  <li>
+                    <a href="/falful/sellers"
+                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
+                      view sellers
+                    </a>
+                  </li>
+                </>
+              )}
               {!existToken ? (
                 <>
                   {/* Register Dropdown */}
                   <li className="relative">
-                    <button 
+                    <button
                       onClick={toggleRegisterDropdown}
                       className="flex items-center gap-1 py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold"
                     >
@@ -134,7 +154,7 @@ const Navbar = () => {
 
                   {/* Login Dropdown */}
                   <li className="relative">
-                    <button 
+                    <button
                       onClick={toggleLoginDropdown}
                       className="flex items-center gap-1 py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold"
                     >
@@ -167,7 +187,7 @@ const Navbar = () => {
                   </div>
                 </>
               )}
-              {existToken &&<button className='text-2xl hover:bg-primary hover:text-white rounded-full p-2 duration-200'>
+              {existToken && <button className='text-2xl hover:bg-primary hover:text-white rounded-full p-2 duration-200'>
                 <MdAddShoppingCart />
               </button>}
             </ul>

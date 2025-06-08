@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ProductCard } from '../../components/products/viewProductCard';
-import { useProducts } from '../../hooks/userProduct.hook';
+import { useProducts } from '../../hooks/products/userProduct.hook';
 import { fetchCurrentUser } from '../../services/auth.fetchCurrentUser.utils';
 import { useNavigate } from 'react-router-dom';
 import { deleteProduct } from '../../services/product.services';
@@ -21,18 +21,18 @@ const { products: initialProducts, loading, error, deleteProduct } = useProducts
     setProducts(initialProducts);
   }, [initialProducts]);
 
-  const getUser = async () => {
-    const decodedToken = await fetchCurrentUser();
-    if (!decodedToken) {
-      navigate("/");
-      return;
-    }
-    setUserRole(decodedToken.role?.toLowerCase());
-  };
+  // const getUser = async () => {
+  //   const decodedToken = await fetchCurrentUser();
+  //   if (!decodedToken) {
+  //     navigate("/");
+  //     return;
+  //   }
+  //   setUserRole(decodedToken.role?.toLowerCase());
+  // };
 
-  useEffect(() => {
-    getUser();
-  }, []);
+  // useEffect(() => {
+  //   getUser();
+  // }, []);
 
   const handleEdit = (id: string) => {
      navigate(`/falful/product/${id}/update`);

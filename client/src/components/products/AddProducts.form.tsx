@@ -1,6 +1,6 @@
 import React from 'react';
 import { FiPlus, FiUpload, FiTrash2, FiImage, FiCheck } from 'react-icons/fi';
-import { useProductForm } from '../../hooks/useProductForm';
+import { useProductForm } from '../../hooks/products/useProductForm';
 
 const AddProducts: React.FC = () => {
   const {
