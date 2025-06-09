@@ -25,19 +25,13 @@ export class buyerAuthServices {
             const buyer = await this.buyerRegisterRepo.findOne({ where: { email } });
             if (!buyer) throw new AppError("user is not found", StatusCodes.NOT_FOUND);
 
-            const dummeyHash =process.env.DUMMY_BCRYPT_HASH || "$H!DT0os3x4ty+&WMkir%d*+/#vd!mVmfR5";
+            const dummeyHash = process.env.DUMMY_BCRYPT_HASH || "$H!DT0os3x4ty+&WMkir%d*+/#vd!mVmfR5";
             const hashToCheck = buyer ? buyer?.password : dummeyHash;
             const isPasswordValid = await compare(password, hashToCheck);
             if (!isPasswordValid) throw new AppError("invalid password", StatusCodes.UNAUTHORIZED);
 
             const hasActiveSeeeion = await this.sessionService.checkActiveSession(buyer.id);
 
-            if (hasActiveSeeeion)
-                return {
-                    message: "You are already logged in",
-                    isAlreadyLoggedIn: true
-                };
-                
             const payload: TokenPayload = {
                 userId: buyer.id,
                 name: buyer.name,
@@ -51,15 +45,18 @@ export class buyerAuthServices {
 
             const expiresAt = new Date(Date.now() + 60 * 60 * 24 * 7);
             await redisService.set(`refresh_token:${buyer.id}`, refreshToken, 60 * 60 * 24 * 7);
-            await this.sessionService.createUserSession(buyer.id, refreshToken, UserType.BUYER, expiresAt);
-            
+
+            if (!hasActiveSeeeion) {
+                await this.sessionService.createUserSession(buyer.id, refreshToken, UserType.BUYER, expiresAt);
+            }
+
             await queryRunner.commitTransaction();
 
-            const {id, name, phone, role} = buyer;
+            const { id, name, phone, role } = buyer;
             return {
                 accessToken,
                 refreshToken,
-                user: { id, name, email, phone, role,},
+                user: { id, name, email, phone, role, },
             }
         } catch (error) {
             await queryRunner.rollbackTransaction();

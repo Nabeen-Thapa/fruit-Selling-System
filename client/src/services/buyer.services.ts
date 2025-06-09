@@ -70,3 +70,19 @@ export const buyerLoginService = async (email: string, password: string) => {
     return { message: "Login successful (no JSON response)" };
   }
 }
+
+export const viewAllSellersService = async()=>{
+  try {
+    const response = await fetch("http://localhost:5000/buyer/viewSellers",{
+    method: "GET",
+    credentials: "include",
+  });
+   if(!response.ok) throw new Error("unable to access sellers");
+  const sellers = await response.json();
+  console.log("seller service:", sellers);
+  return sellers.data;
+  } catch (error) {
+   console.error("error in buyer service:",(error as Error).message);
+    throw error;
+  }
+}

@@ -12,3 +12,11 @@ export enum loginUserType {
     SELLER  ="seller",
     BUYER = "buyer"
 }
+
+export interface Message {
+  _id: string;
+  senderId: string;
+  receiverId: string;
+  message: string;
+  timestamp: string;
+}

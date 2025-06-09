@@ -1,7 +1,6 @@
 import React from 'react';
 import { FiEdit, FiEye, FiTrash2 } from 'react-icons/fi';
 import { Product } from '../../types/product.type';
-import { formatPrice } from '../../utility/format';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { loginUserType, UserType } from '../../types/user.types';
 

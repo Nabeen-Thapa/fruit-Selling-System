@@ -102,12 +102,7 @@ const Navbar = () => {
                     </a>
                   </li>
 
-                  <li>
-                    <a href="/falful/sellers"
-                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
-                      view sellers
-                    </a>
-                  </li>
+                 
                 </>
               )}
 
@@ -115,7 +110,7 @@ const Navbar = () => {
               {userRole === UserType.BUYER && (
                 <>
                   <li>
-                    <a href="/falful/sellers"
+                    <a href="/falful/buyer/sellerlist"
                       className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
                       view sellers
                     </a>

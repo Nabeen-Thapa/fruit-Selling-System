@@ -3,7 +3,7 @@ import { falfulConnection } from "../../config/dbORM.config";
 import { buyerDto } from "../dtos/buyer.dto";
 import { buyer } from "../models/buyer.model";
 import { seller } from "../models/seller.model";
-import { AppError } from "src/common/utils/response.utils";
+import { AppError } from "../../common/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
 
 export class buyerServices {
@@ -40,15 +40,14 @@ export class buyerServices {
 
     }
 
-    async viewAllSellers(){
-       try {
-         const sellers = this.sellerRepo.find();
-        if(!sellers) throw new AppError("sellers not found", StatusCodes.NOT_ACCEPTABLE);
-
-        return sellers;
-       } catch (error) {
+    async viewAllSellers() {
+        try {
+            const sellers = await this.sellerRepo.find();
+            if (!sellers) throw new AppError("sellers not found", StatusCodes.NOT_ACCEPTABLE);
+            return sellers;
+        } catch (error) {
             console.log("buyer service view all seller :", (error as Error).message);
             throw (error as Error).message;
-       }
+        }
     }
 }

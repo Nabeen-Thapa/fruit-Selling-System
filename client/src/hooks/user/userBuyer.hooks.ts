@@ -1,23 +1,27 @@
 import { useState, useEffect } from 'react';
 import { Buyer } from '../../types/buyer.types';
-import { buyerLoginService, deleteBuyer, fetchBuyers, registerBuyer } from '../../services/buyer.services';
+import { buyerLoginService, deleteBuyer, fetchBuyers, registerBuyer, viewAllSellersService } from '../../services/buyer.services';
+import { fetchCurrentUser } from '../../services/auth.fetchCurrentUser.utils';
 
 export const useBuyers = () => {
   const [buyers, setBuyers] = useState<Buyer[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadBuyers = async () => {
-    setLoading(true);
-    try {
-      const data = await fetchBuyers();
-      setBuyers(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    const loadBuyers = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchBuyers();
+        setBuyers(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadBuyers();
+  }, []);
 
   const addBuyer = async (buyerData: Omit<Buyer, 'id' | 'createdAt' | 'lastLogin'>) => {
     setLoading(true);
@@ -58,9 +62,21 @@ export const useBuyers = () => {
     }
   };
 
-  useEffect(() => {
-    loadBuyers();
-  }, []);
 
-  return { buyers, loading, setLoading, error, addBuyer, removeBuyer, loginBuyer };
+  const viewAllSellers = async () => {
+    try {
+      // const currentUser = await fetchCurrentUser();
+      // if (!currentUser) throw new Error("faile to view your data");
+      const sellers = await viewAllSellersService();
+      console.log("buyer hook:", sellers)
+      return sellers;
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Login failed');
+      throw error;
+    }
+  }
+
+
+
+  return { buyers, loading, setLoading, error, viewAllSellers, addBuyer, removeBuyer, loginBuyer };
 };

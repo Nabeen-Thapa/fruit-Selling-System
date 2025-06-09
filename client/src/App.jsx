@@ -18,6 +18,8 @@ import ViewSpecificProductPage from './pages/product/viewSpecificProduct.page';
 import ProductUpdatePage from './pages/product/productUpdate.page';
 import ViewMyProducts from './pages/product/viewMyProducts.page';
 import ViewSellerData from './pages/users/viewSeller.page';
+import SellerList from './pages/users/buyer.getSellers.page';
+import UsersChat from './pages/users/usersChat.page';
 
 const App = () => {
   return (
@@ -37,6 +39,8 @@ const App = () => {
           <Route path="/falful/product/:id/update" element={<ProductUpdatePage/>} />
           <Route path="/falful/product/myproducts" element={<ViewMyProducts/>} />
           <Route path="/falful/seller/view" element={<ViewSellerData/>} />
+          <Route path="/falful/buyer/sellerlist" element={<SellerList/>} />
+          <Route path="/falful/user/chat/:id" element={<UsersChat/>} />
         </Routes>
         {/* <Footer /> */}
       </Router>
