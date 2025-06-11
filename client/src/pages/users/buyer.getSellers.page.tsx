@@ -42,7 +42,7 @@ const SellerList: React.FC = () => {
         </div>
 
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-          <div className="mt-6 text-center text-xl text-gray-500">
+          <div className="mt-6 mb-4 text-center text-xl text-gray-500">
             <p>Showing {sellerList.length} sellers</p>
           </div>
           <hr />

@@ -30,7 +30,7 @@ export class SellerAuthServices {
       const dummyHash = process.env.DUMMY_BCRYPT_HASH || "$2a$10$dkdfsAbiugiuW2bhfdb@h+$A%"; 
       const hashToCheck = seller ? seller.password : dummyHash;
       const isPasswordValid = await compare(password, hashToCheck);
-      if (!seller || !isPasswordValid) throw new AppError("invalid credential", StatusCodes.UNAUTHORIZED);
+      if (!seller || !isPasswordValid) throw new AppError("invalid credentialss", StatusCodes.UNAUTHORIZED);
 
       const hasActiveSession = await this.sessionService.checkActiveSession(seller.id);
       if (hasActiveSession)isAlreadyLoggedIn: true;
@@ -47,11 +47,11 @@ export class SellerAuthServices {
       const refreshToken = generateRefreshToken(payload);
 
       // Store refresh token in Redis with expiration
-      const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+      const expiresAt = new Date(Date.now() + (7 * 24 * 60 * 60 * 1000)); // 7 days
 
       // Store tokens
       //const REFRESH_TOKEN_EXPIRY = parseInt(process.env.REFRESH_TOKEN_EXPIRY || "604800");
-      await redisService.set(`refresh_token:${seller.id}`, refreshToken, 60 * 60 * 24 * 7);
+      await redisService.set(`refresh_token:${seller.id}`, refreshToken,  (7 * 24 * 60 * 60 * 1000));
       await this.sessionService.createUserSession(
         seller.id,
         refreshToken,

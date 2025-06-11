@@ -43,9 +43,9 @@ export class buyerAuthServices {
             const accessToken = generateAccessToken(payload);
             const refreshToken = generateRefreshToken(payload);
 
-            const expiresAt = new Date(Date.now() + 60 * 60 * 24 * 7);
-            await redisService.set(`refresh_token:${buyer.id}`, refreshToken, 60 * 60 * 24 * 7);
-
+            const expiresAt = new Date(Date.now() + (7 * 24 * 60 * 60 * 1000));
+            await redisService.set(`refresh_token:${buyer.id}`, refreshToken,  (7 * 24 * 60 * 60 * 1000));
+            
             if (!hasActiveSeeeion) {
                 await this.sessionService.createUserSession(buyer.id, refreshToken, UserType.BUYER, expiresAt);
             }

@@ -8,6 +8,8 @@ import { seller } from '../models/seller.model';
 import { UserSession } from '../models/userSession.model';
 import { MoreThan } from 'typeorm';
 import { User } from '../models/user.model';
+import { buyer } from '../models/buyer.model';
+import { UserType } from '../types/auth.types';
 
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -19,9 +21,10 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     if (!token) {
       throw new AppError('Authentication token required', StatusCodes.UNAUTHORIZED);
     }
+    console.log("authentication :", token);
 
     // 2. Verify and decode token
-    const accessKey = process.env.ACCESS_TOKEN_SECRET || 'access_secret';
+    const accessKey = process.env.ACCESS_TOKEN_SECRET || "Q@SpU87P17rByoN0odlu?gVO2-zieRdGAq!%UDLExA3K";
     const decoded = jwt.verify(token, accessKey) as {
       userId: string;
       name: string;
@@ -29,22 +32,26 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
       phone: string;
       role: string;
     };
-
+    console.log("auth decode", decoded);
     // 3. Check if token is blacklisted in Redis
     const isBlacklisted = await redisService.exists(`blacklist:${token}`);
     if (isBlacklisted) {
       throw new AppError('Token revoked', StatusCodes.UNAUTHORIZED);
     }
-
+    console.log("auth decode1");
     // 4. Check seller existence
     const sellerRepo = falfulConnection.getRepository(seller);
-    const sellerExist = await sellerRepo.findOne({ where: { id: decoded.userId } });
+     const buyerRepo = falfulConnection.getRepository(buyer);
+     const userRepo = decoded.role === UserType.BUYER ? buyerRepo : sellerRepo;
+    const sellerExist = await userRepo.findOne({ where: { id: decoded.userId } });
 
     if (!sellerExist) throw new AppError('Seller not found', StatusCodes.UNAUTHORIZED);
 
-
+    console.log("auth seller:", sellerExist);
     // 5. Check for active session in DB
     const sessionRepo = falfulConnection.getRepository(UserSession);
+    console.log("authentication seeeion:", sessionRepo);
+
     const activeSession = await sessionRepo.findOne({
       where: {
         userId: decoded.userId,
@@ -63,15 +70,15 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     // }
 
     // 7. Attach user to request for further access
- req.user = {
-  id: decoded.userId,
-  name: decoded.name,
-  email: decoded.email,
-  phone: decoded.phone,
-  role: decoded.role,
-} as unknown as User;
-
-next();
+    req.user = {
+      id: decoded.userId,
+      name: decoded.name,
+      email: decoded.email,
+      phone: decoded.phone, 
+      role: decoded.role,
+    } as User;
+    console.log("authentication :", token);
+    next();
 
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {
@@ -82,7 +89,7 @@ next();
       });
     }
 
-    const statusCode =error instanceof AppError ? error.statusCode : StatusCodes.INTERNAL_SERVER_ERROR;
+    const statusCode = error instanceof AppError ? error.statusCode : StatusCodes.INTERNAL_SERVER_ERROR;
 
     return res.status(statusCode).json({
       success: false,
