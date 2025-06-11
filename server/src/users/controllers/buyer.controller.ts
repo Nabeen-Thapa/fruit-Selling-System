@@ -6,7 +6,6 @@ import { StatusCodes } from "http-status-codes";
 import { buyerDto } from "../dtos/buyer.dto";
 import { buyerServices } from "../services/buyer.services";
 import { validate } from "class-validator";
-import { error } from "console";
 import { validateDto } from "../../common/utils/dtoValidateResponse.utils";
 import { authenticate } from "../middleware/auth.middleware";
 import logger from "../../common/utils/logger";
@@ -60,7 +59,6 @@ export class buyerController {
         // if (!req.user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
         try {
             const allSellers = await this.buyerServices.viewAllSellers();
-            console.log("buyer controller view all sellers:", allSellers)
              sendSuccess(res, StatusCodes.OK,"successfully accessed", allSellers);
         } catch (error) {
             logger.error("error in buyer controller:",(error as Error).message);

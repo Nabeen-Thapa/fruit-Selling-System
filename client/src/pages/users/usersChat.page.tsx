@@ -1,30 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import useChat from '../../hooks/user/useChat.hooks';
 import { userChat } from '../../types/userChat.types';
 import { Message } from '../../types/user.types';
+import { fetchCurrentUser } from '../../services/auth.fetchCurrentUser.utils';
 
 const UsersChat: React.FC = () => {
   const { id: receiverId } = useParams<{ id: string }>();
   const [messages, setMessages] = useState<Message[]>([]);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
-  const { storeNewChat, isLoading, error } = useChat();
+  const { storeNewChat, getOldChat, isLoading, error } = useChat();
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   const [newMessage, setNewMessage] = useState<Omit<userChat, 'id' | 'createdAt' | 'senderId'>>({
-  message: '',
-  receiverId: receiverId || '',
-});
+    message: '',
+    receiverId: receiverId || '',
+  });
 
+  // Load current user
+  useEffect(() => {
+    const loadUser = async () => {
+      const user = await fetchCurrentUser();
+      if (user?.userId) {
+        setCurrentUserId(user.userId);
+      }
+    };
+    loadUser();
+  }, []);
 
- const handleSend = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!newMessage.message.trim()) return;
+  // Fetch chat messages
+  useEffect(() => {
+    if (receiverId) fetchChats(receiverId);
+  }, [receiverId]);
 
-  const success = await storeNewChat(newMessage);
-  if (success) {
-    setNewMessage((prev) => ({ ...prev, message: '' }));
-  }
-};
+  const fetchChats = async (id: string) => {
+    const chats = await getOldChat(id);
+    if (chats) {
+      const mappedMessages = chats.data.map((chat: Message) => ({
+        _id: chat._id,
+        message: chat.message,
+        senderId: chat.senderId,
+        receiverId: chat.receiverId,
+        timestamp: chat.timestamp,
+      }));
+      setMessages(mappedMessages);
+    }
+  };
+
+  // Scroll to bottom on new messages
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const handleSend = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newMessage.message.trim()) return;
+
+    const success = await storeNewChat(newMessage);
+    if (success && receiverId) {
+      setNewMessage((prev) => ({ ...prev, message: '' }));
+      fetchChats(receiverId); // ✅ Pass the ID here
+    }
+  };
 
   return (
     <div className="mt-10 pt-5">
@@ -34,20 +72,24 @@ const UsersChat: React.FC = () => {
         {/* Chat message list */}
         <div className="h-96 overflow-y-auto border rounded p-2 mb-4 bg-gray-50">
           {messages.length > 0 ? (
-            messages.map((msg) => (
-              <div
-                key={msg._id}
-                className={`mb-2 flex ${msg.senderId === 'you' ? 'justify-end' : 'justify-start'}`}
-              >
+            <>
+              {messages.map((msg) => (
                 <div
-                  className={`p-2 rounded-lg text-sm max-w-xs ${
-                    msg.senderId === 'you' ? 'bg-blue-100 text-blue-900' : 'bg-gray-200'
-                  }`}
+                  key={msg._id}
+                  className={`mb-2 flex ${msg.senderId === currentUserId ? 'justify-end' : 'justify-start'}`}
                 >
-                  {msg.message}
+                  <div
+                    className={`p-2 rounded-lg text-sm max-w-xs ${msg.senderId === currentUserId
+                        ? 'bg-blue-100 text-blue-900'
+                        : 'bg-gray-200'
+                      }`}
+                  >
+                    {msg.message}
+                  </div>
                 </div>
-              </div>
-            ))
+              ))}
+              <div ref={bottomRef}></div>
+            </>
           ) : (
             <p className="text-center text-gray-400">No messages yet.</p>
           )}

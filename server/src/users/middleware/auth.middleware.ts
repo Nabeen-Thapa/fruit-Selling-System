@@ -21,8 +21,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     if (!token) {
       throw new AppError('Authentication token required', StatusCodes.UNAUTHORIZED);
     }
-    console.log("authentication :", token);
-
+    
     // 2. Verify and decode token
     const accessKey = process.env.ACCESS_TOKEN_SECRET || "Q@SpU87P17rByoN0odlu?gVO2-zieRdGAq!%UDLExA3K";
     const decoded = jwt.verify(token, accessKey) as {
@@ -32,13 +31,13 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
       phone: string;
       role: string;
     };
-    console.log("auth decode", decoded);
+   
     // 3. Check if token is blacklisted in Redis
     const isBlacklisted = await redisService.exists(`blacklist:${token}`);
     if (isBlacklisted) {
       throw new AppError('Token revoked', StatusCodes.UNAUTHORIZED);
     }
-    console.log("auth decode1");
+    
     // 4. Check seller existence
     const sellerRepo = falfulConnection.getRepository(seller);
      const buyerRepo = falfulConnection.getRepository(buyer);
@@ -47,10 +46,9 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
 
     if (!sellerExist) throw new AppError('Seller not found', StatusCodes.UNAUTHORIZED);
 
-    console.log("auth seller:", sellerExist);
+    
     // 5. Check for active session in DB
     const sessionRepo = falfulConnection.getRepository(UserSession);
-    console.log("authentication seeeion:", sessionRepo);
 
     const activeSession = await sessionRepo.findOne({
       where: {
@@ -77,7 +75,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
       phone: decoded.phone, 
       role: decoded.role,
     } as User;
-    console.log("authentication :", token);
+    
     next();
 
   } catch (error) {
