@@ -71,6 +71,31 @@ export const buyerLoginService = async (email: string, password: string) => {
   }
 }
 
+
+export const viewBuyer = async () => {
+  try {
+    const viewResponse = await fetch(`http://localhost:5000/buyer/viewData`, {
+      method: "GET",
+      credentials: "include"
+    });
+
+    const data = await viewResponse.json();
+
+    if (!viewResponse.ok) {
+      const errorMessage = data?.message || "Failed to view seller";
+      throw new Error(errorMessage);
+    }
+
+    // console.log("view seller service:", data); // ✅ use parsed data
+
+    return data;
+    
+  } catch (error) {
+    console.error("Error fetching seller:", (error as Error).message);
+    throw error;
+  }
+}
+
 export const viewAllSellersService = async()=>{
   try {
     const response = await fetch("http://localhost:5000/buyer/viewSellers",{

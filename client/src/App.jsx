@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navbar from './components/Navbar/Navbar'
 import Footer from './components/Footer/Footer'
 import {
@@ -18,10 +18,16 @@ import ViewSpecificProductPage from './pages/product/viewSpecificProduct.page';
 import ProductUpdatePage from './pages/product/productUpdate.page';
 import ViewMyProducts from './pages/product/viewMyProducts.page';
 import ViewSellerData from './pages/users/viewSeller.page';
-import SellerList from './pages/users/buyer.getSellers.page';
+import UsersList from './pages/users/buyer.getUsers.page';
 import UsersChat from './pages/users/usersChat.page';
+import { useCurrentUser } from './utility/currentUser.utils';
+import UpdateBuyerData from './pages/users/updateBuyer.page';
 
-const App = () => {
+const App = () => {  
+  const { currentUserRole, loading } = useCurrentUser();
+  useEffect(() => {
+    console.log("User role:", currentUserRole);
+  }, [currentUserRole]);
   return (
     <>
       <Router>
@@ -39,10 +45,11 @@ const App = () => {
           <Route path="/falful/product/:id/update" element={<ProductUpdatePage/>} />
           <Route path="/falful/product/myproducts" element={<ViewMyProducts/>} />
           <Route path="/falful/seller/view" element={<ViewSellerData/>} />
-          <Route path="/falful/buyer/sellerlist" element={<SellerList/>} />
+          <Route path="/falful/buyer/view" element={<UpdateBuyerData/>} />
+          <Route path={`/falful/buyer/sellerlist`} element={<UsersList/>} />
           <Route path="/falful/user/chat/:id" element={<UsersChat/>} />
         </Routes>
-        {/* <Footer /> */}
+        <Footer />
       </Router>
     </>
   )

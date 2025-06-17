@@ -7,6 +7,7 @@ import { fetchCurrentUser } from '../../services/auth.fetchCurrentUser.utils';
 import { useNavigate, useLocation } from 'react-router-dom';
 import NavProfileDropDown from './NavProfileDropDown';
 import { UserType } from '../../types/user.types';
+import { useCurrentUser } from '../../utility/currentUser.utils';
 
 const NavbarMenu = [
   { id: 0, title: "Home", link: "/", },
@@ -23,6 +24,11 @@ const Navbar = () => {
   const [loginDropdownOpen, setLoginDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+   const { currentUserRole, loading } = useCurrentUser();
+    useEffect(() => {
+      console.log("User role:", currentUserRole);
+    }, [currentUserRole]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -101,7 +107,12 @@ const Navbar = () => {
                       Add Products
                     </a>
                   </li>
-
+                <li>
+                    <a href="/falful/buyer/sellerlist"
+                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
+                      view buyers
+                    </a>
+                  </li>
                  
                 </>
               )}
@@ -178,11 +189,11 @@ const Navbar = () => {
               ) : (
                 <>
                   <div className="d-flex align-items-center">
-                    {existToken && <NavProfileDropDown name={name} jwtToken={existToken} />}
+                    {existToken && <NavProfileDropDown name={name} jwtToken={existToken} userRole={userRole} />}
                   </div>
                 </>
               )}
-              {existToken && <button className='text-2xl hover:bg-primary hover:text-white rounded-full p-2 duration-200'>
+              {existToken && userRole === UserType.BUYER &&<button className='text-2xl hover:bg-primary hover:text-white rounded-full p-2 duration-200'>
                 <MdAddShoppingCart />
               </button>}
             </ul>

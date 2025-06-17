@@ -4,13 +4,16 @@ import { FaUserCircle } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 import { clearSession } from '../../services/shared.services';
 import ViewSellerData from '../../pages/users/viewSeller.page';
+import UpdateBuyerData from '../../pages/users/updateBuyer.page';
+import { UserType } from '../../types/user.types';
 
 interface NavProfileDropDownProps {
   name: string;
   jwtToken: string;
+  userRole: string;
 }
 
-const NavProfileDropDown: React.FC<NavProfileDropDownProps> = ({ name, jwtToken }) => {
+const NavProfileDropDown: React.FC<NavProfileDropDownProps> = ({ name, jwtToken, userRole }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 370);
   const [isOpen, setIsOpen] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false); // Add this state
@@ -35,7 +38,7 @@ const NavProfileDropDown: React.FC<NavProfileDropDownProps> = ({ name, jwtToken 
     return () => window.removeEventListener('click', handleClickOutside);
   }, []);
 
-  const handleLogout = async() => {
+  const handleLogout = async () => {
     try {
       await clearSession();
       navigate("/");
@@ -87,6 +90,8 @@ const NavProfileDropDown: React.FC<NavProfileDropDownProps> = ({ name, jwtToken 
             >
               Profile <i className="fas fa-user"></i>
             </button>
+
+
             <button
               className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 flex justify-between"
               onClick={() => navigate("/iKeepMy/ChangePassword")}
@@ -112,7 +117,13 @@ const NavProfileDropDown: React.FC<NavProfileDropDownProps> = ({ name, jwtToken 
       )}
 
       {/* Render the profile modal */}
-      {showProfileModal && <ViewSellerData onClose={closeProfileModal} />}
+      {userRole === UserType.SELLER ? (
+        showProfileModal && <ViewSellerData onClose={closeProfileModal} />
+      ) : (
+        showProfileModal && <UpdateBuyerData onClose={closeProfileModal} />
+      )}
+
+
     </div>
   );
 };

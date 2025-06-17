@@ -1,63 +1,83 @@
-// UserViewModal.tsx
-import React from 'react';
-
-interface Seller {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  createdAt: string | Date;
-  lastLogin: string | Date | null;
-  role: string;
-  businessName: string;
-}
+import React, { useEffect, useState } from 'react';
+import { usersView } from '../../types/seller.types';
+import { updateSeller } from '../../services/seller.services';
+import { useCurrentUser } from '../../utility/currentUser.utils';
+import { UserType } from '../../types/user.types';
 
 interface UserViewModalProps {
-  user: Seller | null;
+  user: usersView | null;
   onClose: () => void;
-  onSave?: () => void; // Add onSave prop for save functionality
-  isEditMode?: boolean; // Add flag for edit mode
+  onSave?: (updatedUser: Partial<usersView>) => void;
+  isEditMode?: boolean;
 }
 
-export const UserViewModal: React.FC<UserViewModalProps> = ({ 
-  user, 
-  onClose, 
-  onSave, 
-  isEditMode = false 
+export const UserViewModal: React.FC<UserViewModalProps> = ({
+  user,
+  onClose,
+  onSave,
+  isEditMode = true,
 }) => {
   if (!user) return null;
 
-  // Format date for display
+  const [name, setName] = useState(user.name);
+  const [businessName, setBusinessName] = useState(user.businessName || '');
+  const [email, setEmail] = useState(user.email);
+  const [phone, setPhone] = useState(user.phone);
+  const [address, setAddress] = useState(user.address);
+const [shippingAddress, setShippingAddress] = useState(user.shippingAddress);
+
+
+  const { currentUserRole, loadingCurrentUser } = useCurrentUser();
+      useEffect(() => {
+        console.log("User role:", currentUserRole);
+      }, [currentUserRole]);
+
   const formatDate = (dateString: string | Date) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
+  };
+
+  const handleSave = async() => {
+    const updatedUser: Partial<usersView> = {
+     name,
+    email,
+    phone,
+    address,
+    businessName,
+    shippingAddress
+    };
+
+    if (onSave) onSave(updatedUser);
+    await updateSeller(updatedUser);
+    console.log("updatre succcess");
+    onClose();
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
-        {/* Modal Header */}
+        {/* Header */}
         <div className="border-b p-4">
           <h3 className="text-xl font-bold text-gray-800">
             {isEditMode ? 'Edit Profile' : 'Seller Profile'}
           </h3>
         </div>
-        
-        {/* Modal Body */}
+
+        {/* Body */}
         <div className="p-6 space-y-4">
-          {/* Name Section */}
+          {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-500 mb-1">Name</label>
             <div className="text-gray-800 font-medium">
               {isEditMode ? (
                 <input
                   type="text"
-                  defaultValue={user.name}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="w-full p-2 border rounded-md"
                 />
               ) : (
@@ -66,32 +86,48 @@ export const UserViewModal: React.FC<UserViewModalProps> = ({
             </div>
           </div>
 
-          {/* Business Name Section */}
-          {user.businessName && (
-            <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1">Business Name</label>
-              <div className="text-gray-800 font-medium">
-                {isEditMode ? (
-                  <input
-                    type="text"
-                    defaultValue={user.businessName}
-                    className="w-full p-2 border rounded-md"
-                  />
-                ) : (
-                  user.businessName
-                )}
-              </div>
+          {/* Business Name */}
+         {currentUserRole ===  UserType.SELLER && ( <div>
+            <label className="block text-sm font-medium text-gray-500 mb-1">Business Name</label>
+            <div className="text-gray-800 font-medium">
+              {isEditMode ? (
+                <input
+                  type="text"
+                  value={businessName}
+                  onChange={(e) => setBusinessName(e.target.value)}
+                  className="w-full p-2 border rounded-md"
+                />
+              ) : (
+                user.businessName
+              )}
             </div>
-          )}
+          </div>)}
 
-          {/* Email Section */}
+           {currentUserRole ===  UserType.BUYER && ( <div>
+            <label className="block text-sm font-medium text-gray-500 mb-1">shippingAddress</label>
+            <div className="text-gray-800 font-medium">
+              {isEditMode ? (
+                <input
+                  type="text"
+                  value={shippingAddress}
+                  onChange={(e) => setBusinessName(e.target.value)}
+                  className="w-full p-2 border rounded-md"
+                />
+              ) : (
+                user.shippingAddress
+              )}
+            </div>
+          </div>)}
+
+          {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-500 mb-1">Email</label>
             <div className="text-gray-800 font-medium">
               {isEditMode ? (
                 <input
                   type="email"
-                  defaultValue={user.email}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full p-2 border rounded-md"
                 />
               ) : (
@@ -100,14 +136,15 @@ export const UserViewModal: React.FC<UserViewModalProps> = ({
             </div>
           </div>
 
-          {/* Phone Section */}
+          {/* Phone */}
           <div>
             <label className="block text-sm font-medium text-gray-500 mb-1">Phone</label>
             <div className="text-gray-800 font-medium">
               {isEditMode ? (
                 <input
                   type="tel"
-                  defaultValue={user.phone}
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                   className="w-full p-2 border rounded-md"
                 />
               ) : (
@@ -115,8 +152,23 @@ export const UserViewModal: React.FC<UserViewModalProps> = ({
               )}
             </div>
           </div>
+ <div>
+            <label className="block text-sm font-medium text-gray-500 mb-1">address</label>
+            <div className="text-gray-800 font-medium">
+              {isEditMode ? (
+                <input
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  className="w-full p-2 border rounded-md"
+                />
+              ) : (
+                user.address
+              )}
+            </div>
+          </div>
 
-          {/* Registration Date Section */}
+          {/* Registered Date */}
           <div>
             <label className="block text-sm font-medium text-gray-500 mb-1">Registered Date</label>
             <div className="text-gray-800 font-medium">
@@ -124,8 +176,8 @@ export const UserViewModal: React.FC<UserViewModalProps> = ({
             </div>
           </div>
         </div>
-        
-        {/* Modal Footer */}
+
+        {/* Footer */}
         <div className="border-t p-4 flex justify-end space-x-3">
           <button
             onClick={onClose}
@@ -135,7 +187,7 @@ export const UserViewModal: React.FC<UserViewModalProps> = ({
           </button>
           {isEditMode && (
             <button
-              onClick={onSave}
+              onClick={handleSave}
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
             >
               Save Changes

@@ -1,4 +1,4 @@
-import { Seller } from "../types/seller.types";
+import { Seller, usersView } from "../types/seller.types";
 
 const BASE_URL = "http://localhost:5000/seller"
 
@@ -36,7 +36,7 @@ export const loginSeller = async (email: string, password: string) => {
     },
     body: JSON.stringify({ email, password }),
   });
-  console.log("cient service seller login:", res);
+  //console.log("cient service seller login:", res);
 
   const contentType = res.headers.get("content-type");
 
@@ -74,7 +74,7 @@ export const viewSeller = async () => {
       throw new Error(errorMessage);
     }
 
-    console.log("view seller service:", data); // ✅ use parsed data
+    // console.log("view seller service:", data); // ✅ use parsed data
 
     return data;
     
@@ -83,3 +83,39 @@ export const viewSeller = async () => {
     throw error;
   }
 }
+
+
+export const viewBuyers = async()=>{
+  try {
+    const viewResponse = await fetch(`http://localhost:5000/seller/viewbuyers`,{
+      method: "GET",
+      credentials: "include",
+    })
+    if(!viewResponse.ok) return new Error("unabke to access buyers");
+    const buyersList = await viewResponse.json();
+    // console.log("fortend seller service buyers:", buyersList);
+    return buyersList.data;
+  } catch (error) {
+     console.error("Error fetching seller:", (error as Error).message);
+    throw error;
+  }
+}
+
+export const updateSeller = async (updatedUser: Partial<usersView>) => {
+  try {
+    const res = await fetch(`http://localhost:5000/seller/update`, {
+      method: 'PUT',
+      credentials: "include",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({updatedUser}),
+    });
+    console.log("service update seller:", updatedUser)
+    if (!res.ok) throw new Error("Failed to update seller");
+    const updatedData = await res.json();
+
+    console.log("Updated:", updatedData);
+    // Optionally refresh data or close modal
+  } catch (error) {
+    console.error(error);
+  }
+};

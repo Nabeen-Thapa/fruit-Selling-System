@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Buyer } from '../../types/buyer.types';
-import { buyerLoginService, deleteBuyer, fetchBuyers, registerBuyer, viewAllSellersService } from '../../services/buyer.services';
+import { buyerLoginService, deleteBuyer, fetchBuyers, registerBuyer, viewAllSellersService, viewBuyer } from '../../services/buyer.services';
 import { fetchCurrentUser } from '../../services/auth.fetchCurrentUser.utils';
 
 export const useBuyers = () => {
@@ -8,20 +8,20 @@ export const useBuyers = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const loadBuyers = async () => {
-      setLoading(true);
-      try {
-        const data = await fetchBuyers();
-        setBuyers(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadBuyers();
-  }, []);
+  // useEffect(() => {
+  //   const loadBuyers = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const data = await fetchBuyers();
+  //       setBuyers(data);
+  //     } catch (err) {
+  //       setError(err instanceof Error ? err.message : 'Unknown error');
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   loadBuyers();
+  // }, []);
 
   const addBuyer = async (buyerData: Omit<Buyer, 'id' | 'createdAt' | 'lastLogin'>) => {
     setLoading(true);
@@ -65,8 +65,8 @@ export const useBuyers = () => {
 
   const viewAllSellers = async () => {
     try {
-      // const currentUser = await fetchCurrentUser();
-      // if (!currentUser) throw new Error("faile to view your data");
+      const currentUser = await fetchCurrentUser();
+      if (!currentUser) throw new Error("faile to view your data");
       const sellers = await viewAllSellersService();
       console.log("buyer hook:", sellers)
       return sellers;
@@ -76,7 +76,21 @@ export const useBuyers = () => {
     }
   }
 
+  const viewBuyerData = useCallback(async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const currentUser = await fetchCurrentUser();
+        if (!currentUser) throw new Error("Failed to view your data");
+        const viewSellerRes = await viewBuyer();
+        return viewSellerRes;
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch seller data');
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    }, []);
 
-
-  return { buyers, loading, setLoading, error, viewAllSellers, addBuyer, removeBuyer, loginBuyer };
+  return { buyers, loading, setLoading, error, viewAllSellers,viewBuyerData, addBuyer, removeBuyer, loginBuyer};
 };

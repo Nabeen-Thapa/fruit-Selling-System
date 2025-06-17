@@ -9,3 +9,16 @@ export interface Seller {
   createdAt: string;
   lastLogin?: string;
 }
+
+ export interface usersView {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  createdAt: string | Date;
+  lastLogin: string | Date | null;
+  role: string;
+  businessName: string;
+  shippingAddress:string;
+}

@@ -4,12 +4,14 @@ import { serllerDto } from "../dtos/seller.dot";
 import { seller } from "../models/seller.model";
 import { AppError } from "../../common/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
+import { buyer } from "../models/buyer.model";
+import { serllerUpdateDto } from "../dtos/sellerUpdate.dto";
 
 export class sellerServices {
         private sellerRepo = falfulConnection.getRepository(seller);
+        private buyerRepo = falfulConnection.getRepository(buyer);
 
     async sellerRegister(sellerData: serllerDto): Promise<seller> {
-        console.log("seller service");
         const queryRunner = falfulConnection.createQueryRunner();
         try {
             await queryRunner.connect();
@@ -52,7 +54,28 @@ export class sellerServices {
         }
     }
 
-    async sellerUpdate(sellerId :string) {
-        
+     async viewBuyers() {
+        try {
+            const buyers = await this.buyerRepo.find();
+            if (!buyers) throw new AppError("buyers not found", StatusCodes.NOT_ACCEPTABLE);
+            return buyers;
+        } catch (error) {
+            console.log("buyer service view all seller :", (error as Error).message);
+            throw (error as Error).message;
+        }
     }
+
+    async sellerUpdate(sellerId :string, updatedData: serllerUpdateDto) {
+        console.log("seller service back:",updatedData)
+        try {
+            const seller = await this.sellerRepo.findOne({where :{id:sellerId}});
+            if(!seller) throw new AppError("aou are not authorized", StatusCodes.UNAUTHORIZED);
+            const update = await this.sellerRepo.update({ id: sellerId },
+        { ...updatedData })
+        return "success fully updated";
+        } catch (error) {
+             console.log("update buyer data :", (error as Error).message);
+            throw (error as Error).message;
+        }
+    } 
 }

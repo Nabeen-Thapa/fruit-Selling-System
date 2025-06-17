@@ -7,6 +7,7 @@ import { sellerServices } from "../services/serller.services";
 import { serllerDto } from "../dtos/seller.dot";
 import { validateDto } from "../../common/utils/dtoValidateResponse.utils";
 import { authenticate } from "../middleware/auth.middleware";
+import { serllerUpdateDto } from "../dtos/sellerUpdate.dto";
 
 @Controller("/seller")
 export class sellerController {
@@ -19,12 +20,9 @@ export class sellerController {
                 ...req.body,
                 role: "seller"
             };
-            console.log("seller controller data:", sellerData);
             const sellerDtoValidate = await validateDto(serllerDto, sellerData, res);
             if (!sellerDtoValidate.valid) return;
-            console.log("seller controller 1");
             await this.sellerServices.sellerRegister(sellerDtoValidate.data);
-            console.log("seller controller 2");
             sendSuccess(res, StatusCodes.OK, "successfully registered");
         } catch (error) {
             console.log("seller register service error:", (error as Error).message)
@@ -38,7 +36,7 @@ export class sellerController {
             if(!req.user) return sendError(res, StatusCodes.BAD_REQUEST, "bad request");
             const id = req.user?.id as string;
             const sellerViewResult = await this.sellerServices.sellerView(id);
-            console.log("seller contoller",sellerViewResult);
+           // console.log("seller contoller",sellerViewResult);
             sendSuccess(res, StatusCodes.OK, "successfully view", sellerViewResult);
         } catch (error) {
             console.log("seller view controller error:", error)
@@ -51,7 +49,11 @@ export class sellerController {
         try {
              if(!req.user) return sendError(res, StatusCodes.BAD_REQUEST, "bad request");
             const id = req.user?.id as string;
-            await this.sellerServices.sellerUpdate(id);
+            
+            const sellerUpdatedData = {...req.body.updatedUser, role: "seller"}
+            const updatedDataDto = await validateDto(serllerUpdateDto, sellerUpdatedData, res);
+            if(!updatedDataDto.valid) return;
+            await this.sellerServices.sellerUpdate(id, updatedDataDto.data);
             sendSuccess(res, StatusCodes.OK, "successfully updated");
         } catch (error) {
             console.log("seller update controller error:", error)
@@ -67,6 +69,18 @@ export class sellerController {
         } catch (error) {
             console.log("seller delete controller error:", error)
             sendError(res, StatusCodes.BAD_REQUEST, "fail to register");
+        }
+    }
+
+    @Route("get", "/viewbuyers", [authenticate])
+    async viewBuyersController(req:Request, res:Response){
+        try {
+            if(!req.user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authrized to view buyers")
+            const viewBuyersResult = await this.sellerServices.viewBuyers();
+            return sendSuccess(res, StatusCodes.OK, "seller list", viewBuyersResult);
+        } catch (error) {
+            console.log("error in seller controller view sellers:", (error as Error).message);
+            sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, "internal server error");
         }
     }
 }
