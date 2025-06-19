@@ -1,4 +1,5 @@
 import { Buyer } from "../types/buyer.types";
+import { usersView } from "../types/seller.types";
 
 
 const BASE_URL = 'http://localhost:5000/buyer';
@@ -62,7 +63,7 @@ export const buyerLoginService = async (email: string, password: string) => {
     } else {
       throw new Error("Login failed with no response body");
     }
-  } 
+  }
   // Return parsed response if JSON
   if (contentType && contentType.includes("application/json")) {
     return await res.json();
@@ -89,25 +90,44 @@ export const viewBuyer = async () => {
     // console.log("view seller service:", data); // ✅ use parsed data
 
     return data;
-    
+
   } catch (error) {
     console.error("Error fetching seller:", (error as Error).message);
     throw error;
   }
 }
 
-export const viewAllSellersService = async()=>{
+export const updateBuyerDetail = async (updatedBuyerData: Partial<usersView>) => {
   try {
-    const response = await fetch("http://localhost:5000/buyer/viewSellers",{
-    method: "GET",
-    credentials: "include",
-  });
-   if(!response.ok) throw new Error("unable to access sellers");
-  const sellers = await response.json();
-  console.log("seller service:", sellers);
-  return sellers.data;
+    const res = await fetch(`http://localhost:5000/buyer/update`, {
+      method: 'PUT',
+      credentials: "include",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ updatedBuyerData }),
+    });
+    console.log("service update buyer:", updatedBuyerData)
+    if (!res.ok) throw new Error("Failed to update seller");
+    const updatedData = await res.json();
+
+    console.log("Updated:", updatedData);
+    // Optionally refresh data or close modal
   } catch (error) {
-   console.error("error in buyer service:",(error as Error).message);
+    console.error(error);
+  }
+}
+
+export const viewAllSellersService = async () => {
+  try {
+    const response = await fetch("http://localhost:5000/buyer/viewSellers", {
+      method: "GET",
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("unable to access sellers");
+    const sellers = await response.json();
+    console.log("seller service:", sellers);
+    return sellers.data;
+  } catch (error) {
+    console.error("error in buyer service:", (error as Error).message);
     throw error;
   }
 }

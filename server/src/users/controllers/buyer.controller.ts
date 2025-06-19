@@ -74,16 +74,17 @@ export class buyerController {
             if (!req.user) sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
             const id = req.user?.id as string;
             const buyerData = {
-                ...req.body,
+                ...req.body.updatedBuyerData,
                 role: "buyer"
             };
+            console.log("buyer controller update:", buyerData);
             const buyerUpdateData = await validateDto(buyerUpdateDto, buyerData, res);
             if (!buyerUpdateData.valid) return;
 
             const buyerUpdate = await this.buyerServices.buyerUpdate(id, buyerData)
             sendSuccess(res, StatusCodes.OK, "successfully updated");
         } catch (error) {
-            console.log("seller update controller error:", (error as Error).message)
+            console.log("buyer update controller error:", (error as Error).message)
             sendError(res, StatusCodes.BAD_REQUEST, "fail to update");
         }
     }

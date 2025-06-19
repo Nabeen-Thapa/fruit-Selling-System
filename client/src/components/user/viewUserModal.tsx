@@ -3,6 +3,7 @@ import { usersView } from '../../types/seller.types';
 import { updateSeller } from '../../services/seller.services';
 import { useCurrentUser } from '../../utility/currentUser.utils';
 import { UserType } from '../../types/user.types';
+import { updateBuyerDetail } from '../../services/buyer.services';
 
 interface UserViewModalProps {
   user: usersView | null;
@@ -24,13 +25,13 @@ export const UserViewModal: React.FC<UserViewModalProps> = ({
   const [email, setEmail] = useState(user.email);
   const [phone, setPhone] = useState(user.phone);
   const [address, setAddress] = useState(user.address);
-const [shippingAddress, setShippingAddress] = useState(user.shippingAddress);
+  const [shippingAddress, setShippingAddress] = useState(user.shippingAddress);
 
 
   const { currentUserRole, loadingCurrentUser } = useCurrentUser();
-      useEffect(() => {
-        console.log("User role:", currentUserRole);
-      }, [currentUserRole]);
+  useEffect(() => {
+    console.log("User role:", currentUserRole);
+  }, [currentUserRole]);
 
   const formatDate = (dateString: string | Date) => {
     const date = new Date(dateString);
@@ -41,19 +42,28 @@ const [shippingAddress, setShippingAddress] = useState(user.shippingAddress);
     });
   };
 
-  const handleSave = async() => {
+  const handleSave = async () => {
     const updatedUser: Partial<usersView> = {
-     name,
-    email,
-    phone,
-    address,
-    businessName,
-    shippingAddress
+      name,
+      email,
+      phone,
+      address,
+      businessName,
+      shippingAddress
     };
 
+    const updatedBuyer: Partial<usersView> = {
+      name,
+      email,
+      phone,
+      address,
+      shippingAddress
+    };
     if (onSave) onSave(updatedUser);
-    await updateSeller(updatedUser);
-    console.log("updatre succcess");
+    currentUserRole === UserType.SELLER ? (
+      await updateSeller(updatedUser)) :
+      (await updateBuyerDetail(updatedBuyer));
+    console.log("updatre succcess",currentUserRole );
     onClose();
   };
 
@@ -87,7 +97,7 @@ const [shippingAddress, setShippingAddress] = useState(user.shippingAddress);
           </div>
 
           {/* Business Name */}
-         {currentUserRole ===  UserType.SELLER && ( <div>
+          {currentUserRole === UserType.SELLER && (<div>
             <label className="block text-sm font-medium text-gray-500 mb-1">Business Name</label>
             <div className="text-gray-800 font-medium">
               {isEditMode ? (
@@ -103,14 +113,14 @@ const [shippingAddress, setShippingAddress] = useState(user.shippingAddress);
             </div>
           </div>)}
 
-           {currentUserRole ===  UserType.BUYER && ( <div>
+          {currentUserRole === UserType.BUYER && (<div>
             <label className="block text-sm font-medium text-gray-500 mb-1">shippingAddress</label>
             <div className="text-gray-800 font-medium">
               {isEditMode ? (
                 <input
                   type="text"
                   value={shippingAddress}
-                  onChange={(e) => setBusinessName(e.target.value)}
+                  onChange={(e) => setShippingAddress(e.target.value)}
                   className="w-full p-2 border rounded-md"
                 />
               ) : (
@@ -152,7 +162,7 @@ const [shippingAddress, setShippingAddress] = useState(user.shippingAddress);
               )}
             </div>
           </div>
- <div>
+          <div>
             <label className="block text-sm font-medium text-gray-500 mb-1">address</label>
             <div className="text-gray-800 font-medium">
               {isEditMode ? (

@@ -147,7 +147,7 @@ export class ProductController {
   }
 
 
-  @Route("get", "/myProducts", [authenticate])
+  @Route("get", "/myProducts/:id", [authenticate])
   async myProducts(req: Request, res: Response) {
     try {
       if (!req.user) sendError(res, StatusCodes.UNAUTHORIZED, "yuo are not authorized");

@@ -4,19 +4,19 @@ import { IsString, IsNotEmpty, IsEmail, IsAlphanumeric, MinLength, IsOptional, I
 export class baseUserUpdateDto {
     @IsString()
     @IsNotEmpty()
-    name!: string
+    name?: string
 
     @IsEmail()
-    email!: string
+    email?: string
 
     @IsString()
     @IsNotEmpty()
    // @IsPhoneNumber('NP')
     // @Transform(({ value }) => value.toString())
-    phone!: string;
+    phone?: string;
 
     @IsString()
-    address!: string
+    address?: string
 
     @IsOptional()
     @IsDateString()
@@ -24,5 +24,5 @@ export class baseUserUpdateDto {
 
     @IsString()
     @IsNotEmpty()
-    role!: string
+    role?: string
 }
