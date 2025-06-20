@@ -32,9 +32,15 @@ export class CreateProductDto {
   @Transform(({ value }) => Number(value))
   quantity!: number;
 
+ 
+
   @IsIn(['fruit', 'berry', 'tropical'])
   @IsOptional()
   category?: string;
+   
+  @IsString()
+  @IsIn(['kg', 'dorzen', 'pices'])
+  quantityType?: string;
 
   @IsArray()
   @IsOptional()

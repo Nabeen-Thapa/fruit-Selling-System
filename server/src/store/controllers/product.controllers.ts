@@ -42,7 +42,7 @@ export class ProductController {
         images: req.files,
         userId: user.id,
       };
-
+      console.log("add produc controller:", productData);
       const productDto = plainToInstance(CreateProductDto, productData);
       const errors = await validate(productDto);
 
@@ -50,7 +50,7 @@ export class ProductController {
         const message = errors.map(err => Object.values(err.constraints || {}).join(", ")).join("; ");
         throw new Error(`Validation failed: ${message}`);
       }
-
+      console.log("add produc controller:", productDto);
       // Process with service
       const product = await this.productService.createProduct(productDto, req.files as Express.Multer.File[]
       );
@@ -74,6 +74,7 @@ export class ProductController {
         price: Number(product.price),
         quantity: Number(product.quantity)
       }));
+      console.log("view product controller:", responseData)
       sendSuccess(res, StatusCodes.OK, "Products fetched successfully", responseData);
     } catch (error) {
       console.error("Error fetching products:", error);

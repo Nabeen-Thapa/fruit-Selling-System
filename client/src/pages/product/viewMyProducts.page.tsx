@@ -8,12 +8,15 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Product } from '../../types/product.type';
+import { useCurrentUser } from '../../utility/currentUser.utils';
 
 const ViewProducts: React.FC = () => {
   const [userId, setUserId] = useState<string | null>(null);
 const { products: initialProducts, loading, error, deleteProduct } = useMyProducts(userId ?? undefined); 
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [userRole, setUserRole] = useState<string | null>(null);
+    const { currentUserRole, currentUserId, loadingCurrentUser } = useCurrentUser();
+  
   
   const navigate = useNavigate();
 
@@ -92,7 +95,8 @@ const handleDelete = async (id: string) => {
               onEdit={handleEdit}
               onDelete={handleDelete}
               onView={handleView}
-              userRole ={userRole}
+              userRole={currentUserRole}
+              currentUserId={currentUserId}
             />
           ))}
         </div>

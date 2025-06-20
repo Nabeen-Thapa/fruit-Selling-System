@@ -5,6 +5,7 @@ export interface ProductImage {
 }
 
 export type ProductCategory = 'fruit' | 'berry' | 'tropical';
+export type quantityTypes = 'kg' | 'dorzen' | 'pices';
 
 export interface ProductFormState {
   name: string;
@@ -12,6 +13,7 @@ export interface ProductFormState {
   description: string;
   quantity: string;
   category: ProductCategory;
+  quantityType: quantityTypes;
   images: ProductImage[];
 }
 
@@ -46,9 +48,11 @@ export interface Product {
   description: string;
   quantity: number;
   images: ProductImages[];
-    category?: string; // Add this line
-     seller: { id: string; name: string; email: string,  phone: string
- };
+  category?: string;
+  quantityType?:string;
+  seller: {
+    id: string; name: string; email: string, phone: string
+  };
 }
 
 

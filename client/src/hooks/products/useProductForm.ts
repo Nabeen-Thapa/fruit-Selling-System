@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { ProductCategory, ProductFormState, ProductImage, UseProductFormReturn } from '../../types/product.type';
+import { ProductCategory, ProductFormState, ProductImage, quantityTypes, UseProductFormReturn } from '../../types/product.type';
 const categories: ProductCategory[] = ['fruit', 'berry', 'tropical'];
+const quantityTypes: quantityTypes[] = ['kg' , 'dorzen' , 'pices'];
 
 export const useProductForm = (): UseProductFormReturn => {
   const [product, setProduct] = useState<ProductFormState>({
@@ -9,6 +10,7 @@ export const useProductForm = (): UseProductFormReturn => {
     description: '',
     quantity: '',
     category: 'fruit',
+    quantityType: "kg",
     images: [],
   });
 
@@ -98,6 +100,7 @@ export const useProductForm = (): UseProductFormReturn => {
       formData.append('description', product.description);
       formData.append('quantity', product.quantity);
       formData.append('category', product.category);
+      formData.append('quantityType', product.quantityType);
 
       // Debug: Log form data before sending
       for (let [key, value] of formData.entries()) {
@@ -135,11 +138,9 @@ export const useProductForm = (): UseProductFormReturn => {
       name: '',
       price: '',
       description: '',
-      // seller: '',
-      // phone: '',
-      // email: '',
       quantity: '',
       category: 'fruit',
+      quantityType: 'kg',
       images: [],
     });
     setError('');

@@ -22,7 +22,7 @@ const AddProducts: React.FC = () => {
     triggerFileInput
   } = useProductForm();
 
- 
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 px-4 sm:px-6 lg:px-8">
@@ -72,47 +72,7 @@ const AddProducts: React.FC = () => {
                   className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
                   placeholder="e.g., Organic Apples"
                 />
-              </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label htmlFor="price" className="block text-sm font-medium text-gray-700">
-                    Price(per kg/dorzen) *
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span className="text-gray-500">RS.</span>
-                    </div>
-                    <input
-                      type="number"
-                      id="price"
-                      name="price"
-                      min="0"
-                      step="0.01"
-                      value={product.price}
-                      onChange={handleChange}
-                      required
-                      className="block w-full pl-8 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
-                      placeholder="0.00"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">
-                    Quantity(in kg/dorzen) *
-                  </label>
-                  <input
-                    type="number"
-                    id="quantity"
-                    name="quantity"
-                    min="1"
-                    value={product.quantity}
-                    onChange={handleChange}
-                    required
-                    className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
-                  />
-                </div>
               </div>
               <div className="space-y-1">
                 <label htmlFor="quantityType" className="block text-sm font-medium text-gray-700">
@@ -121,7 +81,7 @@ const AddProducts: React.FC = () => {
                 <select
                   id="quantityType"
                   name="quantityType"
-                  //value={product.quantityType}
+                  value={product.quantityType}
                   onChange={handleChange}
                   className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all appearance-none bg-white bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZXZyb24tZG93biI+PHBhdGggZD0ibTYgOSA2IDYgNi02Ii8+PC9zdmc+')] bg-no-repeat bg-[right_1rem_center] bg-[length:1.5rem]">
                   {QUANTITY_TYPES.map(quantityType => (
@@ -131,6 +91,71 @@ const AddProducts: React.FC = () => {
                   ))}
                 </select>
               </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label htmlFor="price" className="block text-sm font-medium text-gray-700">
+                    Price per {product.quantityType} *
+                  </label>
+                  <div className="relative">
+                    {/* Left side - Currency symbol */}
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <span className="text-gray-500">Rs.</span>
+                    </div>
+
+                    {/* Input field */}
+                    <input
+                      type="text"
+                      id="price"
+                      name="price"
+                      inputMode="decimal"
+                      value={product.price}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (/^\d*\.?\d*$/.test(value) || value === '') {
+                          handleChange(e);
+                        }
+                      }}
+                      className="block w-full pl-10 pr-16 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                      placeholder="0.00"
+                    />
+
+
+                    {/* Right side - Quantity type */}
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <span className="text-gray-500 text-lg">/{product.quantityType}</span>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div className="relative">
+                  <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">
+                    Quantity (in {product.quantityType}) *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      id="quantity"
+                      name="quantity"
+                      inputMode="decimal"
+                      value={product.quantity}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (/^\d*\.?\d*$/.test(value) || value === '') {
+                          handleChange(e);
+                        }
+                      }}
+                      className="block w-full pr-16 pl-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                      placeholder={`you have ?`} />
+
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <span className="text-gray-500 text-lg">{product.quantityType}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
 
               <div className="space-y-1">
                 <label htmlFor="category" className="block text-sm font-medium text-gray-700">
@@ -154,8 +179,6 @@ const AddProducts: React.FC = () => {
             </div>
 
             <div className="space-y-6">
-
-
               <div className="space-y-1">
                 <label htmlFor="description" className="block text-sm font-medium text-gray-700">
                   Description *
@@ -163,7 +186,7 @@ const AddProducts: React.FC = () => {
                 <textarea
                   id="description"
                   name="description"
-                  rows={2}
+                  rows={3}
                   value={product.description}
                   onChange={handleChange}
                   required
@@ -178,14 +201,14 @@ const AddProducts: React.FC = () => {
                 </label>
 
                 <div
-                  className={`border-2 border-dashed rounded-xl p-2 text-center cursor-pointer transition-all ${isDragging ? 'border-green-500 bg-green-50' : 'border-gray-300 hover:border-gray-400'}`}
+                  className={`border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition-all ${isDragging ? 'border-green-500 bg-green-50' : 'border-gray-300 hover:border-gray-400'}`}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
                   onClick={triggerFileInput}
                 >
                   <div className="flex flex-col items-center justify-center space-y-2">
-                    <FiImage className="h-10 w-10 text-gray-400" />
+                    <FiImage className="h-12 w-10 text-gray-400" />
                     <p className="text-sm text-gray-600">
                       {isDragging ? 'Drop images here' : 'Drag & drop images or click to browse'}
                     </p>
@@ -242,8 +265,8 @@ const AddProducts: React.FC = () => {
               type="submit"
               disabled={product.images.length === 0 || loading}
               className={`px-6 py-2.5 rounded-lg font-medium text-white transition-all flex items-center justify-center min-w-[120px] ${product.images.length === 0 || loading
-                  ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-md'
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-md'
                 }`}
             >
               {loading ? (

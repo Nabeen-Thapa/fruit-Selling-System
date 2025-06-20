@@ -38,9 +38,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <h2 className="text-xl font-semibold text-gray-800">{product.name}</h2>
           <div className="whitespace-nowrap">
             <span className="text-lg font-bold text-green-600">
-              Rs. {Number(product.price).toFixed(0)}
+              Rs. {Number(product.price).toFixed(0)}/{product.quantityType}
             </span>
-            <span className="text-sm text-gray-500"> (per kg/dozen)</span>
+            {/* <span className="text-sm text-gray-500"></span> */}
           </div>
         </div>
 

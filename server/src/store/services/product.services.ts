@@ -98,6 +98,7 @@ export class ProductService {
         price: true,
         description: true,
         quantity: true,
+        quantityType:true,
         userId: true, 
       },
     });
@@ -235,6 +236,7 @@ export class ProductService {
         price: true,
         description: true,
         quantity: true,
+        quantityType: true,
         userId: true, // Assumes product.userId = seller.id
       },
       });

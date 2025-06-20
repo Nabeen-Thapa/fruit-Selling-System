@@ -25,10 +25,16 @@ export class Product {
   @Column()
   category?: string;
 
+
+
+  @Column({ type: 'varchar', nullable: true })
+  quantityType?: string;
+
+
   @OneToMany(() => ProductImage, image => image.product, { cascade: true })
   images!: ProductImage[];
 
-   @ManyToOne(() => seller, seller => seller.products, { cascade: true })
+  @ManyToOne(() => seller, seller => seller.products, { cascade: true })
   sellers!: ProductImage[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
