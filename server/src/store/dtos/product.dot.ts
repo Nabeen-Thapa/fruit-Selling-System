@@ -26,19 +26,6 @@ export class CreateProductDto {
   @IsNotEmpty()
   userId!: string;
 
-  @IsString()
-  @IsNotEmpty()
-  seller!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @Transform(({ value }) => value.toString()) // Ensure phone is treated as string
-  phone!: string;
-
-  @IsEmail()
-  @IsNotEmpty()
-  email!: string;
-
   @IsNumber()
   @Min(1)
   @IsNotEmpty()

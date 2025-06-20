@@ -41,9 +41,6 @@ export class ProductController {
         quantity: Number(req.body.quantity),
         images: req.files,
         userId: user.id,
-        seller: user.name,
-        phone: user.phone,
-        email: user.email
       };
 
       const productDto = plainToInstance(CreateProductDto, productData);
@@ -77,7 +74,6 @@ export class ProductController {
         price: Number(product.price),
         quantity: Number(product.quantity)
       }));
-
       sendSuccess(res, StatusCodes.OK, "Products fetched successfully", responseData);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -147,12 +143,14 @@ export class ProductController {
   }
 
 
-  @Route("get", "/myProducts", [authenticate])
+  @Route("get", "/myProducts/:id", [authenticate])
   async myProducts(req: Request, res: Response) {
     try {
       if (!req.user) sendError(res, StatusCodes.UNAUTHORIZED, "yuo are not authorized");
-      const userId = req.user?.id as string;
-      const myProductResult = await this.productService.getMyProducts(userId);
+      // const userId = req.user?.id as string;
+      const {id} = req.params;
+
+      const myProductResult = await this.productService.getMyProducts(id);
       const responseData = myProductResult.map(product => ({
         ...product,
         price: Number(product.price),

@@ -10,9 +10,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Product } from '../../types/product.type';
 
 const ViewProducts: React.FC = () => {
-const { products: initialProducts, loading, error, deleteProduct } = useMyProducts(); // ⬅ use hook's deleteProduct
+  const [userId, setUserId] = useState<string | null>(null);
+const { products: initialProducts, loading, error, deleteProduct } = useMyProducts(userId ?? undefined); 
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [userRole, setUserRole] = useState<string | null>(null);
+  
   const navigate = useNavigate();
 
   // Update local products when initialProducts changes
@@ -26,6 +28,7 @@ const { products: initialProducts, loading, error, deleteProduct } = useMyProduc
       navigate("/");
       return;
     }
+    setUserId(decodedToken.userId);
     setUserRole(decodedToken.role?.toLowerCase());
   };
 

@@ -45,10 +45,10 @@ export interface Product {
   price: number | string;
   description: string;
   quantity: number;
-  seller: string;
-  phone: string;
   images: ProductImages[];
     category?: string; // Add this line
+     seller: { id: string; name: string; email: string,  phone: string
+ };
 }
 
 

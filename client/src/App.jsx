@@ -22,6 +22,7 @@ import UsersList from './pages/users/buyer.getUsers.page';
 import UsersChat from './pages/users/usersChat.page';
 import { useCurrentUser } from './utility/currentUser.utils';
 import UpdateBuyerData from './pages/users/updateBuyer.page';
+import ViewProductToBuyer from './pages/product/viewSellersProductTobuyer.page';
 
 const App = () => {  
   const { currentUserRole, loading } = useCurrentUser();
@@ -44,6 +45,7 @@ const App = () => {
           <Route path="/falful/product/:id/view" element={<ViewSpecificProductPage/>} />
           <Route path="/falful/product/:id/update" element={<ProductUpdatePage/>} />
           <Route path="/falful/product/myproducts" element={<ViewMyProducts/>} />
+          <Route path="/falful/products/:sellerId/products" element={<ViewProductToBuyer/>} />
           <Route path="/falful/seller/view" element={<ViewSellerData/>} />
           <Route path="/falful/buyer/view" element={<UpdateBuyerData/>} />
           <Route path={`/falful/buyer/sellerlist`} element={<UsersList/>} />

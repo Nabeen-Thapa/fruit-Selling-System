@@ -7,10 +7,13 @@ import { AppError } from '../../common/utils/response.utils';
 import { StatusCodes } from 'http-status-codes';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
+import { falfulConnection } from '../../config/dbORM.config';
+import { seller } from '../../users/models/seller.model';
 
 export class ProductService {
   private productRepo: Repository<Product>;
   private imageRepo: Repository<ProductImage>;
+  
 
 
   constructor(private dataSource: DataSource) {
@@ -84,30 +87,44 @@ export class ProductService {
 
 
   // Promise<Product[]>  It tells TypeScript "This will give you product data later, and here's exactly what that data will look like."
-  async getAllProducts(): Promise<Product[]> {
-    try {
-      return await this.productRepo.find({
-        relations: ['images'],
-        order: { createdAt: 'DESC' },
-        select: {
-          id: true,
-          name: true,
-          price: true,
-          description: true,
-          quantity: true,
-          seller: true,
-          phone: true,
-          images: {
-            url: true,
-            altText: true
-          }
-        }
-      });
-    } catch (error) {
-      console.error("Failed to fetch products:", error);
-      throw new Error("Unable to retrieve products at this time");
-    }
+  async getAllProducts(): Promise<any[]> {
+  try {
+    const products = await this.productRepo.find({
+      relations: ['images'], // Get images
+      order: { createdAt: 'DESC' },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        description: true,
+        quantity: true,
+        userId: true, 
+      },
+    });
+
+    const sellerRepo = falfulConnection.getRepository(seller);
+
+    const enrichedProducts = await Promise.all(
+      products.map(async (product) => {
+        const sellerInfo = await sellerRepo.findOne({
+          where: { id: product.userId },
+          select: { id: true, name: true, email: true, phone: true }, // Select only what you need
+        });
+
+        return {
+          ...product,
+          seller: sellerInfo,
+        };
+      })
+    );
+
+    return enrichedProducts;
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+    throw new Error("Unable to retrieve products at this time");
   }
+}
+
 
   //get specific product for detail view
   async getProduct(id: number): Promise<Product | null> {
@@ -209,23 +226,35 @@ export class ProductService {
 
   async getMyProducts(userId: string) {
     try {
-     return await this.productRepo.find({where :{userId},
-        relations: ['images'],
-        order: { createdAt: 'DESC' },
-        select: {
-          id: true,
-          name: true,
-          price: true,
-          description: true,
-          quantity: true,
-          seller: true,
-          phone: true,
-          images: {
-            url: true,
-            altText: true
-          }
-        }
+      const products = await this.productRepo.find({where :{userId},
+        relations: ['images'], // Get images
+      order: { createdAt: 'DESC' },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        description: true,
+        quantity: true,
+        userId: true, // Assumes product.userId = seller.id
+      },
       });
+      const sellerRepo = falfulConnection.getRepository(seller);
+
+    const enrichedProducts = await Promise.all(
+      products.map(async (product) => {
+        const sellerInfo = await sellerRepo.findOne({
+          where: { id: product.userId },
+          select: { id: true, name: true, email: true, phone: true }, // Select only what you need
+        });
+
+        return {
+          ...product,
+          seller: sellerInfo,
+        };
+      })
+    );
+
+    return enrichedProducts;
     } catch (error) {
       console.error(`Failed to fetch product with id ${userId}:`, error);
       throw new AppError("Unable to retrieve product at this time", StatusCodes.INTERNAL_SERVER_ERROR);

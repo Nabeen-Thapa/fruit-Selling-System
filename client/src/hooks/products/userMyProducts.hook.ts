@@ -2,26 +2,29 @@ import { useState, useEffect } from 'react';
 import { deleteProduct as deleteProductService, myProducts as fetchMyProducts } from '../../services/product.services';
 import { Product } from '../../types/product.type';
 
-export const useMyProducts = () => {
+export const useMyProducts = (sellerId?: string) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
- useEffect(() => {
-     const getProducts = async () => {
-       try {
-         const data = await fetchMyProducts();
-         setProducts(data);
-         console.log("user hook my products:", data)
-       } catch (err) {
-         setError(err instanceof Error ? err.message : 'Unknown error');
-       } finally {
-         setLoading(false);
-       }
-     };
- 
-     getProducts();
-   }, []);
+   useEffect(() => {
+        if (!sellerId) return;
+       const getProducts = async () => {
+         try {
+           const data = await fetchMyProducts(sellerId);
+           setProducts(data);
+           console.log("user hook my products:", data)
+         } catch (err) {
+           setError(err instanceof Error ? err.message : 'Unknown error');
+         } finally {
+           setLoading(false);
+         }
+       };
+
+       getProducts();
+     }, [sellerId]);
+
+
 
 
   const handleDeleteProduct = async (productId: string) => {
@@ -42,7 +45,7 @@ export const useMyProducts = () => {
   };
 
   return {
-    products,  
+    products,
     loading,
     error,
     deleteProduct: handleDeleteProduct

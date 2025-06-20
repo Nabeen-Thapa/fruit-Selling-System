@@ -76,7 +76,7 @@ export const deleteProduct = async (id: string): Promise<{ success: boolean; mes
 
 };
 
-// src/services/product.services.ts
+
 
 export const updateProduct = async (
   id: string,
@@ -112,8 +112,8 @@ export const updateProduct = async (
   return response.json();
 };
 
-export const myProducts = async (): Promise<Product[]> => {
-  const response = await fetch(`http://localhost:5000/product/myProducts`, {
+export const myProducts = async (id:string): Promise<Product[]> => {
+  const response = await fetch(`http://localhost:5000/product/myProducts/${id}`, {
     method: "GET",
     credentials: "include",
   });

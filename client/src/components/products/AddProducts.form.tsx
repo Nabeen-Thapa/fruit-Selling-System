@@ -1,6 +1,7 @@
 import React from 'react';
 import { FiPlus, FiUpload, FiTrash2, FiImage, FiCheck } from 'react-icons/fi';
 import { useProductForm } from '../../hooks/products/useProductForm';
+import { CATEGORIES, QUANTITY_TYPES } from '../../constants/product.constant';
 
 const AddProducts: React.FC = () => {
   const {
@@ -21,7 +22,7 @@ const AddProducts: React.FC = () => {
     triggerFileInput
   } = useProductForm();
 
-  const categories = ['fruit', 'berry', 'tropical'];
+ 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 px-4 sm:px-6 lg:px-8">
@@ -113,6 +114,23 @@ const AddProducts: React.FC = () => {
                   />
                 </div>
               </div>
+              <div className="space-y-1">
+                <label htmlFor="quantityType" className="block text-sm font-medium text-gray-700">
+                  quantity type *
+                </label>
+                <select
+                  id="quantityType"
+                  name="quantityType"
+                  //value={product.quantityType}
+                  onChange={handleChange}
+                  className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all appearance-none bg-white bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZXZyb24tZG93biI+PHBhdGggZD0ibTYgOSA2IDYgNi02Ii8+PC9zdmc+')] bg-no-repeat bg-[right_1rem_center] bg-[length:1.5rem]">
+                  {QUANTITY_TYPES.map(quantityType => (
+                    <option key={quantityType} value={quantityType}>
+                      {quantityType.charAt(0).toUpperCase() + quantityType.slice(1)}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
               <div className="space-y-1">
                 <label htmlFor="category" className="block text-sm font-medium text-gray-700">
@@ -125,7 +143,7 @@ const AddProducts: React.FC = () => {
                   onChange={handleChange}
                   className="block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all appearance-none bg-white bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZXZyb24tZG93biI+PHBhdGggZD0ibTYgOSA2IDYgNi02Ii8+PC9zdmc+')] bg-no-repeat bg-[right_1rem_center] bg-[length:1.5rem]"
                 >
-                  {categories.map(category => (
+                  {CATEGORIES.map(category => (
                     <option key={category} value={category}>
                       {category.charAt(0).toUpperCase() + category.slice(1)}
                     </option>

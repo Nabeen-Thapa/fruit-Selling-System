@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm';
 import { ProductImage } from './productImage.model';
+import { seller } from '../../users/models/seller.model';
 
 @Entity()
 export class Product {
@@ -16,16 +17,7 @@ export class Product {
   description!: string;
 
   @Column({ nullable: true }) // allow nulls temporarily
-  userId?: string;
-
-  @Column()
-  seller!: string;
-
-  @Column()
-  phone!: string;
-
-  @Column()
-  email!: string;
+  userId!: string;
 
   @Column('int')
   quantity!: number;
@@ -35,6 +27,9 @@ export class Product {
 
   @OneToMany(() => ProductImage, image => image.product, { cascade: true })
   images!: ProductImage[];
+
+   @ManyToOne(() => seller, seller => seller.products, { cascade: true })
+  sellers!: ProductImage[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt!: Date;
