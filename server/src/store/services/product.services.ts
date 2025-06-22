@@ -5,16 +5,13 @@ import { CreateProductDto } from '../dtos/product.dot';
 import { uploadImage, deleteImage } from '../../config/cloudinary.config';
 import { AppError } from '../../common/utils/response.utils';
 import { StatusCodes } from 'http-status-codes';
-import { plainToInstance } from 'class-transformer';
-import { validate } from 'class-validator';
 import { falfulConnection } from '../../config/dbORM.config';
 import { seller } from '../../users/models/seller.model';
 
 export class ProductService {
   private productRepo: Repository<Product>;
   private imageRepo: Repository<ProductImage>;
-  
-
+  private sellerRepo = falfulConnection.getRepository(seller);
 
   constructor(private dataSource: DataSource) {
     this.productRepo = dataSource.getRepository(Product);
@@ -103,11 +100,10 @@ export class ProductService {
       },
     });
 
-    const sellerRepo = falfulConnection.getRepository(seller);
 
     const enrichedProducts = await Promise.all(
       products.map(async (product) => {
-        const sellerInfo = await sellerRepo.findOne({
+        const sellerInfo = await this.sellerRepo.findOne({
           where: { id: product.userId },
           select: { id: true, name: true, email: true, phone: true }, // Select only what you need
         });
@@ -130,10 +126,15 @@ export class ProductService {
   //get specific product for detail view
   async getProduct(id: number): Promise<Product | null> {
     try {
+
       const product = await this.productRepo.findOne({
         where: { id },
-        relations: ['images'],
+        relations: ['images','sellers'],
+
       });
+      console.log("specific product view service:", product)
+
+      
       return product;
     } catch (error) {
       console.error(`Failed to fetch product with id ${id}:`, error);

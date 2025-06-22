@@ -8,6 +8,6 @@ export class seller extends User{
   @Column()
   businessName?:string;
 
-  @OneToMany(() => Product, (product) => product.userId)
+  @OneToMany(() => Product, (product) => product.sellers)
   products!: Product[];
 }

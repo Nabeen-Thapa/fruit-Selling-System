@@ -26,7 +26,7 @@ const AddProducts: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto mt-12">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-green-700">
             Add New Product
@@ -53,7 +53,7 @@ const AddProducts: React.FC = () => {
 
         <form
           onSubmit={handleSubmit}
-          className="space-y-6 bg-white shadow-xl rounded-2xl p-6 sm:p-8 border border-gray-100"
+          className="space-y-6 bg-white shadow-2xl rounded-2xl p-6 sm:p-8 border border-gray-100"
           encType="multipart/form-data"
         >
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">

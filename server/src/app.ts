@@ -12,6 +12,7 @@ import { connectRedis } from "./config/redis.config";
 import { buyerAuthController } from "./users/controllers/buyer.auth.controller";
 import { LogoutController } from "./common/controllers/users.controller";
 import { ChatControllers } from "./users/controllers/chat.controller";
+import { cartControllers } from "./store/controllers/cart.controllers";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -31,7 +32,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 
 
-registerRoutes(app, [ProductController, buyerController, sellerController, sellerAuthController, buyerAuthController,LogoutController,ChatControllers]);
+registerRoutes(app, [ProductController, buyerController, sellerController, sellerAuthController, buyerAuthController,LogoutController,ChatControllers, cartControllers]);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);

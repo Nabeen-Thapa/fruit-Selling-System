@@ -50,7 +50,10 @@ export interface Product {
   images: ProductImages[];
   category?: string;
   quantityType?:string;
-  seller: {
+  seller?: {
+    id: string; name: string; email: string, phone: string
+  };
+  sellers?: {
     id: string; name: string; email: string, phone: string
   };
 }

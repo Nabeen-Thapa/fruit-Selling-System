@@ -1,7 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { ProductCategory, ProductFormState, ProductImage, quantityTypes, UseProductFormReturn } from '../../types/product.type';
-const categories: ProductCategory[] = ['fruit', 'berry', 'tropical'];
-const quantityTypes: quantityTypes[] = ['kg' , 'dorzen' , 'pices'];
 
 export const useProductForm = (): UseProductFormReturn => {
   const [product, setProduct] = useState<ProductFormState>({

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { ProductImage } from './productImage.model';
 import { seller } from '../../users/models/seller.model';
 
@@ -25,8 +25,6 @@ export class Product {
   @Column()
   category?: string;
 
-
-
   @Column({ type: 'varchar', nullable: true })
   quantityType?: string;
 
@@ -35,7 +33,8 @@ export class Product {
   images!: ProductImage[];
 
   @ManyToOne(() => seller, seller => seller.products, { cascade: true })
-  sellers!: ProductImage[];
+  @JoinColumn({ name: 'userId' }) 
+  sellers!: seller;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt!: Date;

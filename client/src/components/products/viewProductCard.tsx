@@ -11,6 +11,7 @@ interface ProductCardProps {
   onView: (id: string) => void;
   userRole: string | null;
   currentUserId: string | null;
+  addToCart :(id: string) => void;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
@@ -18,6 +19,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onEdit,
   onDelete,
   onView,
+  addToCart,
   userRole,
   currentUserId,
 }) => {
@@ -52,7 +54,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         <div className="mt-6 flex flex-wrap gap-2 justify-between">
           <button
-            className={`px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors flex items-center justify-center ${userRole === UserType.SELLER && currentUserId !== product.seller.id
+            className={`px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors flex items-center justify-center ${userRole === UserType.SELLER && currentUserId !== product.seller?.id
                 ? "w-full"  // Full width if seller is not the owner
                 : "flex-1 min-w-[80px]"  // Default behavior otherwise
               }`}
@@ -63,7 +65,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
           {userRole === UserType.BUYER && (
             <>
-              <button className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors flex-grow flex items-center justify-center">
+              <button className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors flex-grow flex items-center justify-center" onClick={()=> addToCart(product.id)}>
                 <ShoppingCartIcon className="h-5 w-5 mr-1" />
                 <span className="hidden sm:inline">Add to Cart</span>
               </button>
@@ -74,7 +76,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             </>
           )}
 
-          {userRole === UserType.SELLER && currentUserId === product.seller.id && (
+          {userRole === UserType.SELLER && currentUserId === product.seller?.id && (
             <>
               <button
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors  flex-1 min-w-[50px] flex items-center justify-center"

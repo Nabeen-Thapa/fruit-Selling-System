@@ -34,8 +34,10 @@ export const fetchSpecificProduct = async (id: string): Promise<Product> => {
   const data = await response.json();
 
   const product = data.data;
+  const sellers = data.data.sellers;
   return {
     ...product,
+    sellers,
     price: typeof product.price === 'string' ? parseFloat(product.price) : product.price
   };
 };

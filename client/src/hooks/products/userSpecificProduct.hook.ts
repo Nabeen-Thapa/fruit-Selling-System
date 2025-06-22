@@ -11,6 +11,7 @@ export const useSpecificProduct = (id?: string) => {
       try {
         setLoadingOne(true); // ✅ Start loading
         const data = await fetchSpecificProduct(id);
+        console.log(" get specific product hook:", data)
         setProduct(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');

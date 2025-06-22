@@ -145,13 +145,13 @@ const UsersList: React.FC = () => {
                       </div>
                     </div>
                     <div className="flex space-x-2">
-                      <button
+                      {currentUserRole ===UserType.BUYER &&<button
                         onClick={() => navigate(`/falful/products/${user.id}/products`)} // Assuming you have a route for viewing seller's products
                         className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200"
                       >
                         <FiShoppingBag className="mr-2" size={16} />
                         View Products
-                      </button>
+                      </button>}
                       <button
                         onClick={() => openChat(user.id)}
                         className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"

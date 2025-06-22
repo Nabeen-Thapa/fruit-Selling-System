@@ -14,7 +14,6 @@ import { useCurrentUser } from '../../utility/currentUser.utils';
 const ViewProducts: React.FC = () => {
   const { products: initialProducts, loading, error, deleteProduct } = useProducts();
   const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [userRole, setUserRole] = useState<string | null>(null);
   const navigate = useNavigate();
   const { currentUserRole, currentUserId, loadingCurrentUser } = useCurrentUser();
 
@@ -30,6 +29,9 @@ const ViewProducts: React.FC = () => {
     navigate(`/falful/product/${id}/update`);
     // navigate(`/falful/product/${id}/edit`);
   };
+  const addToCart =()=>{
+    alert("addeddd")
+  }
 
 
   // Remove local setProducts state and rely on hook
@@ -84,6 +86,7 @@ const ViewProducts: React.FC = () => {
               onView={handleView}
               userRole={currentUserRole}
               currentUserId={currentUserId}
+              addToCart ={addToCart}
             />
           ))}
         </div>
