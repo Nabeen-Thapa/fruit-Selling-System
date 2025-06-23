@@ -27,21 +27,20 @@ export class ProductService {
 
       product = this.productRepo.create({
         ...productData,
-        images: [] // Initialize empty array for image
+        images: []
       });
 
       await queryRunner.manager.save(product);
 
-      // Process from cloudinary and upload images
       const images = await Promise.all(
-        imageFiles.map(async (file) => {//calls from cloudinary
+        imageFiles.map(async (file) => {
           const { url, publicId } = await uploadImage(file.path);
           if (!url || !publicId) throw new Error("Image upload failed");
           return this.imageRepo.create({
             url,
             publicId,
             altText: productData.name,
-            product: product! // Non-null assertion safe here
+            product: product!
           });
         })
       );
@@ -60,16 +59,6 @@ export class ProductService {
     }
   }
 
-  //Remove uploaded images from cloud storage (like Cloudinary) if a transaction fails
-  // private async cleanupImages(images: ProductImage[]): Promise<void> {
-  //   await Promise.all(
-  //     images.map(img =>
-  //       img.publicId ? deleteImage(img.publicId) : Promise.resolve()
-  //     )
-  //   );
-  // }
-
-
   private async cleanupImages(images: ProductImage[]): Promise<void> {
     await Promise.all(
       images.map(async img => {
@@ -82,66 +71,56 @@ export class ProductService {
     );
   }
 
-
-  // Promise<Product[]>  It tells TypeScript "This will give you product data later, and here's exactly what that data will look like."
   async getAllProducts(): Promise<any[]> {
-  try {
-    const products = await this.productRepo.find({
-      relations: ['images'], // Get images
-      order: { createdAt: 'DESC' },
-      select: {
-        id: true,
-        name: true,
-        price: true,
-        description: true,
-        quantity: true,
-        quantityType:true,
-        userId: true, 
-      },
-    });
+    try {
+      const products = await this.productRepo.find({
+        relations: ['images'],
+        order: { createdAt: 'DESC' },
+        select: {
+          id: true,
+          name: true,
+          price: true,
+          description: true,
+          quantity: true,
+          quantityType: true,
+          userId: true,
+        },
+      });
 
+      const enrichedProducts = await Promise.all(
+        products.map(async (product) => {
+          const sellerInfo = await this.sellerRepo.findOne({
+            where: { id: product.userId },
+            select: { id: true, name: true, email: true, phone: true },
+          });
 
-    const enrichedProducts = await Promise.all(
-      products.map(async (product) => {
-        const sellerInfo = await this.sellerRepo.findOne({
-          where: { id: product.userId },
-          select: { id: true, name: true, email: true, phone: true }, // Select only what you need
-        });
+          return {
+            ...product,
+            seller: sellerInfo,
+          };
+        })
+      );
 
-        return {
-          ...product,
-          seller: sellerInfo,
-        };
-      })
-    );
-
-    return enrichedProducts;
-  } catch (error) {
-    console.error("Failed to fetch products:", error);
-    throw new Error("Unable to retrieve products at this time");
+      return enrichedProducts;
+    } catch (error) {
+      console.error("Failed to fetch products:", error);
+      throw new Error("Unable to retrieve products at this time");
+    }
   }
-}
 
-
-  //get specific product for detail view
   async getProduct(id: number): Promise<Product | null> {
     try {
-
       const product = await this.productRepo.findOne({
         where: { id },
-        relations: ['images','sellers'],
-
+        relations: ['images', 'sellers'],
       });
       console.log("specific product view service:", product)
-
-      
       return product;
     } catch (error) {
       console.error(`Failed to fetch product with id ${id}:`, error);
       throw new Error("Unable to retrieve product at this time");
     }
   }
-
 
   async deleteProduct(id: number) {
     const queryRunner = this.productRepo.manager.connection.createQueryRunner();
@@ -155,7 +134,6 @@ export class ProductService {
       });
       if (!product) throw new AppError("product is not found", StatusCodes.NOT_FOUND);
 
-      // if (product.images && product.images.length > 0) await queryRunner.manager.delete(ProductImage, { product: { id } });
       if (product.images?.length) {
         await this.cleanupImages(product.images);
         await queryRunner.manager.delete(ProductImage, { product: { id } });
@@ -176,51 +154,77 @@ export class ProductService {
   async updateProduct(
     id: number,
     productData: CreateProductDto,
-    imageFiles?: Express.Multer.File[]
+    newImageFiles: Express.Multer.File[] = [],
+    keepImages: { url: string; publicId: string }[] = []
   ): Promise<Product> {
-    console.log("Inside service updateProduct");
-
     const queryRunner = this.dataSource.createQueryRunner();
-    try {
-      await queryRunner.connect();
-      await queryRunner.startTransaction();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-      const existingProduct = await queryRunner.manager.findOne(Product, { where: { id }, relations: ['images'] });
+    try {
+      const existingProduct = await queryRunner.manager.findOne(Product, {
+        where: { id },
+        relations: ['images'],
+      });
+
       if (!existingProduct) throw new AppError("Product not found", StatusCodes.NOT_FOUND);
 
       Object.assign(existingProduct, productData);
 
-      if (imageFiles && imageFiles.length > 0) {
-        if (existingProduct.images?.length) {
-          await this.cleanupImages(existingProduct.images);
-          await queryRunner.manager.delete(ProductImage, { product: { id } });
-        }
+      // Always get fresh images from DB before checking what to keep
+      const freshProduct = await this.productRepo.findOne({
+        where: { id },
+        relations: ['images']
+      });
 
-        const newImages = await Promise.all(
-          imageFiles.map(async (file) => {
-            const { url, publicId } = await uploadImage(file.path);
-            if (!url || !publicId) throw new Error("Image upload failed");
+      const currentImages = freshProduct?.images ?? [];
 
-            return this.imageRepo.create({
-              url,
-              publicId,
-              altText: productData.name,
-              product: existingProduct,
-            });
-          })
-        );
+      const imagesToDelete = currentImages.filter(
+        img => !keepImages.some(keep => keep.publicId === img.publicId)
+      );
 
-        existingProduct.images = await queryRunner.manager.save(newImages);
+      if (imagesToDelete.length > 0) {
+        await this.cleanupImages(imagesToDelete);
+        await queryRunner.manager
+          .createQueryBuilder()
+          .delete()
+          .from(ProductImage)
+          .whereInIds(imagesToDelete.map(img => img.id))
+          .execute();
       }
 
-      const updatedProduct = await queryRunner.manager.save(existingProduct);
-      await queryRunner.commitTransaction();
+      const newImages = newImageFiles.length > 0 ? await Promise.all(
+        newImageFiles.map(async (file) => {
+          const { url, publicId } = await uploadImage(file.path);
+          if (!url || !publicId) throw new Error("Image upload failed");
 
-      return updatedProduct;
+          return this.imageRepo.create({
+            url,
+            publicId,
+            altText: productData.name,
+            product: existingProduct,
+          });
+        })
+      ) : [];
+
+      if (newImages.length > 0) {
+        await queryRunner.manager.save(newImages);
+      }
+
+      const allImagesToKeep = currentImages.filter(img =>
+        keepImages.some(keep => keep.publicId === img.publicId)
+      );
+
+      existingProduct.images = [...allImagesToKeep, ...newImages];
+
+      const updated = await queryRunner.manager.save(existingProduct);
+      await queryRunner.commitTransaction();
+      return updated;
+
     } catch (error) {
       await queryRunner.rollbackTransaction();
       console.error("Failed to update product:", error);
-      throw error; // don't wrap again
+      throw error;
     } finally {
       await queryRunner.release();
     }
@@ -228,41 +232,40 @@ export class ProductService {
 
   async getMyProducts(userId: string) {
     try {
-      const products = await this.productRepo.find({where :{userId},
-        relations: ['images'], // Get images
-      order: { createdAt: 'DESC' },
-      select: {
-        id: true,
-        name: true,
-        price: true,
-        description: true,
-        quantity: true,
-        quantityType: true,
-        userId: true, // Assumes product.userId = seller.id
-      },
+      const products = await this.productRepo.find({
+        where: { userId },
+        relations: ['images'],
+        order: { createdAt: 'DESC' },
+        select: {
+          id: true,
+          name: true,
+          price: true,
+          description: true,
+          quantity: true,
+          quantityType: true,
+          userId: true,
+        },
       });
       const sellerRepo = falfulConnection.getRepository(seller);
 
-    const enrichedProducts = await Promise.all(
-      products.map(async (product) => {
-        const sellerInfo = await sellerRepo.findOne({
-          where: { id: product.userId },
-          select: { id: true, name: true, email: true, phone: true }, // Select only what you need
-        });
+      const enrichedProducts = await Promise.all(
+        products.map(async (product) => {
+          const sellerInfo = await sellerRepo.findOne({
+            where: { id: product.userId },
+            select: { id: true, name: true, email: true, phone: true },
+          });
 
-        return {
-          ...product,
-          seller: sellerInfo,
-        };
-      })
-    );
+          return {
+            ...product,
+            seller: sellerInfo,
+          };
+        })
+      );
 
-    return enrichedProducts;
+      return enrichedProducts;
     } catch (error) {
       console.error(`Failed to fetch product with id ${userId}:`, error);
       throw new AppError("Unable to retrieve product at this time", StatusCodes.INTERNAL_SERVER_ERROR);
-
     }
-
   }
 }

@@ -118,15 +118,30 @@ export class ProductController {
 
     try {
       if (!req.files || !req.body) sendError(res, StatusCodes.BAD_REQUEST, "No files or form data received")
-
-      const user = req.user as UserPayload;
+        const user = req.user as UserPayload;
       if (!user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorize");
+
+
+
+
+
+            // Parse and normalize existing images
+      let keepImages: { url: string; publicId: string }[] = [];
+    const existing = req.body['existingImages[]'];
+     if (Array.isArray(existing)) {
+      keepImages = existing.map(img => JSON.parse(img));
+    } else if (typeof existing === 'string') {
+      keepImages = [JSON.parse(existing)];
+    }
+
+      
+
+
 
       const productData = {
         ...req.body,
         price: Number(req.body.price),
         quantity: Number(req.body.quantity),
-        images: req.files,
         userId: user.id,
         seller: user.name,
         phone: user.phone,
@@ -135,7 +150,7 @@ export class ProductController {
       const validateProduct = await validateDto(CreateProductDto, productData, res);
       if (!validateProduct.valid) return;
 
-      const updatedProductResult = await this.productService.updateProduct(Number(req.params.id), validateProduct.data, req.files as Express.Multer.File[]);
+      const updatedProductResult = await this.productService.updateProduct(Number(req.params.id), validateProduct.data, req.files as Express.Multer.File[], keepImages);
       return sendSuccess(res, StatusCodes.OK, "Product updated successfully", updatedProductResult);
     } catch (error) {
       console.log("error in product update controller:", (error as Error).message);

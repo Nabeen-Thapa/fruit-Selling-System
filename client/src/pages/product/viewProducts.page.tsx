@@ -3,20 +3,21 @@ import { ProductCard } from '../../components/products/viewProductCard';
 import { useProducts } from '../../hooks/products/userProduct.hook';
 import { fetchCurrentUser } from '../../services/auth.fetchCurrentUser.utils';
 import { useNavigate } from 'react-router-dom';
-import { deleteProduct } from '../../services/product.services';
+import { deleteProduct } from '../../services/product.services'; 
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Product } from '../../types/product.type';
 import { useCurrentUser } from '../../utility/currentUser.utils';
+import { useCart } from '../../hooks/products/useCart.hook';
 
 const ViewProducts: React.FC = () => {
   const { products: initialProducts, loading, error, deleteProduct } = useProducts();
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const navigate = useNavigate();
   const { currentUserRole, currentUserId, loadingCurrentUser } = useCurrentUser();
-
+  const { addNewItemToCart } = useCart(); 
 
   console.log("view product page:", products);
   // Update local products when initialProducts changes
@@ -29,8 +30,8 @@ const ViewProducts: React.FC = () => {
     navigate(`/falful/product/${id}/update`);
     // navigate(`/falful/product/${id}/edit`);
   };
-  const addToCart =()=>{
-    alert("addeddd")
+  const addToCart =(productId:string)=>{
+    addNewItemToCart(productId, 1);
   }
 
 
@@ -86,7 +87,7 @@ const ViewProducts: React.FC = () => {
               onView={handleView}
               userRole={currentUserRole}
               currentUserId={currentUserId}
-              addToCart ={addToCart}
+               addToCart={() => addToCart(product.id)}
             />
           ))}
         </div>

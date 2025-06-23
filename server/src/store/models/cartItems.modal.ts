@@ -14,10 +14,10 @@ export class CartItem extends baseDetails {
     @Column()
     quantity!: number;
 
-     @Column("decimal", {precision:10, scale:2})
+    @Column({ type: 'numeric', precision: 10, scale: 2 }) // or use float
     price!: number;
 
-    @Column("decimal", { precision: 10, scale: 2 })
+    @Column({ type: 'numeric', precision: 10, scale: 2 })
     totalPrice!: number;
 
 }

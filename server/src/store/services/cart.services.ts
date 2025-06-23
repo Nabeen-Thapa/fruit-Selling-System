@@ -8,22 +8,28 @@ import { CartItem } from "../models/cartItems.modal";
 
 
 
-export class cartServices{
+export class cartServices {
     private buyerRepo = falfulConnection.getRepository(buyer);
     private productRepo = falfulConnection.getRepository(Product);
     private cartRepo = falfulConnection.getRepository(Cart);
-    
-    async addToCart(buyerId: string, productId: number, quantity: number){
+    private cartItemRepo = falfulConnection.getRepository(CartItem);
+
+    async addToCart(buyerId: string, productId: number, quantity: number) {
         try {
-            const buyer = await this.buyerRepo.findOne({where:{id: buyerId}})
-            if(!buyer) throw new AppError("buyer is not found", StatusCodes.UNAUTHORIZED);
-            
-            const product = await this.productRepo.findOne({where:{id: productId}});
-            if(!product) throw new AppError("product is not found", StatusCodes.UNAUTHORIZED);
+            const buyer = await this.buyerRepo.findOne({ where: { id: buyerId } })
+            if (!buyer) throw new AppError("buyer is not found", StatusCodes.UNAUTHORIZED);
 
-            let  buyerCart = await this.cartRepo.findOne({where:{buyers: {id:buyerId}}, relations:['items','buyers']});
+            const product = await this.productRepo.findOne({ where: { id: productId } });
+            if (!product) throw new AppError("product is not found", StatusCodes.UNAUTHORIZED);
 
-            if(!buyerCart){
+            // let  buyerCart = await this.cartRepo.findOne({where:{buyers: {id:buyerId}}, relations:['items','buyers']});
+            let buyerCart = await this.cartRepo.findOne({
+                where: { buyers: { id: buyerId } },
+                relations: ['items', 'items.product', 'buyers'], // ✅ include 'items.product'
+            });
+
+
+            if (!buyerCart) {
                 buyerCart = new Cart();
                 buyerCart.buyers = buyer;
                 buyerCart.items = [];
@@ -31,35 +37,47 @@ export class cartServices{
                 buyerCart.finalAmount = 0;
             }
 
-            let cartItem :CartItem | undefined = buyerCart.items.find(item => item.product.id === productId);
-            if(cartItem){
-                cartItem.quantity +=quantity;
+            let cartItem: CartItem | undefined = buyerCart.items.find(item => item.product.id === productId);
+            if (cartItem) {
+                cartItem.quantity += quantity;
                 cartItem.totalPrice = cartItem.quantity * cartItem.price;
-            }else{
+            } else {
                 cartItem = new CartItem();
                 cartItem.carts = buyerCart;
                 cartItem.product = product;
                 cartItem.quantity = quantity;
-                cartItem.price= product.price;
+                cartItem.price = product.price;
                 cartItem.totalPrice = quantity * product.price;
 
                 buyerCart.items.push(cartItem);
             }
 
-            buyerCart.totalAmount = Number(buyerCart.items.reduce((sum, item)=> sum + (item.totalPrice), 0));
+            buyerCart.totalAmount = Number(buyerCart.items.reduce((sum, item) => sum + (item.totalPrice), 0));
 
-            await falfulConnection.transaction(async (manager)=>{
+            await falfulConnection.transaction(async (manager) => {
                 await manager.getRepository(CartItem).save(cartItem);
                 await manager.getRepository(Cart).save(buyerCart);
             })
 
             return {
-            message: "Product added to cart successfully",
-            cart: product
-        };
+                message: "Product added to cart successfully",
+                cart: product
+            };
         } catch (error) {
-           console.log("add to cart service error:", (error as Error).message);
-           throw new AppError("error during add to cart ", StatusCodes.INTERNAL_SERVER_ERROR); 
+            console.log("add to cart service error:", (error as Error).message);
+            throw new AppError("error during add to cart ", StatusCodes.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    async viewMyCart(buyerId: string){
+        try {
+            
+            const myCartItems = await this.cartRepo.findOne({where:{buyers:{id: buyerId} }, relations: ['items', 'items.product']});
+
+            return myCartItems;
+        } catch (error) {
+            console.log("error during view my cart:", (error as Error).message);
+            throw (error as Error).message;
         }
     }
 }

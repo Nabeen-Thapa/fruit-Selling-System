@@ -35,14 +35,14 @@ export const useUpdateProductForm = (id: string): UseUpdateProductFormReturn => 
       try {
         const fetchedProduct = await fetchSpecificProduct(id);
         setExistingImages(fetchedProduct.images || []);
-        
         setProduct({
           name: fetchedProduct.name,
           price: fetchedProduct.price.toString(),
           description: fetchedProduct.description,
           quantity: fetchedProduct.quantity.toString(),
-        category: (fetchedProduct as any).category || 'fruit',// Temporary type assertion
-            images: []
+          category: (fetchedProduct as any).category || 'fruit',
+          quantityType: (fetchedProduct as any).quantityType || 'kg',
+          images: []
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load product');
@@ -123,12 +123,12 @@ export const useUpdateProductForm = (id: string): UseUpdateProductFormReturn => 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!product) return;
-    
+
     setLoading(true);
     setError('');
 
     try {
-      await updateProduct(id, product);
+      await updateProduct(id, product, existingImages);
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
     } catch (err) {

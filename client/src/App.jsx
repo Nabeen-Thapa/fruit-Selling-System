@@ -23,6 +23,8 @@ import UsersChat from './pages/users/usersChat.page';
 import { useCurrentUser } from './utility/currentUser.utils';
 import UpdateBuyerData from './pages/users/updateBuyer.page';
 import ViewProductToBuyer from './pages/product/viewSellersProductTobuyer.page';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {  
   const { currentUserRole, loading } = useCurrentUser();
@@ -33,6 +35,7 @@ const App = () => {
     <>
       <Router>
         <Navbar />
+         <ToastContainer position="top-right" autoClose={3000} />
         <VerifyUser/>
         <Routes>
           <Route path="/" element={<HomePage />} />

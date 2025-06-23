@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Product, ProductFormState } from '../types/product.type';
+import { Product, ProductFormState, ProductImages } from '../types/product.type';
 
 const API_BASE_URL = 'http://localhost:5000';
 
@@ -83,8 +83,7 @@ export const deleteProduct = async (id: string): Promise<{ success: boolean; mes
 export const updateProduct = async (
   id: string,
   productData: ProductFormState,
-  keepExistingImages: boolean = true
-): Promise<Product> => {
+  existingImages: ProductImages[]): Promise<Product> => {
   const formData = new FormData();
 
   // Append product data
@@ -93,7 +92,11 @@ export const updateProduct = async (
   formData.append('description', productData.description);
   formData.append('quantity', productData.quantity);
   formData.append('category', productData.category);
-  formData.append('keepExistingImages', keepExistingImages.toString());
+    formData.append('quantityType', productData.quantityType);
+
+    existingImages.forEach((img) => {
+    formData.append('existingImages[]', JSON.stringify(img)); // can also send just `img.id` if backend expects only ID
+  });
 
   // Append new images
   productData.images.forEach((image) => {

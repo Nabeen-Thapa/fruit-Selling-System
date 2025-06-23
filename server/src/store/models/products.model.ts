@@ -29,11 +29,14 @@ export class Product {
   quantityType?: string;
 
 
-  @OneToMany(() => ProductImage, image => image.product, { cascade: true })
+  @OneToMany(() => ProductImage, image => image.product, {
+    cascade: ['insert', 'update'],
+    eager: true
+  })
   images!: ProductImage[];
 
   @ManyToOne(() => seller, seller => seller.products, { cascade: true })
-  @JoinColumn({ name: 'userId' }) 
+  @JoinColumn({ name: 'userId' })
   sellers!: seller;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

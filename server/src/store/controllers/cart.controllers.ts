@@ -6,22 +6,35 @@ import { sendError, sendSuccess } from "../../common/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
 import { cartServices } from "../services/cart.services";
 
-@Controller("falful/cart")
+@Controller("/falful/cart")
 export class cartControllers {
     private cartServices = new cartServices();
     @Route("post", "/add", [authenticate])
     async addToCartController(req: Request, res: Response) {
         try {
             if (!req.user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
-
+            console.log("add to cart controller:", req.body)
             const { productId, quantity } = req.body;
-            const buyerId = req.user?.id;
+            const buyerId = req.user?.id as string;
 
             await this.cartServices.addToCart(buyerId, productId, quantity);
             sendSuccess(res, StatusCodes.OK, "added successfully");
         } catch (error) {
-            console.log("add to cart servi e error:", (error as Error).message)
+            console.log("add to cart service error:", (error as Error).message)
             sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, "internal server error")
+        }
+    }
+
+    @Route("get", "/myCart", [authenticate])
+    async viewMyCartController(req: Request, res:Response){
+        try {
+            if(!req.user) return sendError(res, StatusCodes.UNAUTHORIZED, "you arte not authorized");
+             const {id} =  req.user;
+             const viewMyCartResult = await this.cartServices.viewMyCart(id);
+            sendSuccess(res, StatusCodes.OK, "successfully view", viewMyCartResult);
+        } catch (error) {
+            console.log("errro duirng view my cart:", (error as Error).message);
+            sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, (error as Error).message);
         }
     }
 }
