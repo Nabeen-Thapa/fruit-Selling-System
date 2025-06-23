@@ -15,7 +15,7 @@ const NavbarMenu = [
   { id: 2, title: "About", link: "#", }
 ];
 
-const Navbar = () => {
+const Navbar = ({ onCartClick })  => {
   const [open, setOpen] = React.useState(false);
   const [userRole, setUserRole] = useState(null);
   const [existToken, setExistToken] = useState(null);
@@ -193,7 +193,8 @@ const Navbar = () => {
                   </div>
                 </>
               )}
-              {existToken && userRole === UserType.BUYER &&<button className='text-2xl hover:bg-primary hover:text-white rounded-full p-2 duration-200'>
+              {existToken && userRole === UserType.BUYER &&
+              <button className='text-2xl hover:bg-primary hover:text-white rounded-full p-2 duration-200'  onClick={onCartClick}>
                 <MdAddShoppingCart />
               </button>}
             </ul>

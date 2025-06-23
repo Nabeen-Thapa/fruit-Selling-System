@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useSpecificProduct } from '../../hooks/products/userSpecificProduct.hook';
 import { StarIcon, HeartIcon, ShareIcon, ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
+import { useCart } from '../../hooks/products/useCart.hook';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -10,6 +11,7 @@ const ProductDetail: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [quantity, setQuantity] = useState(1);
+    const { addNewItemToCart } = useCart(); 
   const navigate = useNavigate();
 
   if (loadingOne) return (
@@ -43,6 +45,10 @@ const ProductDetail: React.FC = () => {
 
   const backToProduct = () => {
     navigate("/falful/products");
+  }
+
+   const addToCart =(productId:string)=>{
+    addNewItemToCart(productId, 1);
   }
 
   return (
@@ -146,7 +152,7 @@ const ProductDetail: React.FC = () => {
 
               <div className="flex space-x-4 mb-6">
                 <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center">
-                  <ShoppingCartIcon className="h-5 w-5 mr-2" />
+                  <ShoppingCartIcon className="h-5 w-5 mr-2" onClick={()=> addToCart(product.id)} />
                   Add to Cart
                 </button>
                 <button className="flex-1 bg-gray-900 hover:bg-gray-800 text-white py-3 px-6 rounded-lg font-medium transition-colors">

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 import Navbar from './components/Navbar/Navbar'
 import Footer from './components/Footer/Footer'
 import {
@@ -25,17 +25,20 @@ import UpdateBuyerData from './pages/users/updateBuyer.page';
 import ViewProductToBuyer from './pages/product/viewSellersProductTobuyer.page';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import CartModal from './components/products/viewMyCartModal';
 
 const App = () => {  
   const { currentUserRole, loading } = useCurrentUser();
+    const [isCartOpen, setIsCartOpen] = useState(false);
   useEffect(() => {
     console.log("User role:", currentUserRole);
   }, [currentUserRole]);
   return (
     <>
       <Router>
-        <Navbar />
+        <Navbar onCartClick={() => setIsCartOpen(true)} />
          <ToastContainer position="top-right" autoClose={3000} />
+          <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
         <VerifyUser/>
         <Routes>
           <Route path="/" element={<HomePage />} />

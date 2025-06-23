@@ -73,7 +73,6 @@ export class cartServices {
         try {
             
             const myCartItems = await this.cartRepo.findOne({where:{buyers:{id: buyerId} }, relations: ['items', 'items.product']});
-
             return myCartItems;
         } catch (error) {
             console.log("error during view my cart:", (error as Error).message);
