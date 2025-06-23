@@ -48,7 +48,7 @@ const ProductDetail: React.FC = () => {
   }
 
    const addToCart =(productId:string)=>{
-    addNewItemToCart(productId, 1);
+    addNewItemToCart(productId, quantity);
   }
 
   return (
@@ -151,8 +151,8 @@ const ProductDetail: React.FC = () => {
               </div>
 
               <div className="flex space-x-4 mb-6">
-                <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center">
-                  <ShoppingCartIcon className="h-5 w-5 mr-2" onClick={()=> addToCart(product.id)} />
+                <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center"  onClick={()=> addToCart(product.id)}>
+                  <ShoppingCartIcon className="h-5 w-5 mr-2" />
                   Add to Cart
                 </button>
                 <button className="flex-1 bg-gray-900 hover:bg-gray-800 text-white py-3 px-6 rounded-lg font-medium transition-colors">

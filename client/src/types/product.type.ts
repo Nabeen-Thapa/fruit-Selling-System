@@ -67,3 +67,18 @@ interface UpdateProductData {
   seller: string;
   phone: string;
 }
+
+
+export interface CartItemType {
+  id?: string;
+  _id?: string;
+  product: {
+    name: string;
+    images?: { url: string; altText?: string }[];
+     quantityType:string;
+  };
+  price: string;
+  totalPrice?: string;
+  quantity: number;
+ 
+}

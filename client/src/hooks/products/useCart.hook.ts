@@ -1,18 +1,8 @@
 import { useState } from "react";
 import { addTocart, viewMyCart } from "../../services/cart.services";
 import { toast } from "react-toastify";
+import { CartItemType } from "../../types/product.type";
 
-export interface CartItemType {
-  id?: string;
-  _id?: string;
-  product: {
-    name: string;
-    images?: { url: string; altText?: string }[];
-  };
-  price: string;
-  totalPrice?: string;
-  quantity: number;
-}
 
 export const useCart = () => {
   const [cart, setCart] = useState<any>(null);
