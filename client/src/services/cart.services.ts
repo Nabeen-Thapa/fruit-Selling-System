@@ -37,3 +37,17 @@ export const viewMyCart = async () => {
     throw new Error(error.message);
   }
 };
+
+export const  deleteFromCart = async(id:string)=>{
+  try {
+    const responce = await fetch(`http://localhost:5000/falful/cart/${id}/delete`,{
+      method: "DELETE",
+      credentials: "include"
+    })
+    if(!responce.ok) throw new Error("unable to delete cart item");
+  } catch (error) {
+     console.log("error during delete item form cart:", error.message);
+    throw new Error(error.message);
+  }
+
+}

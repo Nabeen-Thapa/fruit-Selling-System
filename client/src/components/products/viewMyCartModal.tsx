@@ -9,7 +9,7 @@ type CartModalProps = {
 };
 
 const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
-  const { cartItems, viewMyCartItems, loading } = useCart();
+  const { cartItems, viewMyCartItems, loading, deleteCartItem } = useCart();
 
   useEffect(() => {
     if (isOpen) {
@@ -117,7 +117,7 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
                             <span className="text-base font-medium text-gray-900 whitespace-nowrap ml-4">
                               NRS {parseFloat(item.totalPrice || "0").toFixed(2)}
                             </span>
-                            <button className="text-blue-500 hover:text-red-800 transition-colors">
+                   <button className="text-blue-500 hover:text-red-800 transition-colors" onClick={() => deleteCartItem(item.id! || item._id!)}>
                               <FiTrash2 className="h-6 w-6 mx-4" />
                             </button>
                           </div>

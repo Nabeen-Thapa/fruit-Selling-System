@@ -79,4 +79,16 @@ export class cartServices {
             throw (error as Error).message;
         }
     }
+
+    async deleteFromCart(cartItemId:string){
+        try {
+            const Item = await this.cartRepo.findOne({where:{items:{id: cartItemId}}, relations: ['items']});
+            if(!Item) throw new AppError("item is not dound in cart", StatusCodes.NOT_FOUND);
+            //update cartItem talble defore delete 
+            await this.cartItemRepo.delete({ id: cartItemId });
+        } catch (error) {
+             console.log("error during view my cart:", (error as Error).message);
+            throw (error as Error).message;
+        }
+    }
 }

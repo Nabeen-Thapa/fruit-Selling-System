@@ -5,6 +5,7 @@ import { authenticate } from "../../users/middleware/auth.middleware";
 import { sendError, sendSuccess } from "../../common/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
 import { cartServices } from "../services/cart.services";
+import { send } from "process";
 
 @Controller("/falful/cart")
 export class cartControllers {
@@ -13,7 +14,7 @@ export class cartControllers {
     async addToCartController(req: Request, res: Response) {
         try {
             if (!req.user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
-            console.log("add to cart controller:", req.body)
+    
             const { productId, quantity } = req.body;
             const buyerId = req.user?.id as string;
 
@@ -35,6 +36,20 @@ export class cartControllers {
         } catch (error) {
             console.log("errro duirng view my cart:", (error as Error).message);
             sendError(res, StatusCodes.INTERNAL_SERVER_ERROR, (error as Error).message);
+        }
+    }
+
+    @Route("delete", "/:id/delete", [authenticate])
+    async deleteFromCartConteroller (req:Request, res:Response){
+        const cartItemId = req.params.id as string;
+        try {
+            if(!req.user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authrized");
+            console.log("imte deleted");
+            const result = await  this.cartServices.deleteFromCart(cartItemId);
+            sendSuccess(res, StatusCodes.OK, "items is deleted successfully from cart");
+        } catch (error) {
+            console.log("error during delete item form cart:", (error as Error).message);
+            sendError(res, StatusCodes.INTERNAL_SERVER_ERROR,  (error as Error).message)
         }
     }
 }

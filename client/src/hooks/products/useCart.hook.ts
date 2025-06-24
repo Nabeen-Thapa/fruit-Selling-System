@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { addTocart, viewMyCart } from "../../services/cart.services";
+import { addTocart, deleteFromCart, viewMyCart } from "../../services/cart.services";
 import { toast } from "react-toastify";
 import { CartItemType } from "../../types/product.type";
 
@@ -36,5 +36,18 @@ export const useCart = () => {
     }
   };
 
-  return { addNewItemToCart, cart, cartItems, viewMyCartItems, loading };
+  const deleteCartItem = async (itemId: string) => {
+    try {
+      setLoading(true);
+      const deleteResponce = await deleteFromCart(itemId);
+      toast.success("imte deleted successfully form cart");
+       await viewMyCartItems(); 
+    } catch (error) {
+      toast.error(error.message || "Failed to load cart");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return { addNewItemToCart, cart, cartItems, viewMyCartItems, loading,deleteCartItem };
 };
