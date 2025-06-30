@@ -84,16 +84,16 @@ export class cartServices {
 
     async deleteFromCart(cartItemId: string, quantity: number) {
         try {
-            const Item = await this.cartRepo.findOne({ where: { items: { id: cartItemId } }, relations: ['items'] });
-            if (!Item) throw new AppError("item is not dound in cart", StatusCodes.NOT_FOUND);
-
-            //update quantity of product
-            const item = await this.cartItemRepo.findOne({where: { id: cartItemId },relations: ['product'] });
+            const item = await this.cartItemRepo.findOne({ where: { id: cartItemId }, relations: ['product'] });
             if (!item) throw new AppError("Item not found in cart", StatusCodes.NOT_FOUND);
+
             const productId = item.product.id;
             const newQuantity = item.product.quantity + quantity;
-            await this.productRepo.update({id:productId},{quantity: newQuantity})
-            await this.cartItemRepo.delete({ id: cartItemId });
+
+            await falfulConnection.transaction(async (manager) => {
+                await manager.getRepository(Product).update({ id: productId }, { quantity: newQuantity });
+                await manager.getRepository(CartItem).delete({ id: cartItemId });
+            })
         } catch (error) {
             console.log("error during view my cart:", (error as Error).message);
             throw (error as Error).message;
