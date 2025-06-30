@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useCart } from "../../hooks/products/useCart.hook";
 import { FiTrash2 } from "react-icons/fi";
 import { CartModalProps } from "../../types/product.type";
+import { Link } from "react-router-dom";
 
 
 
@@ -30,9 +31,9 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
       ></div>
 
       {/* Modal container with smooth animation */}
-      <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
+      <div className="flex items-center justify-center min-h-screen p-4 text-center">
         <div
-          className="inline-block w-full max-w-lg transform overflow-hidden rounded-t-2xl bg-white text-left shadow-xl transition-all sm:my-8 sm:rounded-lg sm:align-middle"
+          className="inline-block w-full max-w-lg max-h-[98vh] overflow-y-auto transform rounded-2xl bg-white text-left shadow-xl transition-all"
           role="dialog"
           aria-modal="true"
           onClick={(e) => e.stopPropagation()}
@@ -109,13 +110,13 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
                             {item.product?.name || "Unnamed"}
                           </h4>
                           <div className="flex items-center gap-3">
-                            <span className="text-sm text-gray-600 whitespace-nowrap ml-4">
+                            <span className="text-sm text-gray-600 whitespace-nowrap ml-1">
                               NRS {parseFloat(item.price || "0").toFixed(2)}/{item.product?.quantityType}
                             </span>
                             <span className="text-base font-medium text-gray-900 whitespace-nowrap ml-4">
                               NRS {parseFloat(item.totalPrice || "0").toFixed(2)}
                             </span>
-                   <button className="text-blue-500 hover:text-red-800 transition-colors" onClick={() => deleteCartItem(item.id!, item.quantity!)}>
+                            <button className="text-blue-500 hover:text-red-800 transition-colors" onClick={() => deleteCartItem(item.id!, item.quantity!)}>
                               <FiTrash2 className="h-6 w-6 mx-4" />
                             </button>
                           </div>
@@ -143,9 +144,14 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
               <p className="text-sm text-gray-500 mb-4">
                 Shipping and taxes calculated at checkout.
               </p>
-              <button className="w-full rounded-lg bg-blue-600 px-6 py-3 text-base font-bold text-white hover:bg-blue-700 transition-colors shadow-sm">
-                Proceed to Checkout
-              </button>
+             <Link
+  to="/falful/product/checkout"
+  onClick={(e) => e.stopPropagation()}
+  className="w-full rounded-lg bg-blue-600 px-6 py-3 text-base font-bold text-white hover:bg-blue-700 transition-colors shadow-sm block text-center"
+>
+  Proceed to Checkout
+</Link>
+
               <button
                 onClick={onClose}
                 className="w-full mt-3 rounded-lg border border-gray-300 bg-white px-6 py-2.5 text-base font-medium text-gray-700 hover:bg-gray-50 transition-colors"

@@ -26,6 +26,7 @@ import ViewProductToBuyer from './pages/product/viewSellersProductTobuyer.page';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CartModal from './components/products/viewMyCartModal';
+import CheckoutPage from './pages/product/checkout.page';
 
 const App = () => {  
   const { currentUserRole, loading } = useCurrentUser();
@@ -56,6 +57,7 @@ const App = () => {
           <Route path="/falful/buyer/view" element={<UpdateBuyerData/>} />
           <Route path={`/falful/buyer/sellerlist`} element={<UsersList/>} />
           <Route path="/falful/user/chat/:id" element={<UsersChat/>} />
+          <Route path="/falful/product/checkout" element={<CheckoutPage/>} />
         </Routes>
         <Footer />
       </Router>
