@@ -39,13 +39,14 @@ export class cartControllers {
         }
     }
 
-    @Route("delete", "/:id/delete", [authenticate])
+    @Route("delete", "/:id/:qty/delete", [authenticate])
     async deleteFromCartConteroller (req:Request, res:Response){
         const cartItemId = req.params.id as string;
+        const quantity =Number( req.params.qty);
         try {
             if(!req.user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authrized");
             console.log("imte deleted");
-            const result = await  this.cartServices.deleteFromCart(cartItemId);
+            const result = await  this.cartServices.deleteFromCart(cartItemId, quantity);
             sendSuccess(res, StatusCodes.OK, "items is deleted successfully from cart");
         } catch (error) {
             console.log("error during delete item form cart:", (error as Error).message);

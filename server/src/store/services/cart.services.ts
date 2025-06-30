@@ -22,10 +22,12 @@ export class cartServices {
             const product = await this.productRepo.findOne({ where: { id: productId } });
             if (!product) throw new AppError("product is not found", StatusCodes.UNAUTHORIZED);
 
-            // let  buyerCart = await this.cartRepo.findOne({where:{buyers: {id:buyerId}}, relations:['items','buyers']});
+            //decrease quantity of product by add to cart quantity
+            const newQuantity = product.quantity - quantity;
+
             let buyerCart = await this.cartRepo.findOne({
                 where: { buyers: { id: buyerId } },
-                relations: ['items', 'items.product', 'buyers'], // ✅ include 'items.product'
+                relations: ['items', 'items.product', 'buyers'],
             });
 
 
@@ -57,6 +59,7 @@ export class cartServices {
             await falfulConnection.transaction(async (manager) => {
                 await manager.getRepository(CartItem).save(cartItem);
                 await manager.getRepository(Cart).save(buyerCart);
+                await manager.getRepository(Product).update({ id: productId }, { quantity: newQuantity })
             })
 
             return {
@@ -69,10 +72,9 @@ export class cartServices {
         }
     }
 
-    async viewMyCart(buyerId: string){
+    async viewMyCart(buyerId: string) {
         try {
-            
-            const myCartItems = await this.cartRepo.findOne({where:{buyers:{id: buyerId} }, relations: ['items', 'items.product']});
+            const myCartItems = await this.cartRepo.findOne({ where: { buyers: { id: buyerId } }, relations: ['items', 'items.product'] });
             return myCartItems;
         } catch (error) {
             console.log("error during view my cart:", (error as Error).message);
@@ -80,14 +82,20 @@ export class cartServices {
         }
     }
 
-    async deleteFromCart(cartItemId:string){
+    async deleteFromCart(cartItemId: string, quantity: number) {
         try {
-            const Item = await this.cartRepo.findOne({where:{items:{id: cartItemId}}, relations: ['items']});
-            if(!Item) throw new AppError("item is not dound in cart", StatusCodes.NOT_FOUND);
-            //update cartItem talble defore delete 
+            const Item = await this.cartRepo.findOne({ where: { items: { id: cartItemId } }, relations: ['items'] });
+            if (!Item) throw new AppError("item is not dound in cart", StatusCodes.NOT_FOUND);
+
+            //update quantity of product
+            const item = await this.cartItemRepo.findOne({where: { id: cartItemId },relations: ['product'] });
+            if (!item) throw new AppError("Item not found in cart", StatusCodes.NOT_FOUND);
+            const productId = item.product.id;
+            const newQuantity = item.product.quantity + quantity;
+            await this.productRepo.update({id:productId},{quantity: newQuantity})
             await this.cartItemRepo.delete({ id: cartItemId });
         } catch (error) {
-             console.log("error during view my cart:", (error as Error).message);
+            console.log("error during view my cart:", (error as Error).message);
             throw (error as Error).message;
         }
     }

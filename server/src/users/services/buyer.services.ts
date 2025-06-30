@@ -68,7 +68,8 @@ export class buyerServices {
         try {
             const buyer = await this.buyerRepo.findOne({ where: { id: buyerId } });
             if (!buyer) throw new AppError("buyer is not foud for update", StatusCodes.UNAUTHORIZED);
-            await this.buyerRepo.update({ id: buyerId }, { ...buyerData });
+            
+            await this.buyerRepo.update({ id: buyerId }, {...buyerData });
             return "buyer fully updated"
         } catch (error) {
             console.log("update buyer data :", (error as Error).message);

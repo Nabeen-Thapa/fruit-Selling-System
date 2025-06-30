@@ -38,9 +38,9 @@ export const viewMyCart = async () => {
   }
 };
 
-export const  deleteFromCart = async(id:string)=>{
+export const  deleteFromCart = async(id:string, qty:number)=>{
   try {
-    const responce = await fetch(`http://localhost:5000/falful/cart/${id}/delete`,{
+    const responce = await fetch(`http://localhost:5000/falful/cart/${id}/${qty}/delete`,{
       method: "DELETE",
       credentials: "include"
     })

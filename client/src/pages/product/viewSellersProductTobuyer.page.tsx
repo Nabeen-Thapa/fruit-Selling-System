@@ -11,7 +11,7 @@ import { ProductCard } from '../../components/products/viewProductCard';
 
 const ViewProductToBuyer: React.FC = () => {
     const { sellerId } = useParams<{ sellerId: string }>(); 
-const { products: initialProducts, loading, error, deleteProduct } = useMyProducts(sellerId ?? undefined); // ⬅ use hook's deleteProduct
+const { products: initialProducts, loading, error, deleteProduct } = useMyProducts(sellerId ?? undefined);
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [userRole, setUserRole] = useState<string | null>(null);
   

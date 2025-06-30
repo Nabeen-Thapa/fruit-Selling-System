@@ -82,3 +82,9 @@ export interface CartItemType {
   quantity: number;
  
 }
+
+// product cart
+export type CartModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+};

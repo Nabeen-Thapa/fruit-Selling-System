@@ -8,20 +8,7 @@ export const useBuyers = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // useEffect(() => {
-  //   const loadBuyers = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const data = await fetchBuyers();
-  //       setBuyers(data);
-  //     } catch (err) {
-  //       setError(err instanceof Error ? err.message : 'Unknown error');
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   loadBuyers();
-  // }, []);
+
 
   const addBuyer = async (buyerData: Omit<Buyer, 'id' | 'createdAt' | 'lastLogin'>) => {
     setLoading(true);

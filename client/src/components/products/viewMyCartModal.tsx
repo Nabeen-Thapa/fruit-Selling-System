@@ -2,11 +2,9 @@ import { MdClose } from "react-icons/md";
 import React, { useEffect } from "react";
 import { useCart } from "../../hooks/products/useCart.hook";
 import { FiTrash2 } from "react-icons/fi";
+import { CartModalProps } from "../../types/product.type";
 
-type CartModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-};
+
 
 const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
   const { cartItems, viewMyCartItems, loading, deleteCartItem } = useCart();
@@ -117,14 +115,14 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
                             <span className="text-base font-medium text-gray-900 whitespace-nowrap ml-4">
                               NRS {parseFloat(item.totalPrice || "0").toFixed(2)}
                             </span>
-                   <button className="text-blue-500 hover:text-red-800 transition-colors" onClick={() => deleteCartItem(item.id! || item._id!)}>
+                   <button className="text-blue-500 hover:text-red-800 transition-colors" onClick={() => deleteCartItem(item.id!, item.quantity!)}>
                               <FiTrash2 className="h-6 w-6 mx-4" />
                             </button>
                           </div>
                         </div>
                         <div className="mt-2 flex items-center justify-between">
                           <p className="text-sm text-gray-500">
-                            Quantity: {item.quantity}
+                            Quantity: {item.quantity} {item.product?.quantityType}
                           </p>
                         </div>
                       </div>

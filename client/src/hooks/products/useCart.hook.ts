@@ -36,10 +36,10 @@ export const useCart = () => {
     }
   };
 
-  const deleteCartItem = async (itemId: string) => {
+  const deleteCartItem = async (itemId: string, quantity:number) => {
     try {
       setLoading(true);
-      const deleteResponce = await deleteFromCart(itemId);
+      const deleteResponce = await deleteFromCart(itemId, quantity);
       toast.success("imte deleted successfully form cart");
        await viewMyCartItems(); 
     } catch (error) {
