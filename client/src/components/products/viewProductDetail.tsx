@@ -4,6 +4,7 @@ import { useSpecificProduct } from '../../hooks/products/userSpecificProduct.hoo
 import { StarIcon, HeartIcon, ShareIcon, ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 import { useCart } from '../../hooks/products/useCart.hook';
+import { FiShoppingBag } from 'react-icons/fi';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -155,8 +156,18 @@ const ProductDetail: React.FC = () => {
                   <ShoppingCartIcon className="h-5 w-5 mr-2" />
                   Add to Cart
                 </button>
-                <button className="flex-1 bg-gray-900 hover:bg-gray-800 text-white py-3 px-6 rounded-lg font-medium transition-colors">
-                  Buy Now
+                <button className="flex-1 bg-gray-900 hover:bg-gray-800 text-white py-3 px-6 rounded-lg transition-colors flex-grow flex items-center justify-center"
+                onClick={()=>
+                   navigate("/falful/product/checkout", {
+                  state:{
+                    product:product,
+                    quantity:quantity
+                  }
+                })
+                }
+                >
+                  <FiShoppingBag className="h-5 w-5 mr-1" />
+                <span className="hidden sm:inline">Buy Now</span>
                 </button>
               </div>
 

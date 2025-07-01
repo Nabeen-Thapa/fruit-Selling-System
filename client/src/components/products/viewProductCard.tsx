@@ -76,8 +76,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 onClick={() =>
                   navigate("/falful/product/checkout", {
                     state: {
-                      product: product, // pass full product object
-                      quantity: 1,      // or any user-selected quantity
+                      product: product, 
+                      quantity: 1,     
                     },
                   })
                 }>
