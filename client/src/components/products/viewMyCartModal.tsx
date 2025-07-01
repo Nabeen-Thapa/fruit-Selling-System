@@ -144,13 +144,13 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
               <p className="text-sm text-gray-500 mb-4">
                 Shipping and taxes calculated at checkout.
               </p>
-             <Link
-  to="/falful/product/checkout"
-  onClick={(e) => e.stopPropagation()}
-  className="w-full rounded-lg bg-blue-600 px-6 py-3 text-base font-bold text-white hover:bg-blue-700 transition-colors shadow-sm block text-center"
->
-  Proceed to Checkout
-</Link>
+              <Link
+                to="/falful/product/checkout"
+                onClick={onClose}
+                className="w-full rounded-lg bg-blue-600 px-6 py-3 text-base font-bold text-white hover:bg-blue-700 transition-colors shadow-sm block text-center"
+              >
+                Proceed to Checkout
+              </Link>
 
               <button
                 onClick={onClose}
