@@ -3,6 +3,8 @@ import { FiEdit, FiEye, FiShoppingBag, FiTrash2 } from 'react-icons/fi';
 import { Product } from '../../types/product.type';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { UserType } from '../../types/user.types';
+import { useNavigate } from 'react-router-dom';
+
 
 interface ProductCardProps {
   product: Product;
@@ -11,7 +13,7 @@ interface ProductCardProps {
   onView: (id: string) => void;
   userRole: string | null;
   currentUserId: string | null;
-  addToCart :(id: string) => void;
+  addToCart: (id: string) => void;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
@@ -23,6 +25,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   userRole,
   currentUserId,
 }) => {
+  const navigate = useNavigate();
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02] flex flex-col h-full">
       {product.images?.length > 0 && (
@@ -55,8 +58,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <div className="mt-6 flex flex-wrap gap-2 justify-between">
           <button
             className={`px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors flex items-center justify-center ${userRole === UserType.SELLER && currentUserId !== product.seller?.id
-                ? "w-full"  // Full width if seller is not the owner
-                : "flex-1 min-w-[80px]"  // Default behavior otherwise
+              ? "w-full"  // Full width if seller is not the owner
+              : "flex-1 min-w-[80px]"  // Default behavior otherwise
               }`}
             onClick={() => onView(product.id)}
           >
@@ -65,11 +68,19 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
           {userRole === UserType.BUYER && (
             <>
-              <button className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors flex-grow flex items-center justify-center" onClick={()=> addToCart(product.id)}>
+              <button className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors flex-grow flex items-center justify-center" onClick={() => addToCart(product.id)}>
                 <ShoppingCartIcon className="h-5 w-5 mr-1" />
                 <span className="hidden sm:inline">Add to Cart</span>
               </button>
-              <button className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded transition-colors flex-grow flex items-center justify-center">
+              <button className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded transition-colors flex-grow flex items-center justify-center"
+                onClick={() =>
+                  navigate("/falful/product/checkout", {
+                    state: {
+                      product: product, // pass full product object
+                      quantity: 1,      // or any user-selected quantity
+                    },
+                  })
+                }>
                 <FiShoppingBag className="h-5 w-5 mr-1" />
                 <span className="hidden sm:inline">Buy Now</span>
               </button>
