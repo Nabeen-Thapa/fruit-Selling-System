@@ -12,6 +12,7 @@ import { serllerUpdateDto } from "../dtos/sellerUpdate.dto";
 @Controller("/seller")
 export class sellerController {
     private sellerServices = new sellerServices();
+    
     @Route("post", "/register")
     async sellerRegisterController(req: Request, res: Response) {
         console.log("seller controller", req.body);

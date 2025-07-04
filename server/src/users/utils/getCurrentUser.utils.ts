@@ -20,7 +20,8 @@ export async function getCurrentUser(req: Request, res: Response) {
       userId: payload.userId, 
       role: payload.role, 
       name: payload.name, 
-      email: payload.email 
+      email: payload.email,
+      phone: payload.phone 
     });
   } catch (error) {
     return sendError(res, 401, "Invalid or expired token");

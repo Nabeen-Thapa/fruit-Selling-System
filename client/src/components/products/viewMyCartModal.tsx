@@ -26,7 +26,7 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
     <div className={`fixed inset-0 z-50 ${isOpen ? "block" : "hidden"}`}>
       {/* Overlay with backdrop blur */}
       <div
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       ></div>
 

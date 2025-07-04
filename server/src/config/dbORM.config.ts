@@ -8,6 +8,8 @@ import { UserSession } from "../users/models/userSession.model";
 import { userChat } from "../users/models/chat.model";
 import { Cart } from "../store/models/cart.model";
 import { CartItem } from "../store/models/cartItems.modal";
+import { Orders } from "../store/models/orders.model";
+import { OrdersItems } from "../store/models/orderItems.model";
 dotenv.config();
 
 export const falfulConnection = new DataSource({
@@ -19,7 +21,7 @@ export const falfulConnection = new DataSource({
     database : process.env.database,  
     synchronize: true,
     logging: false,
-    entities : [Product, ProductImage, seller, buyer, UserSession, userChat, Cart, CartItem],
+    entities : [Product, ProductImage, seller, buyer, UserSession, userChat, Cart, CartItem, Orders, OrdersItems],
 })
 
 

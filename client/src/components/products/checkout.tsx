@@ -1,15 +1,50 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FiArrowLeft, FiCreditCard, FiHome, FiMapPin, FiPackage, FiTruck } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { useCurrentUser } from '../../utility/currentUser.utils';
+import { UserType } from '../../types/user.types';
+import { useBuyers } from '../../hooks/user/userBuyer.hooks';
 
 const Checkout = ({ cartItems, viewMyCartItems, loading }) => {
-    
-      const subtotal = cartItems.reduce((sum, item) => sum + parseFloat(item.totalPrice as string), 0);
-      const shipping = 2.50;
-      const tax = subtotal * 0.1;
-      const total = subtotal + shipping + tax;
+  const { viewBuyerData } = useBuyers();
+  const { currentUserId, currentUserRole } = useCurrentUser(); // get userId and role
+  const [userData, setUserData] = useState({
+    name: '',
+    address: '',
+    phone: '',
+    shippingAddress: '',
+    email: '',
+  });
 
-    return (
+  useEffect(() => {
+    const fetchUserDetail = async () => {
+      try {
+        const res = await viewBuyerData();
+        console.log("Buyer Data: ", res); // 🔍 Logs the full response
+
+        const buyer = res.data; // ✅ Extract actual buyer object
+
+        setUserData({
+          name: buyer.name || '',
+          address: buyer.address || '',
+          phone: buyer.phone || '',
+          shippingAddress: buyer.shippingAddress || '',
+          email: buyer.email,
+        });
+      } catch (error) {
+        console.error("Error fetching buyer data:", error);
+      }
+    };
+
+    if (currentUserId) fetchUserDetail();
+  }, [currentUserId, currentUserRole]);
+
+  const subtotal = cartItems.reduce((sum, item) => sum + parseFloat(item.totalPrice as string), 0);
+  const shipping = 2.50;
+  const tax = subtotal * 0.1;
+  const total = subtotal + shipping + tax;
+
+  return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm">
@@ -36,41 +71,36 @@ const Checkout = ({ cartItems, viewMyCartItems, loading }) => {
                 <h2 className="text-lg font-bold text-gray-900">Shipping Address</h2>
               </div>
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 mb-1">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="first-name"
-                    className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  />
+              <div className="space-y-4">
+                <div className="flex items-baseline gap-2">
+                  <p className="text-sm font-medium text-gray-500">Name:</p>
+                  <p className="text-gray-900">{userData.name || 'Not provided'}</p>
+                </div>
+
+                <div className="flex items-baseline gap-2">
+                  <p className="text-sm font-medium text-gray-500">Email</p>
+                  <p className="text-gray-900 mt-1">{userData.email || 'Not provided'}</p>
+                </div>
+
+                <div className="flex items-baseline gap-2">
+                  <p className="text-sm font-medium text-gray-500">Phone number</p>
+                  <p className="text-gray-900 mt-1">{userData.phone || 'Not provided'}</p>
+                </div>
+
+                <div className="flex items-baseline gap-2">
+                  <p className="text-sm font-medium text-gray-500"> Shipping Address</p>
+                  <p className="text-gray-900 mt-1">{userData.address || 'Not provided'}</p>
                 </div>
 
               </div>
 
-              <div className="mt-4">
-                <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
-                  Address
-                </label>
-                <input
-                  type="text"
-                  id="address"
-                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-
-              <div className="mt-4">
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                  Phone number
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
+              {/* Optional edit button if you want to allow editing */}
+              {/* <button
+                onClick={() => setEditMode(true)} // Assuming you have an edit mode state
+                className="mt-6 text-blue-600 hover:text-blue-800 font-medium text-sm"
+              >
+                Edit Shipping Address
+              </button> */}
             </section>
 
             {/* Payment method */}
@@ -187,7 +217,7 @@ const Checkout = ({ cartItems, viewMyCartItems, loading }) => {
                   <div key={item.id} className="flex items-center justify-between py-2 border-b border-gray-100">
                     <div className="flex items-center">
                       <div className="h-16 w-16 rounded-lg border border-gray-200 overflow-hidden mr-4">
-                       <img
+                        <img
                           src={
                             item.product?.images?.[0]?.url
                           }
