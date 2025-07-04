@@ -27,6 +27,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CartModal from './components/products/viewMyCartModal';
 import CheckoutPage from './pages/product/checkout.page';
+import AboutUs from './pages/aboutUs.page';
 
 const App = () => {  
   const { currentUserRole, loading } = useCurrentUser();
@@ -43,6 +44,7 @@ const App = () => {
         <VerifyUser/>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/falful/about" element={<AboutUs />} />
           <Route path="/falful/products" element={<ViewProducts />} />
           <Route path="/falful/products/add" element={<AddProductPage/>} />
           <Route path="/falful/user/buyer/register" element={<BuyerRegister/>} />

@@ -12,7 +12,7 @@ import { useCurrentUser } from '../../utility/currentUser.utils';
 const NavbarMenu = [
   { id: 0, title: "Home", link: "/", },
   { id: 1, title: "Products", link: "/falful/products", },
-  { id: 2, title: "About", link: "#", }
+  { id: 2, title: "About", link: "/falful/about", }
 ];
 
 const Navbar = ({ onCartClick })  => {
