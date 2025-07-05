@@ -44,6 +44,12 @@ const Checkout = ({ cartItems, viewMyCartItems, loading }) => {
   const tax = subtotal * 0.1;
   const total = subtotal + shipping + tax;
 
+  // change shipping address
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    // setProduct(prev => prev ? { ...prev, [name]: value } : null);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -63,6 +69,7 @@ const Checkout = ({ cartItems, viewMyCartItems, loading }) => {
           {/* Left column - Customer information */}
           <div className="space-y-8">
             {/* Shipping address */}
+
             <section className="bg-white p-6 rounded-xl shadow-sm">
               <div className="flex items-center mb-6">
                 <div className="bg-blue-100 p-2 rounded-full mr-4">
@@ -70,40 +77,47 @@ const Checkout = ({ cartItems, viewMyCartItems, loading }) => {
                 </div>
                 <h2 className="text-lg font-bold text-gray-900">Shipping Address</h2>
               </div>
-
-              <div className="space-y-4">
-                <div className="flex items-baseline gap-2">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
                   <p className="text-sm font-medium text-gray-500">Name:</p>
                   <p className="text-gray-900">{userData.name || 'Not provided'}</p>
                 </div>
 
-                <div className="flex items-baseline gap-2">
+                <div>
+                  <p className="text-sm font-medium text-gray-500">Phone number</p>
+                  <p className="text-gray-900 mt-1">{userData.phone || 'Not provided'}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="mt-4">
                   <p className="text-sm font-medium text-gray-500">Email</p>
                   <p className="text-gray-900 mt-1">{userData.email || 'Not provided'}</p>
                 </div>
 
-                <div className="flex items-baseline gap-2">
-                  <p className="text-sm font-medium text-gray-500">Phone number</p>
-                  <p className="text-gray-900 mt-1">{userData.phone || 'Not provided'}</p>
-                </div>
-
-                <div className="flex items-baseline gap-2">
-                  <p className="text-sm font-medium text-gray-500"> Shipping Address</p>
-                  <p className="text-gray-900 mt-1">{userData.address || 'Not provided'}</p>
-                </div>
-
+                <form>
+                  <div className="mt-4">
+                    <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
+                      Street Address *
+                    </label>
+                    <input
+                      type="text"
+                      id="address"
+                      value={userData.address}
+                      onChange={(e) => setUserData({ ...userData, address: e.target.value })}
+                      className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    />
+                  </div>
+                </form>
               </div>
-
-              {/* Optional edit button if you want to allow editing */}
-              {/* <button
-                onClick={() => setEditMode(true)} // Assuming you have an edit mode state
-                className="mt-6 text-blue-600 hover:text-blue-800 font-medium text-sm"
+              <button
+                className="mt-6 w-half bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 float-end"
               >
                 Edit Shipping Address
-              </button> */}
+              </button>
             </section>
 
-            {/* Payment method */}
+            {/* Payment method
             <section className="bg-white p-6 rounded-xl shadow-sm">
               <div className="flex items-center mb-6">
                 <div className="bg-blue-100 p-2 rounded-full mr-4">
@@ -286,8 +300,8 @@ const Checkout = ({ cartItems, viewMyCartItems, loading }) => {
             </div>
           </div>
         </div>
-      </main>
-    </div>
+      </main >
+    </div >
   );
 }
 

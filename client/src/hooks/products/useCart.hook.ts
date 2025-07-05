@@ -27,7 +27,6 @@ export const useCart = () => {
     try {
       setLoading(true);
       const response = await viewMyCart();
-      toast.success("Cart loaded");
       setCartItems(response?.data?.items || []);
     } catch (error: any) {
       toast.error(error.message || "Failed to load cart");
