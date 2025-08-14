@@ -15,7 +15,7 @@ const NavbarMenu = [
   { id: 2, title: "About", link: "/falful/about", }
 ];
 
-const Navbar = ({ onCartClick })  => {
+const Navbar = ({ onCartClick }) => {
   const [open, setOpen] = React.useState(false);
   const [userRole, setUserRole] = useState(null);
   const [existToken, setExistToken] = useState(null);
@@ -25,10 +25,10 @@ const Navbar = ({ onCartClick })  => {
   const navigate = useNavigate();
   const location = useLocation();
 
-   const { currentUserRole, loading } = useCurrentUser();
-    useEffect(() => {
-      console.log("User role:", currentUserRole);
-    }, [currentUserRole]);
+  const { currentUserRole, loading } = useCurrentUser();
+  useEffect(() => {
+    console.log("User role:", currentUserRole);
+  }, [currentUserRole]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -107,13 +107,20 @@ const Navbar = ({ onCartClick })  => {
                       Add Products
                     </a>
                   </li>
-                <li>
+                  <li>
                     <a href="/falful/buyer/sellerlist"
                       className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
                       view buyers
                     </a>
                   </li>
-                 
+
+                    <li>
+                    <a href="/falful/buyer/sellerlist"
+                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
+                      orders
+                    </a>
+                  </li>
+
                 </>
               )}
 
@@ -124,6 +131,12 @@ const Navbar = ({ onCartClick })  => {
                     <a href="/falful/buyer/sellerlist"
                       className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
                       view sellers
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/falful/buyer/orders"
+                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
+                      My orders
                     </a>
                   </li>
                 </>
@@ -194,9 +207,9 @@ const Navbar = ({ onCartClick })  => {
                 </>
               )}
               {existToken && userRole === UserType.BUYER &&
-              <button className='text-2xl hover:bg-primary hover:text-white rounded-full p-2 duration-200'  onClick={onCartClick}>
-                <MdAddShoppingCart />
-              </button>}
+                <button className='text-2xl hover:bg-primary hover:text-white rounded-full p-2 duration-200' onClick={onCartClick}>
+                  <MdAddShoppingCart />
+                </button>}
             </ul>
           </div>
 

@@ -4,10 +4,14 @@ import { Link } from "react-router-dom";
 import { useCurrentUser } from '../../utility/currentUser.utils';
 import { UserType } from '../../types/user.types';
 import { useBuyers } from '../../hooks/user/userBuyer.hooks';
+import useOrder from '../../hooks/products/useOrder.hook';
 
 const Checkout = ({ cartItems, viewMyCartItems, loading }) => {
   const { viewBuyerData } = useBuyers();
+  const [deliveryMethod, setDeliveryMethod] = useState<'STANDARD' | 'EXPRESS'>('STANDARD');
+  const [paymentMethod, setPaymentMethod] = useState<'ONLINE' | 'COD'>('ONLINE');
   const { currentUserId, currentUserRole } = useCurrentUser(); // get userId and role
+  const { handlePlaceOrder } = useOrder();
   const [userData, setUserData] = useState({
     name: '',
     address: '',
@@ -130,11 +134,10 @@ const Checkout = ({ cartItems, viewMyCartItems, loading }) => {
 
                 <div className="flex items-center">
                   <input
-                    id="credit-card"
-                    name="payment-method"
                     type="radio"
-                    className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
-                    defaultChecked
+                    name="payment-method"
+                    checked={paymentMethod === 'ONLINE'}
+                    onChange={() => setPaymentMethod('ONLINE')}
                   />
                   <label htmlFor="credit-card" className="ml-3 block text-sm font-medium text-gray-700">
                     online
@@ -142,22 +145,10 @@ const Checkout = ({ cartItems, viewMyCartItems, loading }) => {
                 </div>
                 <div className="flex items-center">
                   <input
-                    id="credit-card"
-                    name="payment-method"
                     type="radio"
-                    className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
-
-                  />
-                  <label htmlFor="credit-card" className="ml-3 block text-sm font-medium text-gray-700">
-                    Credit card
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    id="cash-on-delivery"
                     name="payment-method"
-                    type="radio"
-                    className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                    checked={paymentMethod === 'COD'}
+                    onChange={() => setPaymentMethod('COD')}
                   />
                   <label htmlFor="cash-on-delivery" className="ml-3 block text-sm font-medium text-gray-700">
                     Cash on Delivery
@@ -178,12 +169,12 @@ const Checkout = ({ cartItems, viewMyCartItems, loading }) => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-blue-500 cursor-pointer">
                   <div className="flex items-center">
-                    <input
+                   <input
+                      type="radio"
                       id="standard-delivery"
                       name="delivery-method"
-                      type="radio"
-                      className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
-                      defaultChecked
+                      checked={deliveryMethod === 'STANDARD'}
+                      onChange={() => setDeliveryMethod('STANDARD')}
                     />
                     <div className="ml-3">
                       <label htmlFor="standard-delivery" className="block text-sm font-medium text-gray-700">
@@ -198,11 +189,13 @@ const Checkout = ({ cartItems, viewMyCartItems, loading }) => {
                 <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-blue-500 cursor-pointer">
                   <div className="flex items-center">
                     <input
+                      type="radio"
                       id="express-delivery"
                       name="delivery-method"
-                      type="radio"
-                      className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                      checked={deliveryMethod === 'EXPRESS'}
+                      onChange={() => setDeliveryMethod('EXPRESS')}
                     />
+
                     <div className="ml-3">
                       <label htmlFor="express-delivery" className="block text-sm font-medium text-gray-700">
                         Express Delivery
@@ -271,7 +264,14 @@ const Checkout = ({ cartItems, viewMyCartItems, loading }) => {
                 </div>
               </div>
 
-              <button className="w-full mt-6 rounded-lg bg-blue-600 px-6 py-3 text-base font-bold text-white hover:bg-blue-700 transition-colors shadow-sm">
+              <button className="w-full mt-6 rounded-lg bg-blue-600 px-6 py-3 text-base font-bold text-white hover:bg-blue-700 transition-colors shadow-sm" onClick={() =>
+                handlePlaceOrder({
+                  deliveryAddress: userData.address || '',
+                  deliveryMethod,
+                  paymentMethod,
+                })
+              }
+              >
                 Place Order
               </button>
 

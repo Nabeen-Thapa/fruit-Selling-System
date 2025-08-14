@@ -3,11 +3,15 @@ import { baseDetails } from "./baseDetail";
 import { buyer } from "../../users/models/buyer.model";
 import { OrdersItems } from "./orderItems.model";
 import { OrderStatus, PaymentStatus, DeliveryMethod, PaymentMethod } from "../../types/product.types";
+import { seller } from "src/users/models/seller.model";
 
 @Entity("orders")
 export class Orders extends baseDetails {
     @ManyToOne(() => buyer, buyer => buyer.orders)
     buyer!: buyer;
+
+      @ManyToOne(() => seller, seller => seller.orders)
+    sellers!: seller;
 
     @OneToMany(() => OrdersItems, item => item.order, { cascade: true })
     items!: OrdersItems[];

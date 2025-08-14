@@ -14,12 +14,12 @@ export enum OrderStatus {
 }
 
  export enum DeliveryMethod{
-    STANDARD= 'standard',
-    EXPRESS = 'express'
+    STANDARD= 'STANDARD',
+    EXPRESS = 'EXPRESS'
  }
 
  export enum PaymentMethod{
-  CARD = 'card',
-  ONLINE = "online",
-  CASH = "cash"
+  CARD = 'CARD',
+  ONLINE = "ONLINE",
+  CASH = "CASH"
  }

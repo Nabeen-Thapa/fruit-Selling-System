@@ -34,6 +34,7 @@
     "@types/express-session": "^1.18.1",
     "@types/node": "^22.15.17",
     "@types/redis": "^4.0.10",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.3"
   },
   "name": "server",
@@ -43,8 +44,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "start": "nodemon dist/app.js",
-    "falful": "nodemon --watch src --exec ts-node src/app.ts",
-    
+    "falful": "nodemon --watch src --exec ts-node -r tsconfig-paths/register src/app.ts",
     "watch": "tsc --watch"
   },
   "keywords": [],
