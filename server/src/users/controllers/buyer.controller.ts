@@ -5,7 +5,6 @@ import { sendError, sendSuccess } from "../../common/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
 import { buyerDto } from "../dtos/buyer.dto";
 import { buyerServices } from "../services/buyer.services";
-import { validate } from "class-validator";
 import { validateDto } from "../../common/utils/dtoValidateResponse.utils";
 import { authenticate } from "../middleware/auth.middleware";
 import logger from "../../common/utils/logger";

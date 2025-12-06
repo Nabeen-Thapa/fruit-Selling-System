@@ -21,6 +21,7 @@ const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
   "http://localhost:5173",
   "https://falful.nabinthapa99.com.np",
+  "https://falfulapi.nabinthapa99.com.np",
 ];
 
 
@@ -45,7 +46,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", "true");
-  next();
+  next();  
 });
 
 registerRoutes(app, [ProductController, buyerController, sellerController, sellerAuthController, buyerAuthController,LogoutController,ChatControllers, cartControllers, orderController]);
