@@ -4,7 +4,7 @@ import { Cart } from "../../store/models/cart.model";
 import { Orders } from "../../store/models/orders.model";
 
 @Entity("buyerDetail")
-export class buyer extends User{
+export class Buyer extends User{
     @Column()
     shippingAddress!:string;
 

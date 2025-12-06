@@ -1,17 +1,17 @@
 import { hash } from "bcrypt";
 import { falfulConnection } from "../../config/dbORM.config";
 import { buyerDto } from "../dtos/buyer.dto";
-import { buyer } from "../models/buyer.model";
+import { Buyer } from "../models/buyer.model";
 import { seller } from "../models/seller.model";
 import { AppError } from "../../common/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
 import { buyerUpdateDto } from "../dtos/buyerUpdated.dto";
 
 export class buyerServices {
-    private buyerRepo = falfulConnection.getRepository(buyer)
+    private buyerRepo = falfulConnection.getRepository(Buyer)
     private sellerRepo = falfulConnection.getRepository(seller)
 
-    async buyerRegister(buyerData: buyerDto): Promise<buyer> {
+    async buyerRegister(buyerData: buyerDto): Promise<Buyer> {
         const queryRunner = falfulConnection.createQueryRunner();
         try {
             await queryRunner.connect();

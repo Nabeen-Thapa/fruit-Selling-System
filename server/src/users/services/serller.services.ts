@@ -4,12 +4,12 @@ import { serllerDto } from "../dtos/seller.dot";
 import { seller } from "../models/seller.model";
 import { AppError } from "../../common/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
-import { buyer } from "../models/buyer.model";
+import { Buyer } from "../models/buyer.model";
 import { serllerUpdateDto } from "../dtos/sellerUpdate.dto";
 
 export class sellerServices {
         private sellerRepo = falfulConnection.getRepository(seller);
-        private buyerRepo = falfulConnection.getRepository(buyer);
+        private buyerRepo = falfulConnection.getRepository(Buyer);
 
     async sellerRegister(sellerData: serllerDto): Promise<seller> {
         const queryRunner = falfulConnection.createQueryRunner();

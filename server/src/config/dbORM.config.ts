@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { Product } from "../store/models/products.model";
 import { ProductImage } from "../store/models/productImage.model";
 import { seller } from "../users/models/seller.model";
-import { buyer } from "../users/models/buyer.model";
+import { Buyer } from "../users/models/buyer.model";
 import { UserSession } from "../users/models/userSession.model";
 import { userChat } from "../users/models/chat.model";
 import { Cart } from "../store/models/cart.model";
@@ -21,7 +21,7 @@ export const falfulConnection = new DataSource({
     database : process.env.DB_NAME,  
     synchronize: true,
     logging: false,
-    entities : [Product, ProductImage, seller, buyer, UserSession, userChat, Cart, CartItem, Orders, OrdersItems],
+    entities : [Product, ProductImage, seller, Buyer, UserSession, userChat, Cart, CartItem, Orders, OrdersItems],
 })
 
 

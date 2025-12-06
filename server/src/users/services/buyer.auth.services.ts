@@ -1,5 +1,5 @@
 import { falfulConnection } from "../../config/dbORM.config";
-import { buyer } from "../models/buyer.model";
+import { Buyer } from "../models/buyer.model";
 import { SessionService } from "./session.service";
 import { buyerDto } from "../dtos/buyer.dto";
 import { LoginResponse, TokenPayload, UserType } from "../types/auth.types";
@@ -12,7 +12,7 @@ import { delay } from "../utils/loginDelay.utils";
 import { loginDto } from "../dtos/login.dto";
 
 export class buyerAuthServices {
-    protected buyerRegisterRepo = falfulConnection.getRepository(buyer);
+    protected buyerRegisterRepo = falfulConnection.getRepository(Buyer);
     private sessionService = new SessionService();
 
     async buyerLogin(buyerData: loginDto): Promise<LoginResponse> {
