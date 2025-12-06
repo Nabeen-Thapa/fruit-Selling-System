@@ -3,7 +3,8 @@ import { baseDetails } from "./baseDetail";
 import { buyer } from "../../users/models/buyer.model";
 import { OrdersItems } from "./orderItems.model";
 import { OrderStatus, PaymentStatus, DeliveryMethod, PaymentMethod } from "../../types/product.types";
-import { seller } from "src/users/models/seller.model";
+import { seller } from "../../users/models/seller.model";
+
 
 @Entity("orders")
 export class Orders extends baseDetails {
