@@ -14,11 +14,11 @@ dotenv.config();
 
 export const falfulConnection = new DataSource({
     type:"postgres",
-    host : process.env.HOST ||"localhost",
+    host : process.env.DB_HOST,
     port: 5432,
-    username :"postgres",
-    password : process.env.password ||"Nt@post",
-    database : process.env.database,  
+    username :process.env.DB_USERNAME,
+    password : process.env.DB_PASSWORDd,
+    database : process.env.DB_NAME,  
     synchronize: true,
     logging: false,
     entities : [Product, ProductImage, seller, buyer, UserSession, userChat, Cart, CartItem, Orders, OrdersItems],
