@@ -13,7 +13,7 @@ import { BuyerRegister } from './pages/users/buyerRegister.page';
 import { SellerRegister } from './pages/users/sellerRegister.page';
 import LoginPage from './pages/users/auth.sellerLogin.page';
 import VerifyUser from './middleware/auth.verifyToken';
-import BuyerLogin from './pages/users/auth.buyerLOgin.page';
+import BuyerLogin from './pages/users/auth.buyerLogin.page';
 import ViewSpecificProductPage from './pages/product/viewSpecificProduct.page';
 import ProductUpdatePage from './pages/product/productUpdate.page';
 import ViewMyProducts from './pages/product/viewMyProducts.page';
