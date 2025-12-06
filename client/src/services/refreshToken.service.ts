@@ -1,6 +1,8 @@
 export const checkRefreshToken = async (): Promise<number | null> => {
+  const APIURL = import.meta.env.VITE_API_URL;
+
   try {
-    const res = await fetch('http://localhost:5000/seller/auth/check-refresh-token', {
+    const res = await fetch(`${APIURL}/seller/auth/check-refresh-token`, {
       method: 'GET',
       credentials: 'include', 
     });

@@ -1,6 +1,8 @@
 export async function clearSession() {
+  const APIURL = import.meta.env.VITE_API_URL;
+
   try {
-    const sessionClearRes = await fetch('http://localhost:5000/user/logout', {
+    const sessionClearRes = await fetch(`${APIURL}/user/logout`, {
       method: 'GET',
       credentials: 'include', // sends cookies with the request
     });

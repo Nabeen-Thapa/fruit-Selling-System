@@ -1,23 +1,23 @@
 import axios from 'axios';
 import { Product, ProductFormState, ProductImages } from '../types/product.type';
 
-const API_BASE_URL = 'http://localhost:5000';
 
+const APIURL = import.meta.env.VITE_API_URL;
 export const createProduct = async (productData: FormData) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/product/add`, productData, {
+    const response = await axios.post(`${APIURL}/product/add`, productData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     });
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.response?.data?.message || 'Failed to create product');
   }
 };
 
 export const fetchProducts = async (): Promise<Product[]> => {
-  const response = await fetch('http://localhost:5000/product/view');
+  const response = await fetch(`${APIURL}/product/view`);
   if (!response.ok) throw new Error('Failed to fetch products');
   const data = await response.json();
 
@@ -29,7 +29,7 @@ export const fetchProducts = async (): Promise<Product[]> => {
 
 
 export const fetchSpecificProduct = async (id: string): Promise<Product> => {
-  const response = await fetch(`http://localhost:5000/product/${id}/view`);
+  const response = await fetch(`${APIURL}/product/${id}/view`);
   if (!response.ok) throw new Error('Failed to fetch product');
   const data = await response.json();
 
@@ -46,7 +46,7 @@ export const fetchSpecificProduct = async (id: string): Promise<Product> => {
 export const deleteProduct = async (id: string): Promise<{ success: boolean; message?: string }> => {
   try {
 
-    const response = await fetch(`http://localhost:5000/product/${id}/delete`, {
+    const response = await fetch(`${APIURL}/product/${id}/delete`, {
       method: 'DELETE',
       credentials: "include",
       headers: {
@@ -72,7 +72,7 @@ export const deleteProduct = async (id: string): Promise<{ success: boolean; mes
     // Return structured error information
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'Deletion failed'
+      message: error instanceof Error ? (error as Error).message : 'Deletion failed'
     };
   }
 
@@ -92,9 +92,9 @@ export const updateProduct = async (
   formData.append('description', productData.description);
   formData.append('quantity', productData.quantity);
   formData.append('category', productData.category);
-    formData.append('quantityType', productData.quantityType);
+  formData.append('quantityType', productData.quantityType);
 
-    existingImages.forEach((img) => {
+  existingImages.forEach((img) => {
     formData.append('existingImages[]', JSON.stringify(img)); // can also send just `img.id` if backend expects only ID
   });
 
@@ -103,7 +103,7 @@ export const updateProduct = async (
     formData.append('productImages', image.file);
   });
 
-  const response = await fetch(`http://localhost:5000/product/${id}/update`, {
+  const response = await fetch(`${APIURL}/product/${id}/update`, {
     method: 'PUT',
     credentials: 'include',
     body: formData,
@@ -117,8 +117,8 @@ export const updateProduct = async (
   return response.json();
 };
 
-export const myProducts = async (id:string): Promise<Product[]> => {
-  const response = await fetch(`http://localhost:5000/product/myProducts/${id}`, {
+export const myProducts = async (id: string): Promise<Product[]> => {
+  const response = await fetch(`${APIURL}/product/myProducts/${id}`, {
     method: "GET",
     credentials: "include",
   });
@@ -127,7 +127,7 @@ export const myProducts = async (id:string): Promise<Product[]> => {
 
   const data = await response.json();
 
- return data.data.map((product: Product) => ({
+  return data.data.map((product: Product) => ({
     ...product,
     price: typeof product.price === 'string' ? parseFloat(product.price) : product.price
   }));

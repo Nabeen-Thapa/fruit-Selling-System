@@ -1,9 +1,9 @@
 import { userChat } from "../types/userChat.types";
 
+const APIURL = import.meta.env.VITE_API_URL;
 export class ChatService {
-    protected BASE_URL = "http://localhost:5000/chat"
     async storeChat(userChats: Omit<userChat, 'id' | 'createdAt' | "senderId">) {
-        const storeResponse = await fetch(`http://localhost:5000/chat/store`, {
+        const storeResponse = await fetch(`${APIURL}/chat/store`, {
             method: "POST",
             credentials: "include",
             headers: {
@@ -17,7 +17,7 @@ export class ChatService {
 
     async getUserChats(receiverId: string) {
         try {
-            const chats = await fetch(`http://localhost:5000/chat/view/${receiverId}`, {
+            const chats = await fetch(`${APIURL}/chat/view/${receiverId}`, {
                 method: "GET",
                 credentials: "include",
                 headers: {
@@ -28,7 +28,7 @@ export class ChatService {
             const userChats = chats.json();
             return userChats;
         } catch (error) {
-            console.log("error in fronted service get chats", error.message);
+            console.log("error in fronted service get chats", (error as Error).message);
             throw new Error("eror in forntend service to get user chat");
         }
     }

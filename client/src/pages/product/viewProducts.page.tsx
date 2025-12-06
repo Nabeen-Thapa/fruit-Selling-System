@@ -24,8 +24,7 @@ const ViewProducts: React.FC = () => {
   useEffect(() => {
     setProducts(initialProducts);
   }, [initialProducts]);
-
-
+  
   const handleEdit = (id: string) => {
     navigate(`/falful/product/${id}/update`);
     // navigate(`/falful/product/${id}/edit`);

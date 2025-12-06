@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { ProductCategory, ProductFormState, ProductImage, quantityTypes, UseProductFormReturn } from '../../types/product.type';
 
 export const useProductForm = (): UseProductFormReturn => {
+  const APIURL =import.meta.env.VITE_API_URL;
   const [product, setProduct] = useState<ProductFormState>({
     name: '',
     price: '',
@@ -110,7 +111,7 @@ export const useProductForm = (): UseProductFormReturn => {
         formData.append('productImages', image.file);
       });
 
-      const response = await fetch('http://localhost:5000/product/add', {
+      const response = await fetch(`${APIURL}/product/add`, {
         method: 'POST',
          credentials: 'include',
         body: formData,
@@ -124,7 +125,7 @@ export const useProductForm = (): UseProductFormReturn => {
       resetForm();
 
       setTimeout(() => setShowSuccess(false), 3000);
-    } catch (err) {
+    } catch (err : any) {
       setError(err.message);
     } finally {
       setLoading(false);

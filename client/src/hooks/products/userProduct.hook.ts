@@ -11,6 +11,7 @@ export const useProducts = () => {
     const getProducts = async () => {
       try {
         const data = await fetchProducts();
+        console.log("daataaaa",data)
         setProducts(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');

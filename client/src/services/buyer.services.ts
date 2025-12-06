@@ -2,9 +2,9 @@ import { Buyer } from "../types/buyer.types";
 import { usersView } from "../types/seller.types";
 
 
-const BASE_URL = 'http://localhost:5000/buyer';
+const APIURL =import.meta.env.VITE_API_URL;
 export const registerBuyer = async (buyerData: Omit<Buyer, 'id' | 'createdAt' | 'lastLogin'>): Promise<Buyer> => {
-  const response = await fetch(`${BASE_URL}/register`, {
+  const response = await fetch(`${APIURL}/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -30,14 +30,14 @@ export const registerBuyer = async (buyerData: Omit<Buyer, 'id' | 'createdAt' | 
 
 
 export const fetchBuyers = async (): Promise<Buyer[]> => {
-  const response = await fetch(`${BASE_URL}/view`);
+  const response = await fetch(`${APIURL}/view`);
   if (!response.ok) throw new Error('Failed to fetch buyers');
   return response.json();
 };
 
 
 export const deleteBuyer = async (id: string): Promise<void> => {
-  const response = await fetch(`${BASE_URL}/delete?id=${id}`, {
+  const response = await fetch(`${APIURL}/delete?id=${id}`, {
     method: 'DELETE',
   });
   if (!response.ok) throw new Error('Failed to delete buyer');
@@ -45,7 +45,7 @@ export const deleteBuyer = async (id: string): Promise<void> => {
 
 
 export const buyerLoginService = async (email: string, password: string) => {
-  const res = await fetch(`http://localhost:5000/buyer/auth/login`, {
+  const res = await fetch(`${APIURL}/buyer/auth/login`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -75,7 +75,7 @@ export const buyerLoginService = async (email: string, password: string) => {
 
 export const viewBuyer = async () => {
   try {
-    const viewResponse = await fetch(`http://localhost:5000/buyer/viewData`, {
+    const viewResponse = await fetch(`${APIURL}/buyer/viewData`, {
       method: "GET",
       credentials: "include"
     });
@@ -99,7 +99,7 @@ export const viewBuyer = async () => {
 
 export const updateBuyerDetail = async (updatedBuyerData: Partial<usersView>) => {
   try {
-    const res = await fetch(`http://localhost:5000/buyer/update`, {
+    const res = await fetch(`${APIURL}/buyer/update`, {
       method: 'PUT',
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },
@@ -118,7 +118,7 @@ export const updateBuyerDetail = async (updatedBuyerData: Partial<usersView>) =>
 
 export const viewAllSellersService = async () => {
   try {
-    const response = await fetch("http://localhost:5000/buyer/viewSellers", {
+    const response = await fetch(`${APIURL}/buyer/viewSellers`, {
       method: "GET",
       credentials: "include",
     });

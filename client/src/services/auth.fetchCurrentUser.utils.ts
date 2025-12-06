@@ -6,8 +6,9 @@ export interface tokenPayload {
 }
 
 export async function fetchCurrentUser(): Promise<tokenPayload | null> {
-  try {
-    const res = await fetch("http://localhost:5000/seller/auth/me", {
+  const APIURL = import.meta.env.VITE_API_URL;
+    try {
+    const res = await fetch(`${APIURL}/seller/auth/me`, {
       method: "GET",
       credentials: "include", 
     });

@@ -1,6 +1,7 @@
+const APIURL =import.meta.env.VITE_API_URL;
 export const addTocart = async( productId:string, quantity:number)=>{
     try {
-       const cartRewsponse = await fetch(`http://localhost:5000/falful/cart/add`,{
+       const cartRewsponse = await fetch(`${APIURL}/falful/cart/add`,{
         method:  "POST",
         credentials: "include",
         headers:{
@@ -16,14 +17,14 @@ export const addTocart = async( productId:string, quantity:number)=>{
 
     return await cartRewsponse.json(); 
     } catch (error) {
-        console.log("error during add to cart:", error.message);
-        throw error.message;
+        console.log("error during add to cart:", (error as Error).message);
+        throw (error as Error).message;
     }
 }
 
 export const viewMyCart = async () => {
   try {
-    const res = await fetch("http://localhost:5000/falful/cart/myCart", {
+    const res = await fetch("${APIURL}/falful/cart/myCart", {
       method: "GET",
       credentials: "include",
     });
@@ -32,22 +33,22 @@ export const viewMyCart = async () => {
 
     const json = await res.json(); // ✅ await JSON here
     return json; // ✅ full response: { success, message, data: { items } }
-  } catch (error: any) {
-    console.log("error during view cart:", error.message);
-    throw new Error(error.message);
+  } catch (error) {
+    console.log("error during view cart:", (error as Error).message);
+    throw new Error((error as Error).message);
   }
 };
 
 export const  deleteFromCart = async(id:string, qty:number)=>{
   try {
-    const responce = await fetch(`http://localhost:5000/falful/cart/${id}/${qty}/delete`,{
+    const responce = await fetch(`${APIURL}/falful/cart/${id}/${qty}/delete`,{
       method: "DELETE",
       credentials: "include"
     })
     if(!responce.ok) throw new Error("unable to delete cart item");
   } catch (error) {
-     console.log("error during delete item form cart:", error.message);
-    throw new Error(error.message);
+     console.log("error during delete item form cart:", (error as Error).message);
+    throw new Error((error as Error).message);
   }
 
 }

@@ -1,9 +1,10 @@
 import { Seller, usersView } from "../types/seller.types";
 
-const BASE_URL = "http://localhost:5000/seller"
+
+const APIURL = import.meta.env.VITE_API_URL;
 
 export const registerSeller = async (sellerData: Omit<Seller, 'id' | 'createdAt' | 'lastLogin'>): Promise<Seller> => {
-  const sellerResponse = await fetch(`${BASE_URL}/register`, {
+  const sellerResponse = await fetch(`${APIURL}/register`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -28,7 +29,7 @@ export const registerSeller = async (sellerData: Omit<Seller, 'id' | 'createdAt'
 
 // src/services/authService.ts
 export const loginSeller = async (email: string, password: string) => {
-  const res = await fetch(`${BASE_URL}/auth/login`, {
+  const res = await fetch(`${APIURL}/auth/login`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -62,7 +63,7 @@ export const loginSeller = async (email: string, password: string) => {
 
 export const viewSeller = async () => {
   try {
-    const viewResponse = await fetch(`http://localhost:5000/seller/view`, {
+    const viewResponse = await fetch(`${APIURL}/seller/view`, {
       method: "GET",
       credentials: "include"
     });
@@ -87,7 +88,7 @@ export const viewSeller = async () => {
 
 export const viewBuyers = async()=>{
   try {
-    const viewResponse = await fetch(`http://localhost:5000/seller/viewbuyers`,{
+    const viewResponse = await fetch(`${APIURL}/seller/viewbuyers`,{
       method: "GET",
       credentials: "include",
     })
@@ -103,7 +104,7 @@ export const viewBuyers = async()=>{
 
 export const updateSeller = async (updatedUser: Partial<usersView>) => {
   try {
-    const res = await fetch(`http://localhost:5000/seller/update`, {
+    const res = await fetch(`${APIURL}/seller/update`, {
       method: 'PUT',
       credentials: "include",
       headers: { 'Content-Type': 'application/json' },
