@@ -1,5 +1,5 @@
 import { falfulConnection } from "../../config/dbORM.config";
-import { buyer } from "../../users/models/buyer.model";
+import { Buyer } from "../../users/models/buyer.model";
 import { AppError } from "../../common/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
 import { Product } from "../models/products.model";
@@ -9,7 +9,7 @@ import { CartItem } from "../models/cartItems.modal";
 
 
 export class cartServices {
-    private buyerRepo = falfulConnection.getRepository(buyer);
+    private buyerRepo = falfulConnection.getRepository(Buyer);
     private productRepo = falfulConnection.getRepository(Product);
     private cartRepo = falfulConnection.getRepository(Cart);
     private cartItemRepo = falfulConnection.getRepository(CartItem);

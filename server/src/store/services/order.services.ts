@@ -3,7 +3,7 @@ import { Orders } from "../models/orders.model"
 import { OrdersItems } from "../models/orderItems.model";
 import { AppError, sendError } from "../../common/utils/response.utils";
 import { StatusCodes } from "http-status-codes";
-import { buyer } from "../../users/models/buyer.model";
+import { Buyer } from "../../users/models/buyer.model";
 import { DeliveryMethod, OrderStatus, PaymentStatus } from "../../types/product.types";
 import { ordersDtos } from "../dtos/orders.dto";
 import { Cart } from "../models/cart.model";
@@ -13,7 +13,7 @@ import { seller } from "../../users/models/seller.model";
 export class OrderServices {
     protected orderRepo = falfulConnection.getRepository(Orders);
     protected orderItemsRepo = falfulConnection.getRepository(OrdersItems);
-    protected buyerRepo = falfulConnection.getRepository(buyer);
+    protected buyerRepo = falfulConnection.getRepository(Buyer);
     protected cartRepo = falfulConnection.getRepository(Cart);
     protected sellerRepo = falfulConnection.getRepository(seller);
 
