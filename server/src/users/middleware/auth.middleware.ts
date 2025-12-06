@@ -8,7 +8,7 @@ import { seller } from '../models/seller.model';
 import { UserSession } from '../models/userSession.model';
 import { MoreThan } from 'typeorm';
 import { User } from '../models/user.model';
-import { buyer } from '../models/buyer.model';
+import { Buyer } from '../models/buyer.model';
 import { UserType } from '../types/auth.types';
 
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
@@ -40,7 +40,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     
     // 4. Check seller existence
     const sellerRepo = falfulConnection.getRepository(seller);
-     const buyerRepo = falfulConnection.getRepository(buyer);
+     const buyerRepo = falfulConnection.getRepository(Buyer);
      const userRepo = decoded.role === UserType.BUYER ? buyerRepo : sellerRepo;
     const sellerExist = await userRepo.findOne({ where: { id: decoded.userId } });
 
