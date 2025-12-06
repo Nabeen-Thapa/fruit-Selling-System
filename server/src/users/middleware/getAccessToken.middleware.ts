@@ -7,7 +7,7 @@ import { generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRef
 import { falfulConnection } from "../../config/dbORM.config";
 import { UserSession } from "../../users/models/userSession.model";
 import { seller } from "../models/seller.model";
-import { buyer } from "../models/buyer.model";
+import { Buyer } from "../models/buyer.model";
 import { TokenPayload, UserType } from "../types/auth.types";
 
 export async function getNewAccessToken(req: Request) {
@@ -20,7 +20,7 @@ export async function getNewAccessToken(req: Request) {
 
     const userSessionRepo = falfulConnection.getRepository(UserSession);
     const sellerRepo = falfulConnection.getRepository(seller);
-    const buyerRepo = falfulConnection.getRepository(buyer);
+    const buyerRepo = falfulConnection.getRepository(Buyer);
 
     const userRepo = payload.role === UserType.BUYER ? buyerRepo : sellerRepo;
 
