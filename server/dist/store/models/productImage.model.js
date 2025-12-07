@@ -13,6 +13,11 @@ exports.ProductImage = void 0;
 const typeorm_1 = require("typeorm");
 const products_model_1 = require("./products.model");
 let ProductImage = class ProductImage {
+    id;
+    url;
+    altText;
+    publicId; // For Cloudinary reference
+    product;
 };
 exports.ProductImage = ProductImage;
 __decorate([

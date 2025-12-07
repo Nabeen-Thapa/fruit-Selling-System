@@ -18,6 +18,8 @@ const sendError = (res, statusCode, error) => {
 };
 exports.sendError = sendError;
 class AppError extends Error {
+    message;
+    statusCode;
     constructor(message, statusCode = http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR) {
         super(message);
         this.message = message;

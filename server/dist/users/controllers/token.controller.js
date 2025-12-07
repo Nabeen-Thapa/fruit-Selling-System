@@ -3,6 +3,7 @@
 // import { Route } from "../../common/decorators/route.decoder";
 // import { authenticate } from "../middleware/auth.middleware";
 // import { sendSuccess } from "../../common/utils/response.utils";
+Object.defineProperty(exports, "__esModule", { value: true });
 // export class TokenController{
 //     @Route("get", "/protected", [authenticate])
 // async protectedRoute(req: Request, res: Response) {

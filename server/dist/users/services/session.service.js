@@ -6,9 +6,7 @@ const dbORM_config_1 = require("../../config/dbORM.config");
 const userSession_model_1 = require("../models/userSession.model");
 const typeorm_1 = require("typeorm");
 class SessionService {
-    constructor() {
-        this.userSessionRepo = dbORM_config_1.falfulConnection.getRepository(userSession_model_1.UserSession);
-    }
+    userSessionRepo = dbORM_config_1.falfulConnection.getRepository(userSession_model_1.UserSession);
     async checkActiveSession(userId) {
         const existingSession = await this.userSessionRepo.findOne({
             where: {

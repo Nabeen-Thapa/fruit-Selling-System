@@ -12,7 +12,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Product = void 0;
 const typeorm_1 = require("typeorm");
 const productImage_model_1 = require("./productImage.model");
+const seller_model_1 = require("../../users/models/seller.model");
 let Product = class Product {
+    id;
+    name;
+    price;
+    description;
+    userId;
+    quantity;
+    category;
+    quantityType;
+    images;
+    sellers;
+    createdAt;
 };
 exports.Product = Product;
 __decorate([
@@ -32,17 +44,10 @@ __decorate([
     __metadata("design:type", String)
 ], Product.prototype, "description", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }) // allow nulls temporarily
+    ,
     __metadata("design:type", String)
-], Product.prototype, "seller", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Product.prototype, "phone", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Product.prototype, "email", void 0);
+], Product.prototype, "userId", void 0);
 __decorate([
     (0, typeorm_1.Column)('int'),
     __metadata("design:type", Number)
@@ -52,9 +57,21 @@ __decorate([
     __metadata("design:type", String)
 ], Product.prototype, "category", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => productImage_model_1.ProductImage, image => image.product, { cascade: true }),
+    (0, typeorm_1.Column)({ type: 'varchar', nullable: true }),
+    __metadata("design:type", String)
+], Product.prototype, "quantityType", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => productImage_model_1.ProductImage, image => image.product, {
+        cascade: ['insert', 'update'],
+        eager: true
+    }),
     __metadata("design:type", Array)
 ], Product.prototype, "images", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => seller_model_1.seller, seller => seller.products, { cascade: true }),
+    (0, typeorm_1.JoinColumn)({ name: 'userId' }),
+    __metadata("design:type", seller_model_1.seller)
+], Product.prototype, "sellers", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' }),
     __metadata("design:type", Date)

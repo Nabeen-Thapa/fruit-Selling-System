@@ -12,6 +12,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.baseUserDto = void 0;
 const class_validator_1 = require("class-validator");
 class baseUserDto {
+    name;
+    email;
+    // @Matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/, { message: 'Password too weak' })
+    password;
+    // @IsPhoneNumber('NP')
+    // @Transform(({ value }) => value.toString())
+    phone;
+    address;
+    lastLogin;
+    role;
 }
 exports.baseUserDto = baseUserDto;
 __decorate([
@@ -32,8 +42,8 @@ __decorate([
 ], baseUserDto.prototype, "password", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsPhoneNumber)('NP')
+    (0, class_validator_1.IsNotEmpty)()
+    // @IsPhoneNumber('NP')
     // @Transform(({ value }) => value.toString())
     ,
     __metadata("design:type", String)

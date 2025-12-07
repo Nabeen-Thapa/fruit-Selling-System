@@ -12,6 +12,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const typeorm_1 = require("typeorm");
 class User extends typeorm_1.BaseEntity {
+    id;
+    name;
+    email;
+    password;
+    phone;
+    address;
+    createdAt;
+    lastLogin;
+    role;
 }
 exports.User = User;
 __decorate([

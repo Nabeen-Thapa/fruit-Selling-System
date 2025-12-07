@@ -12,8 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.seller = void 0;
 const typeorm_1 = require("typeorm");
 const user_model_1 = require("./user.model");
-const products_model_1 = require("../../products/models/products.model");
+const products_model_1 = require("../../store/models/products.model");
+const orders_model_1 = require("../../store/models/orders.model");
 let seller = class seller extends user_model_1.User {
+    businessName;
+    products;
+    orders;
 };
 exports.seller = seller;
 __decorate([
@@ -21,9 +25,13 @@ __decorate([
     __metadata("design:type", String)
 ], seller.prototype, "businessName", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => products_model_1.Product, (product) => product.seller),
+    (0, typeorm_1.OneToMany)(() => products_model_1.Product, (product) => product.sellers),
     __metadata("design:type", Array)
 ], seller.prototype, "products", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => orders_model_1.Orders, orders => orders.sellers),
+    __metadata("design:type", orders_model_1.Orders)
+], seller.prototype, "orders", void 0);
 exports.seller = seller = __decorate([
     (0, typeorm_1.Entity)("sellerDetail")
 ], seller);

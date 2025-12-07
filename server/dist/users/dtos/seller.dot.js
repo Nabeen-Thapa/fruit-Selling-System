@@ -13,6 +13,7 @@ exports.serllerDto = void 0;
 const class_validator_1 = require("class-validator");
 const base_user_dto_1 = require("./base-user.dto");
 class serllerDto extends base_user_dto_1.baseUserDto {
+    businessName;
 }
 exports.serllerDto = serllerDto;
 __decorate([

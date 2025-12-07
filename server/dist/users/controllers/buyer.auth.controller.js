@@ -14,13 +14,27 @@ const controller_decoder_1 = require("../../common/decorators/controller.decoder
 const response_utils_1 = require("../../common/utils/response.utils");
 const http_status_codes_1 = require("http-status-codes");
 const route_decoder_1 = require("../../common/decorators/route.decoder");
+const buyer_auth_services_1 = require("../services/buyer.auth.services");
+const authCookie_utils_1 = require("../utils/authCookie.utils");
+const getCurrentUser_utils_1 = require("../utils/getCurrentUser.utils");
+const dtoValidateResponse_utils_1 = require("../../common/utils/dtoValidateResponse.utils");
+const login_dto_1 = require("../dtos/login.dto");
 let buyerAuthController = class buyerAuthController {
-    // protected buyerAuthServices = new buyerAuthService();
+    buyerAuthServices = new buyer_auth_services_1.buyerAuthServices();
+    async correntUser(req, res) {
+        return (0, getCurrentUser_utils_1.getCurrentUser)(req, res);
+    }
     async buyerLoginController(req, res) {
         try {
-            const buyerData = req.body;
-            // const buyerLoginResult =await this.buyerAuthServices.BuyerAuthService(buyerData);
-            (0, response_utils_1.sendSuccess)(res, http_status_codes_1.StatusCodes.OK, "seccess login");
+            const buyerLoginData = req.body;
+            const buyerData = await (0, dtoValidateResponse_utils_1.validateDto)(login_dto_1.loginDto, buyerLoginData, res);
+            if (!buyerData.valid)
+                return;
+            const result = await this.buyerAuthServices.buyerLogin(buyerData.data);
+            if ('isAlreadyLoggedIn' in result)
+                return (0, response_utils_1.sendSuccess)(res, http_status_codes_1.StatusCodes.CONFLICT, result.message);
+            (0, authCookie_utils_1.setAuthCookies)(res, result.accessToken, result.refreshToken);
+            (0, response_utils_1.sendSuccess)(res, http_status_codes_1.StatusCodes.OK, "seccess login as buyer");
         }
         catch (error) {
             console.log("buyer auth login controller:", error);
@@ -29,6 +43,12 @@ let buyerAuthController = class buyerAuthController {
     }
 };
 exports.buyerAuthController = buyerAuthController;
+__decorate([
+    (0, route_decoder_1.Route)("get", "/me"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], buyerAuthController.prototype, "correntUser", null);
 __decorate([
     (0, route_decoder_1.Route)("post", "/login"),
     __metadata("design:type", Function),

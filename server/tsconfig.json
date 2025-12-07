@@ -2,12 +2,9 @@
   "compilerOptions": {
     "module": "Node16",
     "target": "ES2022",
-    "moduleResolution": "node16",
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/types"
-    ],
-     "types": ["express"], 
+    "moduleResolution": "Node16",
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "types": ["node", "express"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "outDir": "./dist",

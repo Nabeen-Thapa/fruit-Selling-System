@@ -13,6 +13,13 @@ exports.UserSession = void 0;
 const typeorm_1 = require("typeorm");
 const auth_types_1 = require("../types/auth.types");
 let UserSession = class UserSession {
+    id;
+    userId;
+    userType;
+    token;
+    isValid;
+    createdAt;
+    expiresAt;
 };
 exports.UserSession = UserSession;
 __decorate([

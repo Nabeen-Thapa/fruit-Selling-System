@@ -13,6 +13,7 @@ exports.buyerDto = void 0;
 const class_validator_1 = require("class-validator");
 const base_user_dto_1 = require("./base-user.dto");
 class buyerDto extends base_user_dto_1.baseUserDto {
+    shippingAddress;
 }
 exports.buyerDto = buyerDto;
 __decorate([

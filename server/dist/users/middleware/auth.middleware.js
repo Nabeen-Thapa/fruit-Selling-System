@@ -12,6 +12,8 @@ const dbORM_config_1 = require("../../config/dbORM.config");
 const seller_model_1 = require("../models/seller.model");
 const userSession_model_1 = require("../models/userSession.model");
 const typeorm_1 = require("typeorm");
+const buyer_model_1 = require("../models/buyer.model");
+const auth_types_1 = require("../types/auth.types");
 const authenticate = async (req, res, next) => {
     try {
         // 1. Extract access token
@@ -21,8 +23,8 @@ const authenticate = async (req, res, next) => {
             throw new response_utils_1.AppError('Authentication token required', http_status_codes_1.StatusCodes.UNAUTHORIZED);
         }
         // 2. Verify and decode token
-        const jwtKey = process.env.JWT_SECRET || 'hQ7@SpU87P17rByoN8odlu$ggVO2+zieRdGASq!%UDLExA5k';
-        const decoded = jsonwebtoken_1.default.verify(token, jwtKey);
+        const accessKey = process.env.ACCESS_TOKEN_SECRET || "Q@SpU87P17rByoN0odlu?gVO2-zieRdGAq!%UDLExA3K";
+        const decoded = jsonwebtoken_1.default.verify(token, accessKey);
         // 3. Check if token is blacklisted in Redis
         const isBlacklisted = await redis_service_1.redisService.exists(`blacklist:${token}`);
         if (isBlacklisted) {
@@ -30,7 +32,9 @@ const authenticate = async (req, res, next) => {
         }
         // 4. Check seller existence
         const sellerRepo = dbORM_config_1.falfulConnection.getRepository(seller_model_1.seller);
-        const sellerExist = await sellerRepo.findOne({ where: { id: decoded.userId } });
+        const buyerRepo = dbORM_config_1.falfulConnection.getRepository(buyer_model_1.Buyer);
+        const userRepo = decoded.role === auth_types_1.UserType.BUYER ? buyerRepo : sellerRepo;
+        const sellerExist = await userRepo.findOne({ where: { id: decoded.userId } });
         if (!sellerExist)
             throw new response_utils_1.AppError('Seller not found', http_status_codes_1.StatusCodes.UNAUTHORIZED);
         // 5. Check for active session in DB
@@ -45,10 +49,10 @@ const authenticate = async (req, res, next) => {
         if (!activeSession)
             throw new response_utils_1.AppError('Session expired or invalid', http_status_codes_1.StatusCodes.UNAUTHORIZED);
         // 6. Validate session token matches Redis refresh token
-        const storedRefreshToken = await redis_service_1.redisService.get(`refresh_token:${decoded.userId}`);
-        if (!storedRefreshToken || storedRefreshToken !== activeSession.token) {
-            throw new response_utils_1.AppError('Invalid session token', http_status_codes_1.StatusCodes.UNAUTHORIZED);
-        }
+        // const storedRefreshToken = await redisService.get(`refresh_token:${decoded.userId}`);
+        // if (!storedRefreshToken || storedRefreshToken !== activeSession.token) {
+        //   throw new AppError('Invalid session token', StatusCodes.UNAUTHORIZED);
+        // }
         // 7. Attach user to request for further access
         req.user = {
             id: decoded.userId,
@@ -67,9 +71,7 @@ const authenticate = async (req, res, next) => {
                 code: http_status_codes_1.StatusCodes.UNAUTHORIZED,
             });
         }
-        const statusCode = error instanceof response_utils_1.AppError
-            ? error.statusCode
-            : http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR;
+        const statusCode = error instanceof response_utils_1.AppError ? error.statusCode : http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR;
         return res.status(statusCode).json({
             success: false,
             message: error instanceof Error ? error.message : 'Authentication failed',

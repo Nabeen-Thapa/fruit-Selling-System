@@ -18,7 +18,7 @@ exports.storage = multer_1.default.diskStorage({
 exports.upload = (0, multer_1.default)({
     storage: exports.storage,
     limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB limit
+        fileSize: 10 * 1024 * 1024 // 5MB limit
     },
     fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('image/')) {

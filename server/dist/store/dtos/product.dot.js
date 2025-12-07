@@ -13,6 +13,14 @@ exports.CreateProductDto = void 0;
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 class CreateProductDto {
+    name;
+    price;
+    description;
+    userId;
+    quantity;
+    category;
+    quantityType;
+    images;
 }
 exports.CreateProductDto = CreateProductDto;
 __decorate([
@@ -38,19 +46,7 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], CreateProductDto.prototype, "seller", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_transformer_1.Transform)(({ value }) => value.toString()) // Ensure phone is treated as string
-    ,
-    __metadata("design:type", String)
-], CreateProductDto.prototype, "phone", void 0);
-__decorate([
-    (0, class_validator_1.IsEmail)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], CreateProductDto.prototype, "email", void 0);
+], CreateProductDto.prototype, "userId", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.Min)(1),
@@ -63,6 +59,11 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateProductDto.prototype, "category", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsIn)(['kg', 'dorzen', 'pices']),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "quantityType", void 0);
 __decorate([
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.IsOptional)(),

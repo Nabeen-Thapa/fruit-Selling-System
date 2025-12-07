@@ -9,17 +9,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.baseUserDto = void 0;
+exports.loginDto = void 0;
 const class_validator_1 = require("class-validator");
-class baseUserDto {
+class loginDto {
+    email;
+    password;
 }
-exports.baseUserDto = baseUserDto;
+exports.loginDto = loginDto;
 __decorate([
     (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
-], baseUserDto.prototype, "email", void 0);
+], loginDto.prototype, "email", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.MinLength)(4),
     __metadata("design:type", String)
-], baseUserDto.prototype, "password", void 0);
+], loginDto.prototype, "password", void 0);
