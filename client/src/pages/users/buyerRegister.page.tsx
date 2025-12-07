@@ -17,8 +17,7 @@ export const BuyerRegister: React.FC = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-4">
-      <h1 className="text-2xl font-bold mb-6">Register New Buyer</h1>
+    <div className="max-w-2xl mx-auto py-8 px-4 pt-8">
       {error && <div className="text-red-500 mb-4">{error}</div>}
       <BuyerForm onSubmit={handleSubmit} loading={loading} />
     </div>
