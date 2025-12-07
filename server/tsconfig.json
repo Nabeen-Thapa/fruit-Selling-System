@@ -7,14 +7,13 @@
       "./node_modules/@types",
       "./src/types"
     ],
-    "types": ["express"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "outDir": "./dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]
