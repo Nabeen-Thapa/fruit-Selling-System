@@ -1,3 +1,5 @@
+// Load type augmentations for Express
+import "./types/express";
 import "reflect-metadata";
 import express, { NextFunction, Request, Response } from 'express';
 import dotenv from "dotenv";
