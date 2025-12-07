@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { ProductService } from '../services/product.services';
@@ -12,6 +11,7 @@ import { upload } from '../../common/utils/cloudinary-upload';
 import { authenticate } from '../../users/middleware/auth.middleware';
 import { JwtUserPayload } from '../../users/types/auth.types';
 import { validateDto } from '../../common/utils/dtoValidateResponse.utils';
+import { Request, Response } from 'express';
 
 
 @Controller("/product")
@@ -31,7 +31,7 @@ export class ProductController {
       if (!req.files || !req.body) {
         throw new Error("No files or form data received");
       }
-      const user = req?.user as JwtUserPayload;
+      const user = (req as any).user as JwtUserPayload;
       if (!user) throw new Error("Unauthorized access");
 
       const productData = {
@@ -95,7 +95,7 @@ export class ProductController {
   async deleteProduct(req: Request, res: Response) {
     try {
 
-      const user = req.user as JwtUserPayload;
+      const user = (req as any).user as JwtUserPayload;
       if (user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorize to delete product");
 
       const id = Number(req.params.id);
@@ -114,7 +114,7 @@ export class ProductController {
 
     try {
       if (!req.files || !req.body) sendError(res, StatusCodes.BAD_REQUEST, "No files or form data received")
-        const user = req.user as JwtUserPayload;
+        const user = (req as any).user as JwtUserPayload;
       if (!user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorize");
 
 
@@ -155,8 +155,8 @@ export class ProductController {
   @Route("get", "/myProducts/:id", [authenticate])
   async myProducts(req: Request, res: Response) {
     try {
-      if (!req?.user) sendError(res, StatusCodes.UNAUTHORIZED, "yuo are not authorized");
-      // const userId = req.user?.id as string;
+      if (!(req as any).user) sendError(res, StatusCodes.UNAUTHORIZED, "yuo are not authorized");
+      // const userId = (req as any).user?.id as string;
       const {id} = req.params;
 
       const myProductResult = await this.productService.getMyProducts(id);

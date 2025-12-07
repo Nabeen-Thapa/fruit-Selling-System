@@ -34,8 +34,8 @@ export class sellerController {
     @Route("get", "/view", [authenticate])
     async viewsellerController(req: Request, res: Response) {
         try {
-            if(!req.user) return sendError(res, StatusCodes.BAD_REQUEST, "bad request");
-            const id = req.user?.id as string;
+            if(!(req as any).user) return sendError(res, StatusCodes.BAD_REQUEST, "bad request");
+            const id = (req as any).user?.id as string;
             const sellerViewResult = await this.sellerServices.sellerView(id);
            // console.log("seller contoller",sellerViewResult);
             sendSuccess(res, StatusCodes.OK, "successfully view", sellerViewResult);
@@ -48,8 +48,8 @@ export class sellerController {
     @Route("put", "/update", [authenticate])
     async updateSellerController(req: Request, res: Response) {
         try {
-             if(!req.user) return sendError(res, StatusCodes.BAD_REQUEST, "bad request");
-            const id = req.user?.id as string;
+             if(!(req as any).user) return sendError(res, StatusCodes.BAD_REQUEST, "bad request");
+            const id = (req as any).user?.id as string;
             
             const sellerUpdatedData = {...req.body.updatedUser, role: "seller"}
             const updatedDataDto = await validateDto(serllerUpdateDto, sellerUpdatedData, res);
@@ -76,7 +76,7 @@ export class sellerController {
     @Route("get", "/viewbuyers", [authenticate])
     async viewBuyersController(req:Request, res:Response){
         try {
-            if(!req.user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authrized to view buyers")
+            if(!(req as any).user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authrized to view buyers")
             const viewBuyersResult = await this.sellerServices.viewBuyers();
             return sendSuccess(res, StatusCodes.OK, "seller list", viewBuyersResult);
         } catch (error) {

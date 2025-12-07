@@ -15,8 +15,8 @@ export class orderController {
   @Route("post", "/placeorder", [authenticate])
   async placeOrderContrlller(req: Request, res: Response) {
     try {
-      if (!req.user) sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
-      const buyerId = req.user?.id as string;
+      if (!(req as any).user) sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
+      const buyerId = (req as any).user?.id as string;
       const orderData = req.body;
       console.log("order dat contrller:", orderData);
       const orderDtoValidate = await validateDto(ordersDtos, orderData, res);
@@ -34,8 +34,8 @@ export class orderController {
   @Route("get", "/viewSellerOrders", [authenticate])
   async viewSellerOrdersController(req: Request, res: Response) {
     try {
-      if (!req.user) sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
-      const sellerId = req.user?.id as string;
+      if (!(req as any).user) sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
+      const sellerId = (req as any).user?.id as string;
 
     } catch (error) {
       console.log("view seller order controller error:", (error as Error).message);
@@ -46,8 +46,8 @@ export class orderController {
   @Route("get", "/viewBuyerOrders", [authenticate])
   async viewBuyerOrdersController(req: Request, res: Response) {
     try {
-      if (!req.user) sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
-      const buyerId = req.user?.id as string;
+      if (!(req as any).user) sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
+      const buyerId = (req as any).user?.id as string;
  
       const orders =await this.orderService.viewBuyerOrders(buyerId);
       if(orders) return sendSuccess(res, StatusCodes.OK, "your orders", orders);

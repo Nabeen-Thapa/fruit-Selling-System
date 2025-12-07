@@ -68,7 +68,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     // }
 
     // 7. Attach user to request for further access
-    req.user = {
+    (req as any).user = {
       id: decoded.userId,
       name: decoded.name,
       email: decoded.email,

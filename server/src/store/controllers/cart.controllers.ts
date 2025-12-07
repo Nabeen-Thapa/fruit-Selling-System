@@ -13,10 +13,10 @@ export class cartControllers {
     @Route("post", "/add", [authenticate])
     async addToCartController(req: Request, res: Response) {
         try {
-            if (!req.user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
+            if (!(req as any).user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
     
             const { productId, quantity } = req.body;
-            const buyerId = req.user?.id as string;
+            const buyerId = (req as any).user?.id as string;
 
             await this.cartServices.addToCart(buyerId, productId, quantity);
             sendSuccess(res, StatusCodes.OK, "added successfully");
@@ -29,8 +29,8 @@ export class cartControllers {
     @Route("get", "/myCart", [authenticate])
     async viewMyCartController(req: Request, res:Response){
         try {
-            if(!req.user) return sendError(res, StatusCodes.UNAUTHORIZED, "you arte not authorized");
-             const {id} =  req.user;
+            if(!(req as any).user) return sendError(res, StatusCodes.UNAUTHORIZED, "you arte not authorized");
+             const {id} =  (req as any).user;
              const viewMyCartResult = await this.cartServices.viewMyCart(id);
             sendSuccess(res, StatusCodes.OK, "successfully view", viewMyCartResult);
         } catch (error) {
@@ -44,7 +44,7 @@ export class cartControllers {
         const cartItemId = req.params.id as string;
         const quantity =Number( req.params.qty);
         try {
-            if(!req.user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authrized");
+            if(!(req as any).user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authrized");
             console.log("imte deleted");
             const result = await  this.cartServices.deleteFromCart(cartItemId, quantity);
             sendSuccess(res, StatusCodes.OK, "items is deleted successfully from cart");

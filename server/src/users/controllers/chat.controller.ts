@@ -17,9 +17,9 @@ export class ChatControllers {
   async storeChatController(req: Request, res: Response) {
     try {
 
-      if (!req.user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
+      if (!(req as any).user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
       
-      const senderId = req.user.id;
+      const senderId = (req as any).user.id;
       const chatData = {
         ...req.body, senderId
       };
@@ -39,10 +39,10 @@ export class ChatControllers {
   async getChatControllers(req: Request, res: Response) {
     try {
       
-      if (!req.user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
+      if (!(req as any).user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
 
       const {receiverId} = req.params;
-      const {id} = req.user;
+      const {id} = (req as any).user;
       const getChatResult = await this.chatService.getChats(id, receiverId);
      return sendSuccess(res, StatusCodes.OK,"successfully accessed", getChatResult);
       } catch (error) {

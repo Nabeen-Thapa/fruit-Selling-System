@@ -56,8 +56,8 @@ export class buyerController {
     @Route("get", "/viewData", [authenticate])
     async viewBuyerController(req: Request, res: Response) {
         try {
-            if (!req.user) return sendError(res, StatusCodes.BAD_REQUEST, "bad request");
-            const id = req.user?.id as string;
+            if (!(req as any).user) return sendError(res, StatusCodes.BAD_REQUEST, "bad request");
+            const id = (req as any).user?.id as string;
             const buyerViewResult = await this.buyerServices.buyerView(id);
             console.log("buyer contoller", buyerViewResult);
             sendSuccess(res, StatusCodes.OK, "successfully view", buyerViewResult);
@@ -70,8 +70,8 @@ export class buyerController {
     @Route("put", "/update", [authenticate])
     async updateBuyerController(req: Request, res: Response) {
         try {
-            if (!req.user) sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
-            const id = req.user?.id as string;
+            if (!(req as any).user) sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
+            const id = (req as any).user?.id as string;
             const buyerData = {
                 ...req.body.updatedBuyerData,
                 role: "buyer"
@@ -90,7 +90,7 @@ export class buyerController {
 
     @Route("get", "/viewSellers")
     async viewAllSellers(req: Request, res: Response) {
-        // if (!req.user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
+        // if (!(req as any).user) return sendError(res, StatusCodes.UNAUTHORIZED, "you are not authorized");
         try {
             const allSellers = await this.buyerServices.viewAllSellers();
             sendSuccess(res, StatusCodes.OK, "successfully accessed", allSellers);
