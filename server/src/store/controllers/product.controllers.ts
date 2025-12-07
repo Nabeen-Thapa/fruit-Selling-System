@@ -11,7 +11,7 @@ import { StatusCodes } from "http-status-codes";
 import { falfulConnection } from '../../config/dbORM.config';
 import { upload } from '../../common/utils/cloudinary-upload';
 import { authenticate } from '../../users/middleware/auth.middleware';
-import { UserPayload } from '../../users/types/auth.types';
+import { JwtUserPayload, UserPayload } from '../../users/types/auth.types';
 import { validateDto } from '../../common/utils/dtoValidateResponse.utils';
 
 
@@ -32,7 +32,7 @@ export class ProductController {
       if (!req.files || !req.body) {
         throw new Error("No files or form data received");
       }
-      const user = req.user as UserPayload;
+      const user = req.user as JwtUserPayload;
       if (!user) throw new Error("Unauthorized access");
 
       const productData = {
