@@ -13,6 +13,7 @@ export const useBuyers = () => {
   const addBuyer = async (buyerData: Omit<Buyer, 'id' | 'createdAt' | 'lastLogin'>) => {
     setLoading(true);
     try {
+      console.log("buyer hooks:", buyerData)
       const newBuyer = await registerBuyer(buyerData);
       setBuyers(prev => [...prev, newBuyer]);
     } catch (err) {

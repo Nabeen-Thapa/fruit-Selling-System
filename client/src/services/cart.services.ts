@@ -24,7 +24,7 @@ export const addTocart = async( productId:string, quantity:number)=>{
 
 export const viewMyCart = async () => {
   try {
-    const res = await fetch("${APIURL}/falful/cart/myCart", {
+    const res = await fetch(`${APIURL}/falful/cart/myCart`, {
       method: "GET",
       credentials: "include",
     });

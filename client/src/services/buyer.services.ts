@@ -4,7 +4,9 @@ import { usersView } from "../types/seller.types";
 
 const APIURL =import.meta.env.VITE_API_URL;
 export const registerBuyer = async (buyerData: Omit<Buyer, 'id' | 'createdAt' | 'lastLogin'>): Promise<Buyer> => {
-  const response = await fetch(`${APIURL}/register`, {
+  console.log("buyer aservice:", buyerData)
+  console.log("buyer aservice:", APIURL)
+  const response = await fetch(`${APIURL}/buyer/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -27,17 +29,15 @@ export const registerBuyer = async (buyerData: Omit<Buyer, 'id' | 'createdAt' | 
 };
 
 
-
-
 export const fetchBuyers = async (): Promise<Buyer[]> => {
-  const response = await fetch(`${APIURL}/view`);
+  const response = await fetch(`${APIURL}/buyer/view`);
   if (!response.ok) throw new Error('Failed to fetch buyers');
   return response.json();
 };
 
 
 export const deleteBuyer = async (id: string): Promise<void> => {
-  const response = await fetch(`${APIURL}/delete?id=${id}`, {
+  const response = await fetch(`${APIURL}/buyer/delete?id=${id}`, {
     method: 'DELETE',
   });
   if (!response.ok) throw new Error('Failed to delete buyer');

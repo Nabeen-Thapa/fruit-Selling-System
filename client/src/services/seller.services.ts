@@ -4,7 +4,7 @@ import { Seller, usersView } from "../types/seller.types";
 const APIURL = import.meta.env.VITE_API_URL;
 
 export const registerSeller = async (sellerData: Omit<Seller, 'id' | 'createdAt' | 'lastLogin'>): Promise<Seller> => {
-  const sellerResponse = await fetch(`${APIURL}/register`, {
+  const sellerResponse = await fetch(`${APIURL}/seller/register`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ export const registerSeller = async (sellerData: Omit<Seller, 'id' | 'createdAt'
 
 // src/services/authService.ts
 export const loginSeller = async (email: string, password: string) => {
-  const res = await fetch(`${APIURL}/auth/login`, {
+  const res = await fetch(`${APIURL}/seller/auth/login`, {
     method: "POST",
     credentials: "include",
     headers: {
