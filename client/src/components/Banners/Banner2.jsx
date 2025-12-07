@@ -44,9 +44,6 @@ const Banner2 = () => {
                     initial='hidden'
                     animate='visible'
                     className='flex justify-center md:justify-start'>
-              <a href="/download">
-                <button className='primary-btn'>Download Our App</button>
-              </a>
             </motion.div>
             </div>
           </div>
