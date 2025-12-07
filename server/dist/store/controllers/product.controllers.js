@@ -33,7 +33,7 @@ let ProductController = class ProductController {
             if (!req.files || !req.body) {
                 throw new Error("No files or form data received");
             }
-            const user = req.user;
+            const user = req?.user;
             if (!user)
                 throw new Error("Unauthorized access");
             const productData = {
