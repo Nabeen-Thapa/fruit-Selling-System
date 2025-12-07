@@ -16,34 +16,35 @@ const Hero = () => {
             initial='hidden'
             animate='visible'
             className='text-5xl lg:text-6xl font-bold leading-relaxed xl:leading-loose font-averia'>
-              Health
+              Fresh
               <br />
-              Fresh<span className='text-secondary'> Fruits!</span>
+              Delicious <span className='text-secondary'>Fruits!</span>
             </motion.h1>
             <motion.p 
             variants={FadeRight(0.9)}
             initial='hidden'
             animate='visible'
-            className='text-2xl tracking-wide'>Order Now For Fresh Healthy Life</motion.p>
+            className='text-2xl tracking-wide'>Get Your Fruits Delivered Fast & Fresh</motion.p>
             <motion.p 
             variants={FadeRight(1.2)}
             initial='hidden'
             animate='visible'
             className='text-gray-400'>
-              Healthy and yummy food for fresh morning breakfast. Eat Daily for good health and Order now and get 20%
-              off on your first order
+              Enjoy a variety of fresh, handpicked fruits delivered straight to your door. Healthy, tasty, and perfect for every meal. Order today and get 20% off your first purchase!
             </motion.p>
             <motion.div 
             variants={FadeRight(1.5)}
             initial='hidden'
             animate='visible'
             className='flex justify-center md:justify-start'>
-              <button  className='primary-btn flex items-center gap-2'>
-                <span>
-                  <IoBagCheckOutline />
-                </span>
-                Order Now
-              </button>
+              <a href="/falful/products">
+                <button className='primary-btn flex items-center gap-2'>
+                  <span>
+                    <IoBagCheckOutline />
+                  </span>
+                  Shop Now
+                </button>
+              </a>
             </motion.div>
           </div>
         </div>

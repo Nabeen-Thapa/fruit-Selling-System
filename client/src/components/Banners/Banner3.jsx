@@ -36,24 +36,28 @@ const Banner3 = () => {
                 whileInView='visible'
                 viewport={{ once: true }}
                 >
-                    Lorem ipsum dolor sit amet consectetur 
-                    adipisicing elit. Officiis magni 
-                    earum cupiditate natus, cumque nesciunt. 
-                    Praesentium, placeat numquam! Enim, nobis 
-                    sunt aliquam porro doloribus nulla quam 
-                    tempora itaque quia mollitia?
+                    Enjoy handpicked, farm-fresh fruits delivered straight to your door. 
+                    Perfect for daily health, snacks, or gifts, our fruits are fresh, juicy, and delicious.
                 </motion.p>
                 <br/>
-                <motion.p>
-                
+                <motion.p
+                variants={FadeLeft(0.9)}
+                initial="hidden"
+                whileInView='visible'
+                viewport={{ once: true }}
+                >
+                    Browse our wide variety of seasonal fruits and order in just a few clicks. 
+                    Freshness and quality guaranteed with every purchase.
                 </motion.p>
                 <br/>
                 <motion.div 
-                    variants={FadeLeft(0.9)}
+                    variants={FadeLeft(1.1)}
                     initial='hidden'
                     animate='visible'
                     className='flex justify-center md:justify-start'>
-              <button className='primary-btn '>Order Now</button>
+              <a href="/falful/products">
+                <button className='primary-btn'>Order Now</button>
+              </a>
             </motion.div>
             </div>
           </div>

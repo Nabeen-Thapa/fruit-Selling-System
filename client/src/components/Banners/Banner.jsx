@@ -27,7 +27,7 @@ const Banner = () => {
               viewport={{ once: true }}
               className='text-3xl lg:text-4xl font-bold uppercase'
             >
-              Fresh From Farm To You
+              Fresh & Delicious Fruits Delivered
             </motion.h1>
             <br/>
             <motion.p
@@ -36,11 +36,10 @@ const Banner = () => {
               whileInView='visible'
               viewport={{ once: true }}
             >
-              Welcome to FarmConnect - your direct marketplace for fresh, 
-              locally-grown fruits. Sellers can easily list their harvests, 
-              while buyers enjoy farm-fresh produce at competitive prices. 
-              Join our community supporting local farmers and getting the 
-              freshest fruits available.
+              Welcome to FruitBasket – your one-stop store for farm-fresh fruits. 
+              Discover seasonal fruits, handpicked for quality and taste. 
+              Enjoy fast delivery straight to your door, and indulge in nature’s 
+              goodness every day.
             </motion.p>
             <br/>
             <motion.p
@@ -49,9 +48,8 @@ const Banner = () => {
               whileInView='visible'
               viewport={{ once: true }}
             >
-              Whether you're a grower looking to sell your harvest or 
-              a buyer seeking quality fruits, our platform makes the 
-              process simple, transparent, and rewarding for everyone.
+              Whether you want fresh fruits for breakfast, snacks, or gifting, 
+              our selection ensures the best quality and flavor for every occasion.
             </motion.p>
             <br/>
             <motion.div 
@@ -60,7 +58,9 @@ const Banner = () => {
               animate='visible'
               className='flex justify-center md:justify-start'
             >
-              <button className='primary-btn'>Join Our Marketplace</button>
+              <a href="/falful/products">
+                <button className='primary-btn'>Shop Fresh Fruits</button>
+              </a>
             </motion.div>
           </div>
         </div>

@@ -19,7 +19,7 @@ const Banner2 = () => {
                 viewport={{ once: true }}
                 className='text-3xl lg:text-4xl font-bold uppercase'>
                 {" "}    
-                Online Fruit Store</motion.h1>
+                Your Online Fruit Store</motion.h1>
                 <br/>
                 <motion.p
                 variants={FadeUp(0.7)}
@@ -27,12 +27,7 @@ const Banner2 = () => {
                 whileInView='visible'
                 viewport={{ once: true }}
                 >
-                    Lorem ipsum dolor sit amet consectetur 
-                    adipisicing elit. Officiis magni 
-                    earum cupiditate natus, cumque nesciunt. 
-                    Praesentium, placeat numquam! Enim, nobis 
-                    sunt aliquam porro doloribus nulla quam 
-                    tempora itaque quia mollitia?
+                    Discover the freshest fruits from local farms, delivered straight to your door. Enjoy seasonal selections, handpicked for quality and taste.  
                 </motion.p>
                 <br/>
                 <motion.p
@@ -41,11 +36,7 @@ const Banner2 = () => {
                 whileInView='visible'
                 viewport={{ once: true }}
                 >
-                    Lorem ipsum dolor sit amet consectetur 
-                    adipisicing elit. 
-                    Porro minus culpa dolores itaque eligendi, 
-                    facere quas sit in. 
-                    
+                    Browse our wide variety of fruits, from everyday favorites to exotic delights. Ordering is simple, fast, and convenient for everyone.
                 </motion.p>
                 <br/>
                 <motion.div 
@@ -53,7 +44,9 @@ const Banner2 = () => {
                     initial='hidden'
                     animate='visible'
                     className='flex justify-center md:justify-start'>
-              <button className='primary-btn '>Download App</button>
+              <a href="/download">
+                <button className='primary-btn'>Download Our App</button>
+              </a>
             </motion.div>
             </div>
           </div>
@@ -64,7 +57,7 @@ const Banner2 = () => {
             transition={{ duration: 1, delay:0.2 }}
             viewport={{once:true}}
             src={BannerPng} 
-            alt='' 
+            alt='Fresh fruits' 
             className='w-[350px] md:max-w-[500px] 
             h-full object-cover drop-shadow'/>
           </div>
