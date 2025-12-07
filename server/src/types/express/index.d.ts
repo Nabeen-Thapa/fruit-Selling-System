@@ -1,6 +1,6 @@
 // src/types/express/index.d.ts
 
-import { JwtUserPayload } from "src/users/types/auth.types";
+import { JwtUserPayload } from "../../users/types/auth.types";
 
 declare global {
   namespace Express {
@@ -9,3 +9,5 @@ declare global {
     }
   }
 }
+
+export {};
