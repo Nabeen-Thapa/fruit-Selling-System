@@ -70,7 +70,7 @@ const Navbar = ({ onCartClick }) => {
 
   return (
     <>
-<nav className="fixed top-0 left-0 w-full bg-white shadow z-50 px-4 py-3 pr-0 flex items-center justify-between md:px-8">
+<nav className="fixed top-0 left-0 w-full bg-white shadow z-50 px-4 py-3 pr-60 flex items-center justify-between md:px-8">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
