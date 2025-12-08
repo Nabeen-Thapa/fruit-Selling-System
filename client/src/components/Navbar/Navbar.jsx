@@ -76,7 +76,7 @@ const Navbar = ({ onCartClick }) => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.5 }}
           className="w-full flex justify-between items-center md:pt-4">
-          <div className='text-2xl flex items-center gap-2 font-bold uppercase'>
+          <div className='text-2xl flex items-center gap-2 font-bold uppercase mr-32'>
             <p className='text-primary'>FalFul</p>
             <FaLeaf className='text-green-500' />
           </div>
