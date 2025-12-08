@@ -70,7 +70,7 @@ const Navbar = ({ onCartClick }) => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full z-50 shadow-md bg-white">
+      <nav className="w-full px-4 py-3 pr-0 flex items-center justify-between md:px-8">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -219,14 +219,17 @@ const Navbar = ({ onCartClick }) => {
         </motion.div>
       </nav>
 
-      <ResponsiveMenu
-        open={open}
-        setOpen={setOpen}
-        NavbarMenu={NavbarMenu}
-        userRole={userRole}
-        existToken={existToken}
-        onCartClick={onCartClick}
-      />
+      <div className="md:hidden">
+        <ResponsiveMenu
+          open={open}
+          setOpen={setOpen}
+          NavbarMenu={NavbarMenu}
+          userRole={userRole}
+          existToken={existToken}
+          onCartClick={onCartClick}
+        />
+      </div>
+
 
     </>
   );

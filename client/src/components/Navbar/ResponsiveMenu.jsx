@@ -18,22 +18,29 @@ const ResponsiveMenu = ({
   const closeMenu = () => setOpen(false);
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence>
       {open && (
         <motion.div
-          initial={{ opacity: 0, y: -100 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -100 }}
-          transition={{ duration: 0.3 }}
-          className="absolute top-20 left-0 w-full h-screen z-50 bg-black bg-opacity-50 md:hidden"
-        >
-          <div className="text-lg font-semibold uppercase bg-white text-gray-800 py-10 mx-4 rounded-3xl shadow-lg">
-            <ul className="flex flex-col items-center gap-6">
-
-              {/* STATIC NAV MENU */}
+          className="
+    fixed top-0 left-0 w-full h-full 
+    bg-black bg-opacity-50 z-[999]
+    overflow-x-hidden
+    md:hidden
+  ">
+          <div
+            className="
+    bg-white text-gray-800 
+    w-full max-w-[280px] mx-auto mt-24 p-6 pl-0
+    rounded-3xl shadow-xl 
+    max-h-[75vh] overflow-y-auto overflow-x-hidden
+  ">
+            <ul className="flex flex-col p-2 pl-5 gap-6 w-full overflow-x-hidden">
               {NavbarMenu.map((menu) => (
                 <li key={menu.id} onClick={closeMenu}>
-                  <a href={menu.link} className="hover:text-primary">
+                  <a
+                    href={menu.link}
+                    className="hover:text-primary text-lg"
+                  >
                     {menu.title}
                   </a>
                 </li>
@@ -43,17 +50,17 @@ const ResponsiveMenu = ({
               {existToken && userRole === UserType.SELLER && (
                 <>
                   <li onClick={closeMenu}>
-                    <a href="/falful/product/myproducts" className="hover:text-primary">
+                    <a href="/falful/product/myproducts" className="hover:text-primary text-lg">
                       My Products
                     </a>
                   </li>
                   <li onClick={closeMenu}>
-                    <a href="/falful/products/add" className="hover:text-primary">
+                    <a href="/falful/products/add" className="hover:text-primary text-lg">
                       Add Products
                     </a>
                   </li>
                   <li onClick={closeMenu}>
-                    <a href="/falful/buyer/sellerlist" className="hover:text-primary">
+                    <a href="/falful/buyer/sellerlist" className="hover:text-primary text-lg">
                       View Buyers
                     </a>
                   </li>
@@ -64,29 +71,29 @@ const ResponsiveMenu = ({
               {existToken && userRole === UserType.BUYER && (
                 <>
                   <li onClick={closeMenu}>
-                    <a href="/falful/buyer/sellerlist" className="hover:text-primary">
+                    <a href="/falful/buyer/sellerlist" className="hover:text-primary text-lg">
                       View Sellers
                     </a>
                   </li>
                   <li onClick={closeMenu}>
-                    <a href="/falful/buyer/orders" className="hover:text-primary">
+                    <a href="/falful/buyer/orders" className="hover:text-primary text-lg">
                       My Orders
                     </a>
                   </li>
                 </>
               )}
 
-              {/* AUTH MENUS */}
+              {/* NO TOKEN → REGISTER + LOGIN */}
               {!existToken && (
                 <>
-                  {/* REGISTER DROPDOWN */}
+                  {/* REGISTER */}
                   <li className="relative w-full px-6">
                     <button
                       onClick={() => {
                         setRegisterDropdown(!registerDropdown);
                         setLoginDropdown(false);
                       }}
-                      className="flex justify-between w-full"
+                      className="flex justify-between w-full text-lg"
                     >
                       <span className="flex items-center gap-2">
                         <FaUserPlus /> Register
@@ -118,14 +125,14 @@ const ResponsiveMenu = ({
                     )}
                   </li>
 
-                  {/* LOGIN DROPDOWN */}
+                  {/* LOGIN */}
                   <li className="relative w-full px-6">
                     <button
                       onClick={() => {
                         setLoginDropdown(!loginDropdown);
                         setRegisterDropdown(false);
                       }}
-                      className="flex justify-between w-full"
+                      className="flex justify-between w-full text-lg"
                     >
                       <span className="flex items-center gap-2">
                         <FaSignInAlt /> Login
@@ -159,7 +166,7 @@ const ResponsiveMenu = ({
                 </>
               )}
 
-              {/* CART FOR BUYER */}
+              {/* CART BUTTON */}
               {existToken && userRole === UserType.BUYER && (
                 <button
                   className="text-3xl hover:text-primary"
