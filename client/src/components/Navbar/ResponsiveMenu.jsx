@@ -30,7 +30,7 @@ const ResponsiveMenu = ({
           <div
             className="
     bg-white text-gray-800 
-    w-full max-w-[280px] mx-auto mt-24 p-6 pl-0
+    w-full max-w-[330px] mx-auto mt-24 p-6 pl-0
     rounded-3xl shadow-xl 
     max-h-[75vh] overflow-y-auto overflow-x-hidden
   ">

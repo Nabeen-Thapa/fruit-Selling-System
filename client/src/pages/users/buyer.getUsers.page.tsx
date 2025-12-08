@@ -21,9 +21,7 @@ const UsersList: React.FC = () => {
     const loadUser = async () => {
       try {
         const user = await fetchCurrentUser();
-        if (user?.role) {
-          setcurrentUserRole(user.role);
-        }
+        if (user?.role) setcurrentUserRole(user.role);
       } catch (err) {
         throw new Error("Failed to load user");
       } finally {
@@ -36,7 +34,6 @@ const UsersList: React.FC = () => {
   useEffect(() => {
     const fetchSellersList = async () => {
       if (!currentUserRole || currentUserLoading) return;
-
       try {
         setLoading(true);
         const response =
@@ -51,13 +48,10 @@ const UsersList: React.FC = () => {
         setLoading(false);
       }
     };
-
     fetchSellersList();
   }, [currentUserRole, currentUserLoading]);
 
-  const openChat = (id: string) => {
-    navigate(`/falful/user/chat/${id}`);
-  }
+  const openChat = (id: string) => navigate(`/falful/user/chat/${id}`);
 
   if (loading) return (
     <div className="flex items-center justify-center min-h-screen">
@@ -83,8 +77,8 @@ const UsersList: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-10"
         >
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-2">
-            {currentUserRole === UserType.BUYER ? 'sellers' : 'buyers'} Directory
+          <h1 className="text-4xl font-extrabold text-gray-900 mb-2 capitalize">
+            {currentUserRole === UserType.BUYER ? 'Sellers' : 'Buyers'} Directory
           </h1>
           <p className="text-lg text-gray-600">
             Connect with registered {currentUserRole === UserType.BUYER ? 'sellers' : 'buyers'}
@@ -96,21 +90,16 @@ const UsersList: React.FC = () => {
           animate={{ opacity: 1, scale: 1 }}
           className="bg-white shadow-xl rounded-2xl overflow-hidden"
         >
-          <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-gray-800">
+          <div className="px-6 py-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+            <h2 className="text-xl font-semibold text-gray-800 capitalize">
               {currentUserRole === UserType.BUYER ? 'Available Sellers' : 'Registered Buyers'}
             </h2>
             <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
               {sellerList.length}{" "}
               {currentUserRole === UserType.BUYER
-                ? sellerList.length === 1
-                  ? "seller"
-                  : "sellers"
-                : sellerList.length === 1
-                  ? "buyer"
-                  : "buyers"}
+                ? sellerList.length === 1 ? "seller" : "sellers"
+                : sellerList.length === 1 ? "buyer" : "buyers"}
             </span>
-
           </div>
 
           <ul className="divide-y divide-gray-200">
@@ -123,41 +112,41 @@ const UsersList: React.FC = () => {
                   transition={{ delay: index * 0.05 }}
                   className="px-6 py-4 hover:bg-gray-50 transition-colors duration-150"
                 >
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                     <div className="flex items-center space-x-4">
                       <div className="flex-shrink-0">
                         <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
                           <FiUser size={20} />
                         </div>
                       </div>
-                      <div>
-                        <h3 className="text-lg font-medium text-gray-900">{user.name}</h3>
-                        <div className="flex items-center text-sm text-gray-500 mt-1 space-x-3">
-                          <span className="flex items-center">
-                            <FiMail className="mr-1" size={14} />
-                            {user.email}
+                      <div className="min-w-0">
+                        <h3 className="text-lg font-medium text-gray-900 truncate">{user.name}</h3>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center text-sm text-gray-500 mt-1 gap-2">
+                          <span className="flex items-center truncate">
+                            <FiMail className="mr-1" size={14} /> {user.email}
                           </span>
-                          <span className="flex items-center">
-                            <FiKey className="mr-1" size={14} />
-                            {user.role}
+                          <span className="flex items-center truncate">
+                            <FiKey className="mr-1" size={14} /> {user.role}
                           </span>
                         </div>
                       </div>
                     </div>
-                    <div className="flex space-x-2">
-                      {currentUserRole ===UserType.BUYER &&<button
-                        onClick={() => navigate(`/falful/products/${user.id}/products`)} // Assuming you have a route for viewing seller's products
-                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200"
-                      >
-                        <FiShoppingBag className="mr-2" size={16} />
-                        View Products
-                      </button>}
+
+                    {/* Buttons */}
+                    <div className="flex flex-wrap gap-2 mt-2 sm:mt-0">
+                      {currentUserRole === UserType.BUYER && (
+                        <button
+                          onClick={() => navigate(`/falful/products/${user.id}/products`)}
+                          className="w-full sm:w-auto inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200"
+                        >
+                          <FiShoppingBag className="mr-2" size={16} /> View Products
+                        </button>
+                      )}
                       <button
                         onClick={() => openChat(user.id)}
-                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
+                        className="w-full sm:w-auto inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
                       >
-                        <FiMessageSquare className="mr-2" size={16} />
-                        Message
+                        <FiMessageSquare className="mr-2" size={16} /> Message
                       </button>
                     </div>
                   </div>
