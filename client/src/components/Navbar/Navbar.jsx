@@ -70,12 +70,12 @@ const Navbar = ({ onCartClick }) => {
 
   return (
     <>
-      <nav className="w-full px-4 py-3 pr-0 flex items-center justify-between md:px-8">
+<nav className="fixed top-0 left-0 w-full bg-white shadow z-50 px-4 py-3 pr-0 flex items-center justify-between md:px-8">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.5 }}
-          className="container flex justify-between items-center py-4 md:pt-4">
+          className="w-full flex justify-between items-center md:pt-4">
           <div className='text-2xl flex items-center gap-2 font-bold uppercase'>
             <p className='text-primary'>FalFul</p>
             <FaLeaf className='text-green-500' />
