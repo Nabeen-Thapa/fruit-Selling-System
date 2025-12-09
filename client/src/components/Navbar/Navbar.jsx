@@ -60,90 +60,111 @@ const Navbar = ({ onCartClick }) => {
 
   const toggleRegisterDropdown = () => {
     setRegisterDropdownOpen(!registerDropdownOpen);
-    setLoginDropdownOpen(false); // Close login dropdown when opening register
+    setLoginDropdownOpen(false);
   };
 
   const toggleLoginDropdown = () => {
     setLoginDropdownOpen(!loginDropdownOpen);
-    setRegisterDropdownOpen(false); // Close register dropdown when opening login
+    setRegisterDropdownOpen(false);
   };
+
+  useEffect(() => {
+    if (open) {
+      setRegisterDropdownOpen(false);
+      setLoginDropdownOpen(false);
+    }
+  }, [open]);
 
   return (
     <>
-<nav className="fixed top-0 left-0 w-full bg-white shadow z-50 px-4 py-3 pr-60 flex items-center justify-between md:px-8">
+      {/* COMPLETELY REMOVED pr-60 - NO RIGHT PADDING */}
+      <nav className="fixed top-0 left-0 w-full bg-white shadow z-50 px-4 py-3 flex items-center justify-between md:px-8">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.5 }}
-          className="w-full flex justify-between items-center md:pt-4">
-          <div className='text-2xl flex items-center gap-2 font-bold uppercase mr-32'>
+          className="w-full flex justify-between items-center"
+        >
+          {/* Logo - NO right margin on mobile */}
+          <div className='text-2xl flex items-center gap-2 font-bold uppercase'>
             <p className='text-primary'>FalFul</p>
             <FaLeaf className='text-green-500' />
           </div>
+          
+          {/* Desktop Navigation */}
           <div className='hidden md:block'>
-            <ul className='flex items-center gap-2 text-gray-600'>
+            <ul className='flex items-center gap-4 text-gray-600'>
               {NavbarMenu.map((menu) => (
                 <li key={menu.id}>
-                  <a href={menu.link}
-                    className='inline-block py-1 px-3
-                    hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444]
-                    font-semibold'
-                  >{menu.title}</a>
+                  <a 
+                    href={menu.link}
+                    className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'
+                  >
+                    {menu.title}
+                  </a>
                 </li>
               ))}
 
               {userRole === UserType.SELLER && (
                 <>
                   <li>
-                    <a href="/falful/product/myproducts"
-                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
+                    <a 
+                      href="/falful/product/myproducts"
+                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'
+                    >
                       my Products
                     </a>
                   </li>
-
                   <li>
-                    <a href="/falful/products/add"
-                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
+                    <a 
+                      href="/falful/products/add"
+                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'
+                    >
                       Add Products
                     </a>
                   </li>
                   <li>
-                    <a href="/falful/buyer/sellerlist"
-                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
+                    <a 
+                      href="/falful/buyer/sellerlist"
+                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'
+                    >
                       view buyers
                     </a>
                   </li>
-
                   <li>
-                    <a href="/falful/buyer/sellerlist"
-                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
+                    <a 
+                      href="/falful/buyer/sellerlist"
+                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'
+                    >
                       orders
                     </a>
                   </li>
-
                 </>
               )}
-
 
               {userRole === UserType.BUYER && (
                 <>
                   <li>
-                    <a href="/falful/buyer/sellerlist"
-                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
+                    <a 
+                      href="/falful/buyer/sellerlist"
+                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'
+                    >
                       view sellers
                     </a>
                   </li>
                   <li>
-                    <a href="/falful/buyer/orders"
-                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'>
+                    <a 
+                      href="/falful/buyer/orders"
+                      className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'
+                    >
                       My orders
                     </a>
                   </li>
                 </>
               )}
+              
               {!existToken ? (
                 <>
-                  {/* Register Dropdown */}
                   <li className="relative">
                     <button
                       onClick={toggleRegisterDropdown}
@@ -171,7 +192,6 @@ const Navbar = ({ onCartClick }) => {
                     )}
                   </li>
 
-                  {/* Login Dropdown */}
                   <li className="relative">
                     <button
                       onClick={toggleLoginDropdown}
@@ -200,22 +220,31 @@ const Navbar = ({ onCartClick }) => {
                   </li>
                 </>
               ) : (
-                <>
-                  <div className="d-flex align-items-center">
-                    {existToken && <NavProfileDropDown name={name} jwtToken={existToken} userRole={userRole} />}
-                  </div>
-                </>
+                <div className="flex items-center">
+                  {existToken && <NavProfileDropDown name={name} jwtToken={existToken} userRole={userRole} />}
+                </div>
               )}
-              {existToken && userRole === UserType.BUYER &&
-                <button className='text-2xl hover:bg-primary hover:text-white rounded-full p-2 duration-200' onClick={onCartClick}>
+              
+              {existToken && userRole === UserType.BUYER && (
+                <button 
+                  className='text-2xl hover:bg-primary hover:text-white rounded-full p-2 duration-200' 
+                  onClick={onCartClick}
+                >
                   <MdAddShoppingCart />
-                </button>}
+                </button>
+              )}
             </ul>
           </div>
 
-          <div className='md:hidden' onClick={() => setOpen(!open)}>
-            <MdMenu className='text-4xl' />
-          </div>
+          {/* Mobile Hamburger Menu Button - Now fully visible */}
+          <button 
+            className='md:hidden text-3xl p-2 hover:bg-gray-100 rounded-full transition-colors'
+            onClick={() => setOpen(!open)}
+            aria-label="Toggle menu"
+            aria-expanded={open}
+          >
+            <MdMenu />
+          </button>
         </motion.div>
       </nav>
 
@@ -229,8 +258,6 @@ const Navbar = ({ onCartClick }) => {
           onCartClick={onCartClick}
         />
       </div>
-
-
     </>
   );
 };
