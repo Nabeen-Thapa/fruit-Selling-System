@@ -32,7 +32,7 @@ const ResponsiveMenu = ({
     bg-white text-gray-800 
     w-full max-w-[380px] mx-auto mt-24 p-6 pl-0
     rounded-3xl shadow-xl 
-    max-h-[75vh] overflow-y-auto overflow-x-hidden
+    max-h-[80vh] overflow-y-auto overflow-x-hidden
   ">
             <ul className="flex flex-col p-2 pl-5 gap-6 w-full overflow-x-hidden">
               {NavbarMenu.map((menu) => (
