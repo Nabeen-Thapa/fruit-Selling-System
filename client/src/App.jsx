@@ -57,7 +57,7 @@ const App = () => {
           <Route path="/falful/products/:sellerId/products" element={<ViewProductToBuyer/>} />
           <Route path="/falful/seller/view" element={<ViewSellerData/>} />
           <Route path="/falful/buyer/view" element={<UpdateBuyerData/>} />
-          <Route path={`/falful/buyer/sellerlist`} element={<UsersList/>} />
+          <Route path={`/falful/buyer/list`} element={<UsersList/>} />
           <Route path="/falful/user/chat/:id" element={<UsersChat/>} />
           <Route path="/falful/product/checkout" element={<CheckoutPage/>} />
         </Routes>

@@ -32,8 +32,7 @@ const ResponsiveMenu = ({
     bg-white text-gray-800 
     w-full max-w-[330px] mx-auto mt-24 p-6 pl-0
     rounded-3xl shadow-xl 
-    max-h-[80vh] overflow-y-auto overflow-x-hidden
-  ">
+    max-h-[80vh] overflow-y-auto overflow-x-hidden">
             <ul className="flex flex-col p-2 pl-5 gap-6 w-full overflow-x-hidden">
               {NavbarMenu.map((menu) => (
                 <li key={menu.id} onClick={closeMenu}>
@@ -60,7 +59,7 @@ const ResponsiveMenu = ({
                     </a>
                   </li>
                   <li onClick={closeMenu}>
-                    <a href="/falful/buyer/sellerlist" className="hover:text-primary text-lg">
+                    <a href="/falful/buyer/list" className="hover:text-primary text-lg">
                       View Buyers
                     </a>
                   </li>
@@ -71,7 +70,7 @@ const ResponsiveMenu = ({
               {existToken && userRole === UserType.BUYER && (
                 <>
                   <li onClick={closeMenu}>
-                    <a href="/falful/buyer/sellerlist" className="hover:text-primary text-lg">
+                    <a href="/falful/buyer/list" className="hover:text-primary text-lg">
                       View Sellers
                     </a>
                   </li>

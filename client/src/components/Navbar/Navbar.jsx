@@ -125,20 +125,20 @@ const Navbar = ({ onCartClick }) => {
                   </li>
                   <li>
                     <a 
-                      href="/falful/buyer/sellerlist"
+                      href="/falful/buyer/list"
                       className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'
                     >
                       view buyers
                     </a>
                   </li>
-                  <li>
+                  {/* <li>
                     <a 
-                      href="/falful/buyer/sellerlist"
+                      href="/falful/buyer/list"
                       className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'
                     >
                       orders
                     </a>
-                  </li>
+                  </li> */}
                 </>
               )}
 
@@ -146,7 +146,7 @@ const Navbar = ({ onCartClick }) => {
                 <>
                   <li>
                     <a 
-                      href="/falful/buyer/sellerlist"
+                      href="/falful/buyer/list"
                       className='inline-block py-1 px-3 hover:text-primary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold'
                     >
                       view sellers
